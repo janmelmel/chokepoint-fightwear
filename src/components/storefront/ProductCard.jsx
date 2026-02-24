@@ -1,111 +1,46 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ShoppingBag, Clock } from 'lucide-react';
+import React from 'react';
 
-export default function ProductCard({ product, onBuy }) {
-  const [selectedSize, setSelectedSize] = useState('');
-  const [isHovered, setIsHovered] = useState(false);
+const EDITION_STYLE = {
+  Limited: 'bg-[#8b0000] text-white',
+  Rare: 'bg-white text-[#050505]',
+  Standard: 'bg-transparent text-white/40 border border-white/20',
+};
 
-  const handleBuyClick = () => {
-    if (!selectedSize) {
-      // Highlight size selector
-      return;
-    }
-    onBuy(product, selectedSize);
-  };
-
-  const formatPrice = (price) => {
-    return `₱${price.toLocaleString()}`;
-  };
-
+export default function ProductCard({ product, onOrder }) {
   return (
-    <motion.div
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="group relative bg-[#0A0A0A] border border-white/5 overflow-hidden"
-    >
-      {/* Status Badge */}
-      {product.status === 'pre-order' && (
-        <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 px-3 py-1.5 bg-[#FF0A0A] text-white text-xs font-body tracking-wider uppercase">
-          <Clock className="w-3 h-3" />
-          Pre-Order
-        </div>
-      )}
-
-      {/* Image Container */}
+    <div className="border border-white/10 bg-[#0a0a0a] overflow-hidden group hover:border-[#8b0000]/50 transition-colors duration-300">
+      {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-[#111]">
-        <motion.img
+        <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover"
-          animate={{ scale: isHovered ? 1.05 : 1 }}
-          transition={{ duration: 0.4 }}
+          className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-60" />
-        
-        {/* Hover Overlay */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          className="absolute inset-0 bg-[#FF0A0A]/10"
-        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+
+        {product.edition !== 'Standard' && (
+          <span className={`absolute top-3 left-3 text-[10px] font-inter font-semibold tracking-widest uppercase px-2 py-1 ${EDITION_STYLE[product.edition]}`}>
+            {product.edition}
+          </span>
+        )}
       </div>
 
-      {/* Product Info */}
-      <div className="p-5 sm:p-6">
-        <h3 className="font-body text-lg sm:text-xl font-semibold text-white tracking-tight">
+      {/* Info */}
+      <div className="p-4">
+        <p className="font-inter text-[10px] text-white/40 uppercase tracking-widest">
+          {product.subtitle}
+        </p>
+        <h3 className="font-inter text-base font-semibold text-white mt-0.5">
           {product.name}
         </h3>
-        <p className="font-body text-2xl text-[#FF0A0A] font-bold mt-2">
-          {formatPrice(product.price)}
-        </p>
 
-        {/* Size Selector */}
-        <div className="mt-5">
-          <p className="font-body text-xs text-white/40 uppercase tracking-wider mb-3">
-            Select Size
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {product.sizes.map((size) => (
-              <button
-                key={size}
-                onClick={() => setSelectedSize(size)}
-                className={`
-                  w-10 h-10 font-body text-xs font-medium tracking-wide
-                  border transition-all duration-200
-                  ${selectedSize === size 
-                    ? 'border-[#FF0A0A] bg-[#FF0A0A] text-white' 
-                    : 'border-white/20 text-white/60 hover:border-white/40 hover:text-white'
-                  }
-                `}
-              >
-                {size}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Buy Button */}
-        <motion.button
-          onClick={handleBuyClick}
-          disabled={!selectedSize}
-          whileTap={{ scale: 0.98 }}
-          className={`
-            w-full mt-6 py-4 font-body text-sm tracking-widest uppercase
-            flex items-center justify-center gap-2 transition-all duration-300
-            ${selectedSize 
-              ? 'bg-[#FF0A0A] text-white hover:bg-[#cc0808]' 
-              : 'bg-white/5 text-white/30 cursor-not-allowed'
-            }
-          `}
+        <button
+          onClick={() => onOrder(product)}
+          className="mt-4 w-full py-3 font-inter text-xs tracking-[0.2em] uppercase bg-[#8b0000] text-white hover:bg-[#a80000] transition-colors duration-200"
         >
-          <ShoppingBag className="w-4 h-4" />
-          {product.status === 'pre-order' ? 'Pre-Order Now' : 'Buy Now'}
-        </motion.button>
+          Pre-order
+        </button>
       </div>
-
-      {/* Corner Accent */}
-      <div className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-[#FF0A0A]/20" />
-    </motion.div>
+    </div>
   );
 }

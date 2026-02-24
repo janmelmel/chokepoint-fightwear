@@ -1,84 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, ExternalLink, FileSpreadsheet, Inbox, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { ArrowLeft, Plus, Trash2, ChevronRight, Lock } from 'lucide-react';
+
+const STAGES = ['Processing', 'Packing', 'Out for Delivery', 'Completed'];
+
+const STAGE_COLORS = {
+  'Processing': 'text-yellow-400 border-yellow-400/30 bg-yellow-400/5',
+  'Packing': 'text-blue-400 border-blue-400/30 bg-blue-400/5',
+  'Out for Delivery': 'text-orange-400 border-orange-400/30 bg-orange-400/5',
+  'Completed': 'text-green-400 border-green-400/30 bg-green-400/5',
+};
+
+const MOCK_ORDERS = [
+  { id: 'CP-001', product: 'No Gi SET', customer: 'Juan D.', stage: 'Processing' },
+  { id: 'CP-002', product: 'Rashguard (Classic Logo)', customer: 'Maria S.', stage: 'Packing' },
+  { id: 'CP-003', product: 'Grimthorn SET', customer: 'Pedro R.', stage: 'Out for Delivery' },
+  { id: 'CP-004', product: 'Pilipinas SET', customer: 'Ana L.', stage: 'Completed' },
+];
+
+const STAFF_PASSWORD = 'chokepoint2026';
 
 export default function Staff() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
+  const [authed, setAuthed] = useState(false);
+  const [pw, setPw] = useState('');
   const [error, setError] = useState('');
+  const [orders, setOrders] = useState([]);
 
-  // Simple password protection - replace with your actual password
-  const STAFF_PASSWORD = 'chokepoint2026';
+  useEffect(() => {
+    const saved = localStorage.getItem('cp_orders');
+    setOrders(saved ? JSON.parse(saved) : MOCK_ORDERS);
+  }, []);
+
+  const save = (updated) => {
+    setOrders(updated);
+    localStorage.setItem('cp_orders', JSON.stringify(updated));
+  };
+
+  const updateStage = (id, stage) => {
+    save(orders.map(o => o.id === id ? { ...o, stage } : o));
+  };
+
+  const deleteOrder = (id) => {
+    save(orders.filter(o => o.id !== id));
+  };
+
+  const addOrder = () => {
+    const newOrder = {
+      id: `CP-${String(orders.length + 1).padStart(3, '0')}`,
+      product: 'New Order',
+      customer: 'Customer',
+      stage: 'Processing',
+    };
+    save([...orders, newOrder]);
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === STAFF_PASSWORD) {
-      setIsAuthenticated(true);
+    if (pw === STAFF_PASSWORD) {
+      setAuthed(true);
       setError('');
     } else {
       setError('Incorrect password');
     }
   };
 
-  // Replace these with your actual URLs
-  const FORMSPREE_INBOX = 'https://formspree.io/forms/yourformid/submissions';
-  const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit';
-
-  if (!isAuthenticated) {
+  if (!authed) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
-        <style>
-          {`
-            @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@300;400;500;600;700&display=swap');
-            .font-blackletter { font-family: 'UnifrakturMaguntia', cursive; }
-            .font-body { font-family: 'Inter', sans-serif; }
-          `}
-        </style>
-        
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center px-4">
+        <style>{`@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@400;500;600&display=swap');
+          .font-gothic { font-family: 'UnifrakturMaguntia', cursive; }
+          .font-inter { font-family: 'Inter', sans-serif; }
+        `}</style>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-sm"
+          className="w-full max-w-xs"
         >
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 border border-[#FF0A0A]/30 mb-4">
-              <Lock className="w-6 h-6 text-[#FF0A0A]" />
-            </div>
-            <h1 className="font-blackletter text-3xl text-white">Staff Portal</h1>
-            <p className="font-body text-xs text-white/40 mt-2 tracking-wider uppercase">
-              Authorized Personnel Only
-            </p>
+            <Lock className="w-6 h-6 text-[#8b0000] mx-auto mb-4" />
+            <h1 className="font-gothic text-3xl text-white">System Access</h1>
+            <p className="font-inter text-xs text-white/30 mt-2 tracking-widest uppercase">Staff Only</p>
           </div>
-
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                className="w-full px-4 py-4 bg-[#0A0A0A] border border-white/10 text-white font-body text-sm text-center tracking-widest focus:outline-none focus:border-[#FF0A0A]/50 transition-colors"
-              />
-            </div>
-            
-            {error && (
-              <p className="font-body text-xs text-[#FF0A0A] text-center">{error}</p>
-            )}
-
+          <form onSubmit={handleLogin} className="space-y-3">
+            <input
+              type="password"
+              value={pw}
+              onChange={e => setPw(e.target.value)}
+              placeholder="Password"
+              className="w-full font-inter text-sm text-white bg-[#0a0a0a] border border-white/10 px-4 py-3 text-center tracking-widest focus:outline-none focus:border-[#8b0000]/60 placeholder-white/20"
+            />
+            {error && <p className="font-inter text-xs text-[#8b0000] text-center">{error}</p>}
             <button
               type="submit"
-              className="w-full py-4 bg-[#FF0A0A] text-white font-body text-sm tracking-widest uppercase hover:bg-[#cc0808] transition-colors"
+              className="w-full font-inter text-xs tracking-[0.3em] uppercase py-3 bg-[#8b0000] text-white hover:bg-[#a80000] transition-colors"
             >
-              Access Portal
+              Enter
             </button>
           </form>
-
-          <Link 
-            to={createPageUrl('Home')}
-            className="flex items-center justify-center gap-2 mt-8 font-body text-xs text-white/30 hover:text-white/50 transition-colors"
-          >
+          <Link to={createPageUrl('Home')} className="flex items-center justify-center gap-1 mt-8 font-inter text-xs text-white/20 hover:text-white/40 transition-colors">
             <ArrowLeft className="w-3 h-3" />
             Back to Store
           </Link>
@@ -87,142 +108,109 @@ export default function Staff() {
     );
   }
 
+  const stageCounts = STAGES.reduce((acc, s) => {
+    acc[s] = orders.filter(o => o.stage === s).length;
+    return acc;
+  }, {});
+
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@300;400;500;600;700&display=swap');
-          .font-blackletter { font-family: 'UnifrakturMaguntia', cursive; }
-          .font-body { font-family: 'Inter', sans-serif; }
-        `}
-      </style>
+    <div className="min-h-screen bg-[#050505] text-white font-inter">
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@400;500;600;700&display=swap');
+        .font-gothic { font-family: 'UnifrakturMaguntia', cursive; }
+        .font-inter { font-family: 'Inter', sans-serif; }
+      `}</style>
 
       {/* Header */}
-      <header className="border-b border-white/5 px-4 sm:px-6 lg:px-8 py-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="font-blackletter text-2xl text-white">Staff Dashboard</h1>
-            <p className="font-body text-xs text-white/40 mt-1">Chokepoint Fightwear</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link 
-              to={createPageUrl('Home')}
-              className="font-body text-xs text-white/40 hover:text-white transition-colors"
-            >
-              View Store
-            </Link>
-            <button
-              onClick={() => setIsAuthenticated(false)}
-              className="px-4 py-2 border border-white/10 font-body text-xs text-white/60 hover:text-white hover:border-white/30 transition-colors"
-            >
-              Logout
-            </button>
-          </div>
+      <header className="border-b border-white/10 px-4 sm:px-6 py-4 flex items-center justify-between">
+        <div>
+          <h1 className="font-gothic text-2xl text-white">Operations</h1>
+          <p className="font-inter text-[10px] text-white/30 uppercase tracking-widest">Chokepoint Staff</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Link to={createPageUrl('Home')} className="font-inter text-xs text-white/30 hover:text-white/60 transition-colors">
+            View Store
+          </Link>
+          <button onClick={() => setAuthed(false)} className="font-inter text-xs text-white/30 hover:text-white/60 transition-colors border border-white/10 px-3 py-1.5">
+            Logout
+          </button>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-6xl mx-auto">
-          {/* Quick Links */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            {/* Formspree Inbox */}
-            <motion.a
-              href={FORMSPREE_INBOX}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="group p-6 bg-[#0A0A0A] border border-white/10 hover:border-[#FF0A0A]/30 transition-all"
-            >
-              <div className="flex items-start justify-between">
-                <div className="w-12 h-12 bg-[#FF0A0A]/10 flex items-center justify-center mb-4">
-                  <Inbox className="w-6 h-6 text-[#FF0A0A]" />
-                </div>
-                <ExternalLink className="w-4 h-4 text-white/20 group-hover:text-white/40 transition-colors" />
-              </div>
-              <h3 className="font-body text-lg font-semibold text-white">Custom Orders Inbox</h3>
-              <p className="font-body text-sm text-white/40 mt-2">
-                View all custom order submissions from Formspree
-              </p>
-            </motion.a>
-
-            {/* Google Sheet */}
-            <motion.a
-              href={GOOGLE_SHEET_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="group p-6 bg-[#0A0A0A] border border-white/10 hover:border-[#FF0A0A]/30 transition-all"
-            >
-              <div className="flex items-start justify-between">
-                <div className="w-12 h-12 bg-green-500/10 flex items-center justify-center mb-4">
-                  <FileSpreadsheet className="w-6 h-6 text-green-500" />
-                </div>
-                <ExternalLink className="w-4 h-4 text-white/20 group-hover:text-white/40 transition-colors" />
-              </div>
-              <h3 className="font-body text-lg font-semibold text-white">Order Tracker Sheet</h3>
-              <p className="font-body text-sm text-white/40 mt-2">
-                Manually track orders and inventory in Google Sheets
-              </p>
-            </motion.a>
-          </div>
-
-          {/* Embedded Sheet Preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-[#0A0A0A] border border-white/10 p-6"
-          >
-            <h3 className="font-body text-lg font-semibold text-white mb-4">Order Tracker (Embedded)</h3>
-            <div className="aspect-video bg-[#111] border border-white/5 flex items-center justify-center">
-              <div className="text-center p-8">
-                <FileSpreadsheet className="w-12 h-12 text-white/20 mx-auto mb-4" />
-                <p className="font-body text-sm text-white/40">
-                  Replace this with your embedded Google Sheet
-                </p>
-                <p className="font-body text-xs text-white/20 mt-2">
-                  File → Share → Publish to web → Embed
-                </p>
-              </div>
-              {/* Uncomment and replace with your actual sheet embed URL:
-              <iframe 
-                src="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/htmlembed?gid=0" 
-                className="w-full h-full"
-                frameBorder="0"
-              />
-              */}
+      <main className="px-4 sm:px-6 py-8 max-w-4xl mx-auto">
+        {/* Stage Summary */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          {STAGES.map((stage) => (
+            <div key={stage} className={`border px-4 py-4 ${STAGE_COLORS[stage]}`}>
+              <p className="text-2xl font-bold">{stageCounts[stage]}</p>
+              <p className="text-[10px] uppercase tracking-wider mt-1 opacity-70">{stage}</p>
             </div>
-          </motion.div>
-
-          {/* Quick Stats Placeholder */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8"
-          >
-            {[
-              { label: 'Pending Orders', value: '—' },
-              { label: 'Processing', value: '—' },
-              { label: 'Shipped', value: '—' },
-              { label: 'Completed', value: '—' }
-            ].map((stat, i) => (
-              <div key={i} className="p-4 bg-[#0A0A0A] border border-white/5 text-center">
-                <p className="font-body text-2xl font-bold text-white">{stat.value}</p>
-                <p className="font-body text-xs text-white/40 mt-1 uppercase tracking-wider">{stat.label}</p>
-              </div>
-            ))}
-          </motion.div>
-
-          <p className="font-body text-xs text-white/20 text-center mt-8">
-            Tip: Update stats manually in your Google Sheet, or upgrade to database integration for live data.
-          </p>
+          ))}
         </div>
+
+        {/* Orders List */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-gothic text-xl text-white">Order Stream</h2>
+          <button
+            onClick={addOrder}
+            className="flex items-center gap-1.5 font-inter text-xs text-[#8b0000] border border-[#8b0000]/30 px-3 py-2 hover:bg-[#8b0000]/10 transition-colors"
+          >
+            <Plus className="w-3 h-3" />
+            Add Order
+          </button>
+        </div>
+
+        <div className="space-y-2">
+          {orders.map((order, i) => (
+            <motion.div
+              key={order.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.04 }}
+              className="flex items-center gap-3 border border-white/10 bg-[#0a0a0a] px-4 py-3 hover:border-white/20 transition-colors"
+            >
+              {/* Order Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="font-inter text-[10px] text-white/30 tracking-widest">{order.id}</span>
+                  <span className={`font-inter text-[10px] uppercase tracking-wider border px-2 py-0.5 ${STAGE_COLORS[order.stage]}`}>
+                    {order.stage}
+                  </span>
+                </div>
+                <p className="font-inter text-sm text-white font-medium mt-0.5 truncate">{order.product}</p>
+                <p className="font-inter text-xs text-white/40">{order.customer}</p>
+              </div>
+
+              {/* Stage Selector */}
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <select
+                  value={order.stage}
+                  onChange={e => updateStage(order.id, e.target.value)}
+                  className="font-inter text-xs bg-[#111] border border-white/10 text-white/70 px-2 py-2 focus:outline-none focus:border-[#8b0000]/50 cursor-pointer max-w-[120px] sm:max-w-none"
+                >
+                  {STAGES.map(s => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => deleteOrder(order.id)}
+                  className="p-2 text-white/20 hover:text-red-400 transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </motion.div>
+          ))}
+
+          {orders.length === 0 && (
+            <div className="text-center py-12 border border-white/5">
+              <p className="font-inter text-xs text-white/20">No orders yet. Add one above.</p>
+            </div>
+          )}
+        </div>
+
+        <p className="font-inter text-[10px] text-white/15 text-center mt-8">
+          Data stored in browser localStorage · No server calls
+        </p>
       </main>
     </div>
   );

@@ -1,125 +1,90 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import HeroSection from '@/components/storefront/HeroSection';
-import ProductSection from '@/components/storefront/ProductSection';
-import CustomOrderSection from '@/components/storefront/CustomOrderSection';
-import OrderTrackingSection from '@/components/storefront/OrderTrackingSection';
+import ProductGrid from '@/components/storefront/ProductGrid';
+import CustomGearSection from '@/components/storefront/CustomGearSection';
 import CheckoutModal from '@/components/storefront/CheckoutModal';
-import Footer from '@/components/storefront/Footer';
 
 const PRODUCTS = [
   {
     id: 1,
-    name: 'Midnight Strangle Rashguard',
-    price: 1899,
-    category: 'rashguard',
-    status: 'pre-order',
+    name: 'No Gi SET',
+    subtitle: 'Rashguard + Shorts',
+    edition: 'Standard',
+    fbLink: 'https://m.me/yourpage',
     image: 'https://images.unsplash.com/photo-1517438476312-10d79c077509?w=600&q=80',
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-    drop: 1
   },
   {
     id: 2,
-    name: 'V2 Fight Shorts',
-    price: 1499,
-    category: 'shorts',
-    status: 'available',
-    image: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&q=80',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    drop: 2
+    name: 'Rashguard',
+    subtitle: 'Classic Logo',
+    edition: 'Standard',
+    fbLink: 'https://m.me/yourpage',
+    image: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80',
   },
   {
     id: 3,
-    name: 'Chokepoint Logo Tee',
-    price: 799,
-    category: 'apparel',
-    status: 'available',
+    name: 'Gi',
+    subtitle: 'Heavyweight',
+    edition: 'Standard',
+    fbLink: 'https://m.me/yourpage',
+    image: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&q=80',
+  },
+  {
+    id: 4,
+    name: 'Pilipinas SET',
+    subtitle: 'National Edition',
+    edition: 'Limited',
+    fbLink: 'https://m.me/yourpage',
     image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80',
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-    drop: 2
-  }
+  },
+  {
+    id: 5,
+    name: 'Grimthorn SET',
+    subtitle: 'Limited Edition',
+    edition: 'Rare',
+    fbLink: 'https://m.me/yourpage',
+    image: 'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=600&q=80',
+  },
 ];
 
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedSize, setSelectedSize] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleBuy = (product, size) => {
-    setSelectedProduct(product);
-    setSelectedSize(size);
-    setIsModalOpen(true);
-  };
-
-  const drop1Products = PRODUCTS.filter(p => p.drop === 1);
-  const drop2Products = PRODUCTS.filter(p => p.drop === 2);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-          
-          .font-blackletter {
-            font-family: 'UnifrakturMaguntia', cursive;
-          }
-          
-          .font-body {
-            font-family: 'Inter', sans-serif;
-          }
-          
-          .neon-glow {
-            text-shadow: 0 0 10px #FF0A0A, 0 0 20px #FF0A0A, 0 0 40px #FF0A0A;
-          }
-          
-          .neon-border {
-            box-shadow: 0 0 15px rgba(255, 10, 10, 0.3), inset 0 0 15px rgba(255, 10, 10, 0.1);
-          }
-          
-          .scanline {
-            background: repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 2px,
-              rgba(255, 10, 10, 0.03) 2px,
-              rgba(255, 10, 10, 0.03) 4px
-            );
-          }
-        `}
-      </style>
-
-      <div className="scanline fixed inset-0 pointer-events-none z-50" />
+    <div className="min-h-screen bg-[#050505] text-white font-inter">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@300;400;500;600;700;800&display=swap');
+        .font-gothic { font-family: 'UnifrakturMaguntia', cursive; }
+        .font-inter { font-family: 'Inter', sans-serif; }
+        * { box-sizing: border-box; }
+      `}</style>
 
       <HeroSection />
-      
-      <ProductSection 
-        title="DROP 01" 
-        subtitle="RASHGUARDS"
-        products={drop1Products}
-        onBuy={handleBuy}
-      />
-      
-      <ProductSection 
-        title="DROP 02" 
-        subtitle="SHORTS & APPAREL"
-        products={drop2Products}
-        onBuy={handleBuy}
-      />
-      
-      <CustomOrderSection />
-      
-      <OrderTrackingSection />
-      
-      <Footer />
+      <ProductGrid products={PRODUCTS} onOrder={setSelectedProduct} />
+      <CustomGearSection />
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-8 px-4 text-center">
+        <p className="font-gothic text-2xl text-[#8b0000] mb-1">Chokepoint</p>
+        <p className="text-xs text-white/30 tracking-widest uppercase font-inter">Fightwear</p>
+        <div className="mt-6">
+          <Link
+            to={createPageUrl('Staff')}
+            className="text-[10px] text-white/10 hover:text-white/30 transition-colors font-inter tracking-widest uppercase"
+          >
+            System Access
+          </Link>
+        </div>
+      </footer>
 
       <AnimatePresence>
-        {isModalOpen && (
-          <CheckoutModal 
+        {selectedProduct && (
+          <CheckoutModal
             product={selectedProduct}
-            size={selectedSize}
-            onClose={() => setIsModalOpen(false)}
+            onClose={() => setSelectedProduct(null)}
           />
         )}
       </AnimatePresence>
