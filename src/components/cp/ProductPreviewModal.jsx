@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Tag, Package, AlertCircle } from 'lucide-react';
+import { X, Package, Eye } from 'lucide-react';
 
 export default function ProductPreviewModal({ product, onClose }) {
   if (!product) return null;
@@ -80,5 +80,3 @@ export default function ProductPreviewModal({ product, onClose }) {
     </motion.div>
   );
 }
-
-import { Eye } from 'lucide-react';
