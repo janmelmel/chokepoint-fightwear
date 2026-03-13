@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
-import { LayoutDashboard, ShoppingBag, Package, TrendingUp, Clock, Truck, CheckCircle, AlertCircle } from 'lucide-react';
+import { ShoppingBag, Package, TrendingUp, Clock, Truck, CheckCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
