@@ -79,6 +79,12 @@ export default function StaffProducts() {
     await loadData();
   };
 
+  const deleteProduct = async (id) => {
+    if (!window.confirm('Permanently delete this product? This cannot be undone.')) return;
+    await base44.entities.Product.delete(id);
+    await loadData();
+  };
+
   const toggleSize = (s) => setForm((f) => ({ ...f, sizes: f.sizes.includes(s) ? f.sizes.filter((x) => x !== s) : [...f.sizes, s] }));
 
   return (
