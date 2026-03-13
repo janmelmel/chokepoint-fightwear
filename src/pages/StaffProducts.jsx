@@ -5,12 +5,12 @@ import AdminSidebar from '@/components/cp/AdminSidebar';
 import ProductPreviewModal from '@/components/cp/ProductPreviewModal';
 import { Plus, Eye, Archive, Edit2, CheckCircle, Clock, X, Upload } from 'lucide-react';
 
-const SIZES = ['XS','S','M','L','XL','XXL','2XL','3XL'];
+const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL'];
 
 const STATUS_STYLE = {
   'Draft': 'text-[#555] border-[#333]',
   'Pending Review': 'text-yellow-400 border-yellow-400/30',
-  'Live': 'text-green-400 border-green-400/30',
+  'Live': 'text-green-400 border-green-400/30'
 };
 
 export default function StaffProducts() {
@@ -24,7 +24,7 @@ export default function StaffProducts() {
   const [form, setForm] = useState({
     name: '', category_id: '', price: '', description: '',
     images: [], status: 'Draft', is_preorder: false,
-    stock_limit: 0, sizes: [], edition: '',
+    stock_limit: 0, sizes: [], edition: ''
   });
 
   useEffect(() => {
@@ -38,11 +38,11 @@ export default function StaffProducts() {
   const loadData = async () => {
     setLoading(true);
     const [p, c] = await Promise.all([
-      base44.entities.Product.filter({ is_archived: false }),
-      base44.entities.Category.list(),
-    ]);
-    const catMap = Object.fromEntries(c.map(cat => [cat.id, cat.name]));
-    setProducts(p.map(prod => ({ ...prod, category_name: catMap[prod.category_id] || '—' })));
+    base44.entities.Product.filter({ is_archived: false }),
+    base44.entities.Category.list()]
+    );
+    const catMap = Object.fromEntries(c.map((cat) => [cat.id, cat.name]));
+    setProducts(p.map((prod) => ({ ...prod, category_name: catMap[prod.category_id] || '—' })));
     setCategories(c);
     setLoading(false);
   };
@@ -63,8 +63,8 @@ export default function StaffProducts() {
 
   const handleSave = async () => {
     const data = { ...form, price: Number(form.price), stock_limit: Number(form.stock_limit) };
-    if (editProduct) await base44.entities.Product.update(editProduct.id, data);
-    else await base44.entities.Product.create(data);
+    if (editProduct) await base44.entities.Product.update(editProduct.id, data);else
+    await base44.entities.Product.create(data);
     setShowForm(false);
     await loadData();
   };
@@ -79,7 +79,7 @@ export default function StaffProducts() {
     await loadData();
   };
 
-  const toggleSize = (s) => setForm(f => ({ ...f, sizes: f.sizes.includes(s) ? f.sizes.filter(x => x !== s) : [...f.sizes, s] }));
+  const toggleSize = (s) => setForm((f) => ({ ...f, sizes: f.sizes.includes(s) ? f.sizes.filter((x) => x !== s) : [...f.sizes, s] }));
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex">
@@ -91,23 +91,23 @@ export default function StaffProducts() {
               <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Inventory</p>
               <h1 className="font-tactical text-4xl text-white">Products</h1>
             </div>
-            <button onClick={openCreate} className="btn-glow-orange px-5 py-3 font-mono-ui text-xs tracking-widest uppercase flex items-center gap-2">
+            <button onClick={openCreate} className="bg-[#1a0505] text-slate-50 px-5 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange flex items-center gap-2">
               <Plus className="w-4 h-4" /> New Product
             </button>
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {loading ?
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[...Array(6)].map((_, i) => <div key={i} className="card-tactical h-48 animate-pulse" />)}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {products.map(p => (
-                <div key={p.id} className="card-tactical overflow-hidden">
+            </div> :
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {products.map((p) =>
+            <div key={p.id} className="card-tactical overflow-hidden">
                   <div className="aspect-video bg-[#0d0d0d] relative">
-                    {p.images?.[0]
-                      ? <img src={p.images[0]} className="w-full h-full object-cover opacity-70" />
-                      : <div className="w-full h-full flex items-center justify-center"><span className="font-tactical text-4xl text-[#1a1a1a]">CP</span></div>}
+                    {p.images?.[0] ?
+                <img src={p.images[0]} className="w-full h-full object-cover opacity-70" /> :
+                <div className="w-full h-full flex items-center justify-center"><span className="font-tactical text-4xl text-[#1a1a1a]">CP</span></div>}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
                   </div>
                   <div className="p-4">
@@ -128,43 +128,43 @@ export default function StaffProducts() {
                       <button onClick={() => openEdit(p)} className="btn-glow-white p-2 flex-shrink-0" title="Edit">
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
-                      {isAdmin && p.status === 'Pending Review' && (
-                        <button onClick={() => approve(p.id)} className="btn-glow-orange flex-1 py-2 font-mono-ui text-[10px] tracking-widest uppercase flex items-center justify-center gap-1">
+                      {isAdmin && p.status === 'Pending Review' &&
+                  <button onClick={() => approve(p.id)} className="btn-glow-orange flex-1 py-2 font-mono-ui text-[10px] tracking-widest uppercase flex items-center justify-center gap-1">
                           <CheckCircle className="w-3 h-3" /> Approve
                         </button>
-                      )}
-                      {!isAdmin && p.status === 'Draft' && (
-                        <button onClick={() => base44.entities.Product.update(p.id, { status: 'Pending Review' }).then(loadData)}
-                          className="btn-glow-white flex-1 py-2 font-mono-ui text-[10px] tracking-widest uppercase flex items-center justify-center gap-1">
+                  }
+                      {!isAdmin && p.status === 'Draft' &&
+                  <button onClick={() => base44.entities.Product.update(p.id, { status: 'Pending Review' }).then(loadData)}
+                  className="btn-glow-white flex-1 py-2 font-mono-ui text-[10px] tracking-widest uppercase flex items-center justify-center gap-1">
                           <Clock className="w-3 h-3" /> Submit Review
                         </button>
-                      )}
+                  }
                       <button onClick={() => archive(p.id)} className="btn-glow-red p-2 flex-shrink-0" title="Archive">
                         <Archive className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
                 </div>
-              ))}
-              {products.length === 0 && (
-                <div className="col-span-full text-center py-20">
+            )}
+              {products.length === 0 &&
+            <div className="col-span-full text-center py-20">
                   <p className="font-mono-ui text-[#333] text-sm">No products. Create one to get started.</p>
                 </div>
-              )}
+            }
             </div>
-          )}
+          }
         </div>
       </div>
 
       {/* Product Form Modal */}
       <AnimatePresence>
-        {showForm && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            onClick={() => setShowForm(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+        {showForm &&
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        onClick={() => setShowForm(false)}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
-              onClick={e => e.stopPropagation()}
-              className="w-full max-w-lg bg-[#111] border border-[#333] max-h-[90vh] overflow-y-auto scrollbar-tactical">
+          onClick={(e) => e.stopPropagation()}
+          className="w-full max-w-lg bg-[#111] border border-[#333] max-h-[90vh] overflow-y-auto scrollbar-tactical">
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#222]">
                 <h2 className="font-tactical text-2xl text-white">{editProduct ? 'Edit Product' : 'New Product'}</h2>
                 <button onClick={() => setShowForm(false)} className="text-[#555] hover:text-white"><X className="w-5 h-5" /></button>
@@ -173,29 +173,29 @@ export default function StaffProducts() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Product Name *</label>
-                    <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                      className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60"
-                      placeholder="e.g. No Gi Rashguard V3" />
+                    <input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                  className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60"
+                  placeholder="e.g. No Gi Rashguard V3" />
                   </div>
                   <div>
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Price (₱) *</label>
-                    <input type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
-                      className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60"
-                      placeholder="1899" />
+                    <input type="number" value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+                  className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60"
+                  placeholder="1899" />
                   </div>
                   <div>
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Category</label>
-                    <select value={form.category_id} onChange={e => setForm(f => ({ ...f, category_id: e.target.value }))}
-                      className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60">
+                    <select value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: e.target.value }))}
+                  className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60">
                       <option value="">None</option>
-                      {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Status</label>
-                    <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
-                      disabled={!isAdmin && editProduct?.status === 'Live'}
-                      className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 disabled:opacity-50">
+                    <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
+                  disabled={!isAdmin && editProduct?.status === 'Live'}
+                  className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 disabled:opacity-50">
                       <option>Draft</option>
                       <option>Pending Review</option>
                       {isAdmin && <option>Live</option>}
@@ -203,42 +203,42 @@ export default function StaffProducts() {
                   </div>
                   <div>
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Stock Limit (0=unlimited)</label>
-                    <input type="number" value={form.stock_limit} onChange={e => setForm(f => ({ ...f, stock_limit: e.target.value }))}
-                      className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
+                    <input type="number" value={form.stock_limit} onChange={(e) => setForm((f) => ({ ...f, stock_limit: e.target.value }))}
+                  className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
                   </div>
                   <div className="col-span-2">
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Edition / Tag</label>
-                    <input value={form.edition} onChange={e => setForm(f => ({ ...f, edition: e.target.value }))}
-                      className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60"
-                      placeholder="e.g. Limited Edition, National Series" />
+                    <input value={form.edition} onChange={(e) => setForm((f) => ({ ...f, edition: e.target.value }))}
+                  className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60"
+                  placeholder="e.g. Limited Edition, National Series" />
                   </div>
                   <div className="col-span-2">
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Image URLs (one per line)</label>
                     <textarea value={form.images.join('\n')}
-                      onChange={e => setForm(f => ({ ...f, images: e.target.value.split('\n').filter(Boolean) }))}
-                      rows={3} className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 resize-none"
-                      placeholder="https://..." />
+                  onChange={(e) => setForm((f) => ({ ...f, images: e.target.value.split('\n').filter(Boolean) }))}
+                  rows={3} className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 resize-none"
+                  placeholder="https://..." />
                   </div>
                   <div className="col-span-2">
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Description</label>
-                    <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                      rows={3} className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 resize-none" />
+                    <textarea value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                  rows={3} className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 resize-none" />
                   </div>
                   <div className="col-span-2">
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-2">Available Sizes</label>
                     <div className="flex flex-wrap gap-2">
-                      {SIZES.map(s => (
-                        <button key={s} type="button" onClick={() => toggleSize(s)}
-                          className={`px-3 py-1.5 font-mono-ui text-xs border transition-all ${form.sizes.includes(s) ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]' : 'border-[#333] text-[#555] hover:border-[#555]'}`}>
+                      {SIZES.map((s) =>
+                    <button key={s} type="button" onClick={() => toggleSize(s)}
+                    className={`px-3 py-1.5 font-mono-ui text-xs border transition-all ${form.sizes.includes(s) ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]' : 'border-[#333] text-[#555] hover:border-[#555]'}`}>
                           {s}
                         </button>
-                      ))}
+                    )}
                     </div>
                   </div>
                   <div className="col-span-2 flex items-center gap-3">
                     <input type="checkbox" id="preorder" checked={form.is_preorder}
-                      onChange={e => setForm(f => ({ ...f, is_preorder: e.target.checked }))}
-                      className="accent-[#ff8c00]" />
+                  onChange={(e) => setForm((f) => ({ ...f, is_preorder: e.target.checked }))}
+                  className="accent-[#ff8c00]" />
                     <label htmlFor="preorder" className="font-mono-ui text-xs text-[#888] uppercase tracking-wider cursor-pointer">
                       Is Pre-Order
                     </label>
@@ -253,12 +253,12 @@ export default function StaffProducts() {
               </div>
             </motion.div>
           </motion.div>
-        )}
+        }
       </AnimatePresence>
 
       <AnimatePresence>
         {previewProduct && <ProductPreviewModal product={previewProduct} onClose={() => setPreviewProduct(null)} />}
       </AnimatePresence>
-    </div>
-  );
+    </div>);
+
 }
