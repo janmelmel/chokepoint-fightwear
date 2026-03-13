@@ -1,80 +1,175 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import HeroSection from '@/components/storefront/HeroSection';
-import ProductGrid from '@/components/storefront/ProductGrid';
-import CustomGearSection from '@/components/storefront/CustomGearSection';
-import CheckoutModal from '@/components/storefront/CheckoutModal';
-
-const PRODUCTS = [
-  {
-    id: 1,
-    name: 'No Gi SET',
-    subtitle: 'Rashguard + Shorts',
-    edition: 'Standard',
-    fbLink: 'https://m.me/yourpage',
-    image: 'https://images.unsplash.com/photo-1517438476312-10d79c077509?w=600&q=80',
-  },
-  {
-    id: 2,
-    name: 'Rashguard',
-    subtitle: 'Classic Logo',
-    edition: 'Standard',
-    fbLink: 'https://m.me/yourpage',
-    image: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80',
-  },
-  {
-    id: 3,
-    name: 'Gi',
-    subtitle: 'Heavyweight',
-    edition: 'Standard',
-    fbLink: 'https://m.me/yourpage',
-    image: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&q=80',
-  },
-  {
-    id: 4,
-    name: 'Pilipinas SET',
-    subtitle: 'National Edition',
-    edition: 'Limited',
-    fbLink: 'https://m.me/yourpage',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80',
-  },
-  {
-    id: 5,
-    name: 'Grimthorn SET',
-    subtitle: 'Limited Edition',
-    edition: 'Rare',
-    fbLink: 'https://m.me/yourpage',
-    image: 'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=600&q=80',
-  },
-];
+import { base44 } from '@/api/base44Client';
+import StickyHeader from '@/components/cp/StickyHeader';
+import ProductCard from '@/components/cp/ProductCard';
+import CheckoutModal from '@/components/cp/CheckoutModal';
+import CPLogo from '@/components/cp/CPLogo';
+import { ChevronDown, Send, Shield } from 'lucide-react';
 
 export default function Home() {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [customForm, setCustomForm] = useState({ name: '', email: '', details: '' });
+  const [customSent, setCustomSent] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    loadData();
+  }, [refreshKey]);
+
+  const loadData = async () => {
+    setLoading(true);
+    const [prods, cats] = await Promise.all([
+      base44.entities.Product.filter({ status: 'Live', is_archived: false }),
+      base44.entities.Category.filter({ is_active: true }),
+    ]);
+    const catMap = Object.fromEntries(cats.map(c => [c.id, c.name]));
+    setProducts(prods.map(p => ({ ...p, category_name: catMap[p.category_id] || '' })));
+    setCategories(cats);
+    setLoading(false);
+  };
+
+  const grouped = categories.reduce((acc, cat) => {
+    const items = products.filter(p => p.category_id === cat.id);
+    if (items.length) acc.push({ cat, items });
+    return acc;
+  }, []);
+
+  const uncategorized = products.filter(p => !p.category_id || !categories.find(c => c.id === p.category_id));
+  if (uncategorized.length) grouped.push({ cat: { id: 'misc', name: 'All Gear', slug: 'misc' }, items: uncategorized });
+
+  const handleCustomSubmit = async (e) => {
+    e.preventDefault();
+    const res = await fetch('https://formspree.io/f/yourformid', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(customForm),
+    });
+    if (res.ok) { setCustomSent(true); setCustomForm({ name: '', email: '', details: '' }); }
+  };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-inter">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@300;400;500;600;700;800&display=swap');
-        .font-gothic { font-family: 'UnifrakturMaguntia', cursive; }
-        .font-inter { font-family: 'Inter', sans-serif; }
-        * { box-sizing: border-box; }
-      `}</style>
+    <div className="min-h-screen bg-[#0a0a0a]">
+      <StickyHeader onCartClick={() => {}} />
 
-      <HeroSection />
-      <ProductGrid products={PRODUCTS} onOrder={setSelectedProduct} />
-      <CustomGearSection />
+      {/* HERO */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
+        <div className="absolute inset-0"
+          style={{ backgroundImage: 'radial-gradient(ellipse at center, #1a0000 0%, #0a0a0a 70%)', opacity: 0.6 }} />
+        <div className="absolute inset-0 opacity-[0.03]"
+          style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 40px,#fff 40px,#fff 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,#fff 40px,#fff 41px)' }} />
 
-      {/* Footer */}
-      <footer className="border-t border-white/10 py-8 px-4 text-center">
-        <p className="font-gothic text-2xl text-[#8b0000] mb-1">Chokepoint</p>
-        <p className="text-xs text-white/30 tracking-widest uppercase font-inter">Fightwear</p>
-        <div className="mt-6">
-          <Link
-            to={createPageUrl('Staff')}
-            className="text-[10px] text-white/10 hover:text-white/30 transition-colors font-inter tracking-widest uppercase"
-          >
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
+          className="relative z-10 text-center">
+          <CPLogo size={80} variant="white" />
+          <h1 className="font-tactical text-6xl sm:text-8xl md:text-9xl text-white mt-6 leading-none">
+            Chokepoint
+          </h1>
+          <p className="font-mono-ui text-[11px] tracking-[0.5em] text-[#ff0000] uppercase mt-3">
+            No Escape From Chokepoint
+          </p>
+          <div className="w-24 h-px bg-[#ff8c00] mx-auto mt-6 mb-8" />
+          <a href="#gear"
+            className="btn-glow-orange font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 inline-block">
+            Shop the Drop
+          </a>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.8 }}>
+            <ChevronDown className="w-5 h-5 text-[#444]" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* PRODUCTS */}
+      <main id="gear" className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="card-tactical aspect-square animate-pulse" />
+            ))}
+          </div>
+        ) : grouped.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="font-mono-ui text-[#444] text-sm">No products live yet. Check back soon.</p>
+          </div>
+        ) : (
+          grouped.map(({ cat, items }) => (
+            <section key={cat.id} id={cat.slug || cat.id} className="mb-16">
+              <div className="flex items-center gap-4 mb-8">
+                <div>
+                  <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Collection</p>
+                  <h2 className="font-tactical text-4xl sm:text-5xl text-white">{cat.name}</h2>
+                </div>
+                <div className="flex-1 h-px bg-[#1a1a1a]" />
+                <span className="font-mono-ui text-[11px] text-[#444]">{items.length} items</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {items.map((p, i) => (
+                  <motion.div key={p.id}
+                    initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
+                    <ProductCard product={p} onOrder={setSelectedProduct} />
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+          ))
+        )}
+
+        {/* CUSTOM GEAR */}
+        <section id="custom" className="border-t border-[#1a1a1a] pt-16 max-w-2xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest mb-2">Bespoke</p>
+            <h2 className="font-tactical text-4xl sm:text-5xl text-white">Custom Gear</h2>
+            <div className="w-12 h-px bg-[#333] mx-auto mt-4 mb-4" />
+            <p className="font-inter text-sm text-[#666]">Team kits, custom patches, academy sets. Min. 10 pieces.</p>
+          </div>
+
+          {customSent ? (
+            <div className="text-center py-10 border border-[#333] bg-[#111]">
+              <Shield className="w-8 h-8 text-[#ff8c00] mx-auto mb-3" />
+              <p className="font-tactical text-2xl text-white">Request Received</p>
+              <p className="font-mono-ui text-xs text-[#555] mt-1">We'll reach out within 24–48 hours.</p>
+              <button onClick={() => setCustomSent(false)} className="mt-4 font-mono-ui text-[10px] text-[#444] hover:text-[#888] underline">
+                Send another
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleCustomSubmit} className="space-y-3">
+              <input value={customForm.name} onChange={e => setCustomForm(p => ({ ...p, name: e.target.value }))}
+                required placeholder="Your Name"
+                className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
+              <input value={customForm.email} onChange={e => setCustomForm(p => ({ ...p, email: e.target.value }))}
+                required type="email" placeholder="Email Address"
+                className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
+              <textarea value={customForm.details} onChange={e => setCustomForm(p => ({ ...p, details: e.target.value }))}
+                required rows={4} placeholder="Describe your design, quantity, team name..."
+                className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333] resize-none" />
+              <button type="submit"
+                className="btn-glow-orange w-full py-4 font-mono-ui text-xs tracking-[0.3em] uppercase flex items-center justify-center gap-2">
+                <Send className="w-4 h-4" /> Submit Request
+              </button>
+            </form>
+          )}
+        </section>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="border-t border-[#1a1a1a] py-10 px-4 text-center">
+        <CPLogo size={32} variant="white" />
+        <p className="font-mono-ui text-[10px] text-[#333] tracking-widest uppercase mt-3">
+          © 2026 Chokepoint Fightwear
+        </p>
+        <div className="mt-4">
+          <Link to={createPageUrl('Staff')} className="font-mono-ui text-[10px] text-[#222] hover:text-[#555] tracking-widest uppercase transition-colors">
             System Access
           </Link>
         </div>
@@ -82,10 +177,8 @@ export default function Home() {
 
       <AnimatePresence>
         {selectedProduct && (
-          <CheckoutModal
-            product={selectedProduct}
-            onClose={() => setSelectedProduct(null)}
-          />
+          <CheckoutModal product={selectedProduct} onClose={() => setSelectedProduct(null)}
+            onOrderPlaced={() => { setSelectedProduct(null); setRefreshKey(k => k + 1); }} />
         )}
       </AnimatePresence>
     </div>
