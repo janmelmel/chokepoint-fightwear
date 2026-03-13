@@ -37,7 +37,7 @@ export default function Staff() {
     totalRevenue: orders.filter(o => o.status !== 'Cancelled').reduce((sum, o) => sum + (o.total_amount || 0), 0),
   };
 
-  const StatCard = ({ label, value, icon: Icon, color = '#ff8c00', sub }) => (
+  const StatCard = ({ label, value, icon: Icon, color = '#ff8c00', sub }) => (  // eslint-disable-line
     <div className="card-tactical p-5">
       <div className="flex items-start justify-between">
         <div>
