@@ -87,6 +87,23 @@ export default function StaffProducts() {
 
   const toggleSize = (s) => setForm((f) => ({ ...f, sizes: f.sizes.includes(s) ? f.sizes.filter((x) => x !== s) : [...f.sizes, s] }));
 
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const handleImageUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setUploadingImage(true);
+    const urls = await Promise.all(files.map(async (file) => {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      return file_url;
+    }));
+    setForm((f) => ({ ...f, images: [...f.images, ...urls] }));
+    setUploadingImage(false);
+    e.target.value = '';
+  };
+
+  const removeImage = (idx) => setForm((f) => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex">
       <AdminSidebar user={user} />
