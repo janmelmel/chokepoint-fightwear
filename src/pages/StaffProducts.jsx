@@ -145,9 +145,14 @@ export default function StaffProducts() {
                           <Clock className="w-3 h-3" /> Submit Review
                         </button>
                   }
-                      <button onClick={() => archive(p.id)} className="btn-glow-red p-2 flex-shrink-0" title="Archive">
+                      <button onClick={() => archive(p.id)} className="btn-glow-white p-2 flex-shrink-0" title="Archive">
                         <Archive className="w-3.5 h-3.5" />
                       </button>
+                      {isAdmin &&
+                        <button onClick={() => deleteProduct(p.id)} className="btn-glow-red p-2 flex-shrink-0" title="Delete permanently">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      }
                     </div>
                   </div>
                 </div>
