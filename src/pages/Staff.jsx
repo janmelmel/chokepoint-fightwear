@@ -1,217 +1,120 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { base44 } from '@/api/base44Client';
+import AdminSidebar from '@/components/cp/AdminSidebar';
+import { LayoutDashboard, ShoppingBag, Package, TrendingUp, Clock, Truck, CheckCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ArrowLeft, Plus, Trash2, ChevronRight, Lock } from 'lucide-react';
-
-const STAGES = ['Processing', 'Packing', 'Out for Delivery', 'Completed'];
-
-const STAGE_COLORS = {
-  'Processing': 'text-yellow-400 border-yellow-400/30 bg-yellow-400/5',
-  'Packing': 'text-blue-400 border-blue-400/30 bg-blue-400/5',
-  'Out for Delivery': 'text-orange-400 border-orange-400/30 bg-orange-400/5',
-  'Completed': 'text-green-400 border-green-400/30 bg-green-400/5',
-};
-
-const MOCK_ORDERS = [
-  { id: 'CP-001', product: 'No Gi SET', customer: 'Juan D.', stage: 'Processing' },
-  { id: 'CP-002', product: 'Rashguard (Classic Logo)', customer: 'Maria S.', stage: 'Packing' },
-  { id: 'CP-003', product: 'Grimthorn SET', customer: 'Pedro R.', stage: 'Out for Delivery' },
-  { id: 'CP-004', product: 'Pilipinas SET', customer: 'Ana L.', stage: 'Completed' },
-];
-
-const STAFF_PASSWORD = 'chokepoint2026';
 
 export default function Staff() {
-  const [authed, setAuthed] = useState(false);
-  const [pw, setPw] = useState('');
-  const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem('cp_orders');
-    setOrders(saved ? JSON.parse(saved) : MOCK_ORDERS);
+    (async () => {
+      const u = await base44.auth.me();
+      setUser(u);
+      const [o, p] = await Promise.all([
+        base44.entities.Order.list('-created_date', 20),
+        base44.entities.Product.filter({ is_archived: false }),
+      ]);
+      setOrders(o);
+      setProducts(p);
+      setLoading(false);
+    })();
   }, []);
 
-  const save = (updated) => {
-    setOrders(updated);
-    localStorage.setItem('cp_orders', JSON.stringify(updated));
+  const isAdmin = user?.role === 'admin';
+
+  const stats = {
+    processing: orders.filter(o => o.status === 'Processing').length,
+    packing: orders.filter(o => o.status === 'Packing').length,
+    outForDelivery: orders.filter(o => o.status === 'Out for Delivery').length,
+    completed: orders.filter(o => o.status === 'Completed').length,
+    liveProducts: products.filter(p => p.status === 'Live').length,
+    pendingReview: products.filter(p => p.status === 'Pending Review').length,
+    totalRevenue: orders.filter(o => o.status !== 'Cancelled').reduce((sum, o) => sum + (o.total_amount || 0), 0),
   };
 
-  const updateStage = (id, stage) => {
-    save(orders.map(o => o.id === id ? { ...o, stage } : o));
-  };
-
-  const deleteOrder = (id) => {
-    save(orders.filter(o => o.id !== id));
-  };
-
-  const addOrder = () => {
-    const newOrder = {
-      id: `CP-${String(orders.length + 1).padStart(3, '0')}`,
-      product: 'New Order',
-      customer: 'Customer',
-      stage: 'Processing',
-    };
-    save([...orders, newOrder]);
-  };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (pw === STAFF_PASSWORD) {
-      setAuthed(true);
-      setError('');
-    } else {
-      setError('Incorrect password');
-    }
-  };
-
-  if (!authed) {
-    return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center px-4">
-        <style>{`@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@400;500;600&display=swap');
-          .font-gothic { font-family: 'UnifrakturMaguntia', cursive; }
-          .font-inter { font-family: 'Inter', sans-serif; }
-        `}</style>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-xs"
-        >
-          <div className="text-center mb-8">
-            <Lock className="w-6 h-6 text-[#8b0000] mx-auto mb-4" />
-            <h1 className="font-gothic text-3xl text-white">System Access</h1>
-            <p className="font-inter text-xs text-white/30 mt-2 tracking-widest uppercase">Staff Only</p>
-          </div>
-          <form onSubmit={handleLogin} className="space-y-3">
-            <input
-              type="password"
-              value={pw}
-              onChange={e => setPw(e.target.value)}
-              placeholder="Password"
-              className="w-full font-inter text-sm text-white bg-[#0a0a0a] border border-white/10 px-4 py-3 text-center tracking-widest focus:outline-none focus:border-[#8b0000]/60 placeholder-white/20"
-            />
-            {error && <p className="font-inter text-xs text-[#8b0000] text-center">{error}</p>}
-            <button
-              type="submit"
-              className="w-full font-inter text-xs tracking-[0.3em] uppercase py-3 bg-[#8b0000] text-white hover:bg-[#a80000] transition-colors"
-            >
-              Enter
-            </button>
-          </form>
-          <Link to={createPageUrl('Home')} className="flex items-center justify-center gap-1 mt-8 font-inter text-xs text-white/20 hover:text-white/40 transition-colors">
-            <ArrowLeft className="w-3 h-3" />
-            Back to Store
-          </Link>
-        </motion.div>
+  const StatCard = ({ label, value, icon: Icon, color = '#ff8c00', sub }) => (
+    <div className="card-tactical p-5">
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{label}</p>
+          <p className="font-mono-ui text-3xl font-bold text-white mt-1">{value}</p>
+          {sub && <p className="font-mono-ui text-[10px] text-[#444] mt-1">{sub}</p>}
+        </div>
+        <Icon className="w-5 h-5" style={{ color }} />
       </div>
-    );
-  }
+    </div>
+  );
 
-  const stageCounts = STAGES.reduce((acc, s) => {
-    acc[s] = orders.filter(o => o.stage === s).length;
-    return acc;
-  }, {});
+  if (loading) return (
+    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <p className="font-mono-ui text-[#444] text-sm animate-pulse">Loading...</p>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-inter">
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@400;500;600;700&display=swap');
-        .font-gothic { font-family: 'UnifrakturMaguntia', cursive; }
-        .font-inter { font-family: 'Inter', sans-serif; }
-      `}</style>
+    <div className="min-h-screen bg-[#0a0a0a] flex">
+      <AdminSidebar user={user} />
+      <div className="flex-1 overflow-auto">
+        <div className="px-6 py-8 max-w-5xl">
+          <div className="mb-8">
+            <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Chokepoint</p>
+            <h1 className="font-tactical text-4xl text-white">Operations Dashboard</h1>
+          </div>
 
-      {/* Header */}
-      <header className="border-b border-white/10 px-4 sm:px-6 py-4 flex items-center justify-between">
-        <div>
-          <h1 className="font-gothic text-2xl text-white">Operations</h1>
-          <p className="font-inter text-[10px] text-white/30 uppercase tracking-widest">Chokepoint Staff</p>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link to={createPageUrl('Home')} className="font-inter text-xs text-white/30 hover:text-white/60 transition-colors">
-            View Store
-          </Link>
-          <button onClick={() => setAuthed(false)} className="font-inter text-xs text-white/30 hover:text-white/60 transition-colors border border-white/10 px-3 py-1.5">
-            Logout
-          </button>
-        </div>
-      </header>
+          {/* Order Stats */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+            <StatCard label="Processing" value={stats.processing} icon={Clock} color="#ff8c00" />
+            <StatCard label="Packing" value={stats.packing} icon={Package} color="#3b82f6" />
+            <StatCard label="Out for Delivery" value={stats.outForDelivery} icon={Truck} color="#ff8c00" />
+            <StatCard label="Completed" value={stats.completed} icon={CheckCircle} color="#22c55e" />
+          </div>
 
-      <main className="px-4 sm:px-6 py-8 max-w-4xl mx-auto">
-        {/* Stage Summary */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-          {STAGES.map((stage) => (
-            <div key={stage} className={`border px-4 py-4 ${STAGE_COLORS[stage]}`}>
-              <p className="text-2xl font-bold">{stageCounts[stage]}</p>
-              <p className="text-[10px] uppercase tracking-wider mt-1 opacity-70">{stage}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+            <StatCard label="Live Products" value={stats.liveProducts} icon={Package} color="#ff8c00" />
+            <StatCard label="Pending Review" value={stats.pendingReview} icon={AlertCircle} color="#ff0000"
+              sub={stats.pendingReview > 0 ? 'Needs admin approval' : ''} />
+            {isAdmin && (
+              <StatCard label="Total Revenue"
+                value={`₱${stats.totalRevenue.toLocaleString()}`}
+                icon={TrendingUp} color="#22c55e" sub="All time" />
+            )}
+          </div>
+
+          {/* Recent Orders */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-tactical text-2xl text-white">Recent Orders</h2>
+              <Link to={createPageUrl('StaffOrders')} className="font-mono-ui text-[10px] text-[#ff8c00] hover:text-white uppercase tracking-widest transition-colors">
+                View All →
+              </Link>
             </div>
-          ))}
-        </div>
-
-        {/* Orders List */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-gothic text-xl text-white">Order Stream</h2>
-          <button
-            onClick={addOrder}
-            className="flex items-center gap-1.5 font-inter text-xs text-[#8b0000] border border-[#8b0000]/30 px-3 py-2 hover:bg-[#8b0000]/10 transition-colors"
-          >
-            <Plus className="w-3 h-3" />
-            Add Order
-          </button>
-        </div>
-
-        <div className="space-y-2">
-          {orders.map((order, i) => (
-            <motion.div
-              key={order.id}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.04 }}
-              className="flex items-center gap-3 border border-white/10 bg-[#0a0a0a] px-4 py-3 hover:border-white/20 transition-colors"
-            >
-              {/* Order Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="font-inter text-[10px] text-white/30 tracking-widest">{order.id}</span>
-                  <span className={`font-inter text-[10px] uppercase tracking-wider border px-2 py-0.5 ${STAGE_COLORS[order.stage]}`}>
-                    {order.stage}
-                  </span>
+            <div className="space-y-2">
+              {orders.slice(0, 8).map(o => (
+                <div key={o.id} className="card-tactical px-4 py-3 flex items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-mono-ui text-xs text-white truncate">{o.customer_name}</p>
+                    <p className="font-mono-ui text-[10px] text-[#555] truncate">{o.product_name} · {o.size}</p>
+                  </div>
+                  <span className={`font-mono-ui text-[10px] uppercase tracking-wider px-2 py-1 border flex-shrink-0 ${
+                    o.status === 'Completed' ? 'border-green-500/30 text-green-400' :
+                    o.status === 'Out for Delivery' ? 'border-[#ff8c00]/30 text-[#ff8c00]' :
+                    o.status === 'Packing' ? 'border-blue-500/30 text-blue-400' :
+                    'border-[#333] text-[#666]'
+                  }`}>{o.status}</span>
                 </div>
-                <p className="font-inter text-sm text-white font-medium mt-0.5 truncate">{order.product}</p>
-                <p className="font-inter text-xs text-white/40">{order.customer}</p>
-              </div>
-
-              {/* Stage Selector */}
-              <div className="flex items-center gap-1 flex-shrink-0">
-                <select
-                  value={order.stage}
-                  onChange={e => updateStage(order.id, e.target.value)}
-                  className="font-inter text-xs bg-[#111] border border-white/10 text-white/70 px-2 py-2 focus:outline-none focus:border-[#8b0000]/50 cursor-pointer max-w-[120px] sm:max-w-none"
-                >
-                  {STAGES.map(s => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-                <button
-                  onClick={() => deleteOrder(order.id)}
-                  className="p-2 text-white/20 hover:text-red-400 transition-colors"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
-
-          {orders.length === 0 && (
-            <div className="text-center py-12 border border-white/5">
-              <p className="font-inter text-xs text-white/20">No orders yet. Add one above.</p>
+              ))}
+              {orders.length === 0 && (
+                <p className="font-mono-ui text-[#333] text-xs text-center py-8">No orders yet</p>
+              )}
             </div>
-          )}
+          </div>
         </div>
-
-        <p className="font-inter text-[10px] text-white/15 text-center mt-8">
-          Data stored in browser localStorage · No server calls
-        </p>
-      </main>
+      </div>
     </div>
   );
 }
