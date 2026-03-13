@@ -127,7 +127,7 @@ export default function StaffProducts() {
                         {p.status}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 mt-4">
+                    <div className="bg-transparent text-slate-50 mt-4 flex items-center gap-2">
                       <button onClick={() => setPreviewProduct(p)} className="btn-glow-white p-2 flex-shrink-0" title="Preview">
                         <Eye className="w-3.5 h-3.5" />
                       </button>
@@ -149,10 +149,10 @@ export default function StaffProducts() {
                         <Archive className="w-3.5 h-3.5" />
                       </button>
                       {isAdmin &&
-                        <button onClick={() => deleteProduct(p.id)} className="btn-glow-red p-2 flex-shrink-0" title="Delete permanently">
+                  <button onClick={() => deleteProduct(p.id)} className="btn-glow-red p-2 flex-shrink-0" title="Delete permanently">
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
-                      }
+                  }
                     </div>
                   </div>
                 </div>
