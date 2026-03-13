@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
 import ProductPreviewModal from '@/components/cp/ProductPreviewModal';
-import { Plus, Eye, Archive, Edit2, CheckCircle, Clock, X, Trash2 } from 'lucide-react';
+import { Plus, Eye, Archive, Edit2, CheckCircle, Clock, X, Trash2, ImagePlus, XCircle } from 'lucide-react';
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL'];
 
