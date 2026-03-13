@@ -241,11 +241,25 @@ export default function StaffProducts() {
                   placeholder="e.g. Limited Edition, National Series" />
                   </div>
                   <div className="col-span-2">
-                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Image URLs (one per line)</label>
-                    <textarea value={form.images.join('\n')}
-                  onChange={(e) => setForm((f) => ({ ...f, images: e.target.value.split('\n').filter(Boolean) }))}
-                  rows={3} className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 resize-none"
-                  placeholder="https://..." />
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-2">Images</label>
+                    {form.images.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {form.images.map((url, idx) => (
+                          <div key={idx} className="relative group w-20 h-20 border border-[#333] overflow-hidden">
+                            <img src={url} className="w-full h-full object-cover opacity-80" />
+                            <button type="button" onClick={() => removeImage(idx)}
+                              className="absolute top-0.5 right-0.5 text-white bg-black/70 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                              <XCircle className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <label className={`flex items-center gap-2 w-full border border-dashed border-[#444] px-4 py-3 font-mono-ui text-xs text-[#555] hover:border-[#ff8c00]/60 hover:text-[#ff8c00] transition-colors cursor-pointer ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
+                      <ImagePlus className="w-4 h-4" />
+                      {uploadingImage ? 'Uploading...' : 'Click to upload image(s)'}
+                      <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+                    </label>
                   </div>
                   <div className="col-span-2">
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Description</label>
