@@ -238,7 +238,7 @@ export default function StaffProducts() {
                   </div>
                   <div>
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Category</label>
-                    <select value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: e.target.value }))}
+                    <select value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: e.target.value, sizes: [] }))}
                   className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60">
                       <option value="">None</option>
                       {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
