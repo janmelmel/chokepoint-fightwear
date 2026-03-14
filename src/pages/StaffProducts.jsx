@@ -292,14 +292,29 @@ export default function StaffProducts() {
                   rows={3} className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 resize-none" />
                   </div>
                   <div className="col-span-2">
-                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-2">Available Sizes</label>
-                    <div className="flex flex-wrap gap-2">
-                      {SIZES.map((s) =>
-                    <button key={s} type="button" onClick={() => toggleSize(s)}
-                    className={`px-3 py-1.5 font-mono-ui text-xs border transition-all ${form.sizes.includes(s) ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]' : 'border-[#333] text-[#555] hover:border-[#555]'}`}>
-                          {s}
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Available Sizes</label>
+                      {form.sizes.length > 0 && (
+                        <button type="button" onClick={() => setForm(f => ({ ...f, sizes: [] }))}
+                          className="font-mono-ui text-[9px] text-[#555] hover:text-[#ff0000] uppercase tracking-wider transition-colors">
+                          Clear all
                         </button>
-                    )}
+                      )}
+                    </div>
+                    <div className="space-y-3">
+                      {getSizeGroups().map(group => (
+                        <div key={group.label}>
+                          <p className="font-mono-ui text-[9px] text-[#444] uppercase tracking-widest mb-1.5">{group.label}</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {group.sizes.map(s => (
+                              <button key={s} type="button" onClick={() => toggleSize(s)}
+                                className={`px-2.5 py-1 font-mono-ui text-[10px] border transition-all ${form.sizes.includes(s) ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]' : 'border-[#333] text-[#555] hover:border-[#555]'}`}>
+                                {s}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                   <div className="col-span-2 flex items-center gap-3">
