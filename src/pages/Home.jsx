@@ -54,7 +54,7 @@ export default function Home() {
       name: customForm.name,
       email: customForm.email,
       details: customForm.details,
-      status: 'New',
+      status: 'New'
     });
     setCustomForm({ name: '', email: '', details: '' });
     setCustomSent(true);
@@ -142,16 +142,16 @@ export default function Home() {
 
           <form onSubmit={handleCustomSubmit} className="space-y-3">
             <input value={customForm.name} onChange={(e) => setCustomForm((p) => ({ ...p, name: e.target.value }))}
-              required placeholder="Your Name"
-              className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
+            required placeholder="Your Name"
+            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
             <input value={customForm.email} onChange={(e) => setCustomForm((p) => ({ ...p, email: e.target.value }))}
-              required type="email" placeholder="Email Address"
-              className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
+            required type="email" placeholder="Email Address"
+            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
             <textarea value={customForm.details} onChange={(e) => setCustomForm((p) => ({ ...p, details: e.target.value }))}
-              required rows={4} placeholder="Describe your design, quantity, team name..."
-              className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333] resize-none" />
-            <button type="submit" disabled={customSubmitting}
-              className="btn-glow-orange w-full py-4 font-mono-ui text-xs tracking-[0.3em] uppercase flex items-center justify-center gap-2 disabled:opacity-50">
+            required rows={4} placeholder="Describe your design, quantity, team name..."
+            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333] resize-none" />
+            <button type="submit" disabled={customSubmitting} className="bg-green-600 text-green-50 py-4 text-xs font-mono-ui uppercase tracking-[0.3em] rounded-[40px] btn-glow-orange w-full flex items-center justify-center gap-2 disabled:opacity-50">
+
               <Send className="w-4 h-4" /> {customSubmitting ? 'Sending...' : 'Submit Request'}
             </button>
           </form>
@@ -173,16 +173,16 @@ export default function Home() {
 
       <AnimatePresence>
         {detailProduct &&
-          <ProductDetailModal product={detailProduct}
-            onClose={() => setDetailProduct(null)}
-            onOrder={(p) => { setDetailProduct(null); setSelectedProduct(p); }} />
+        <ProductDetailModal product={detailProduct}
+        onClose={() => setDetailProduct(null)}
+        onOrder={(p) => {setDetailProduct(null);setSelectedProduct(p);}} />
         }
         {selectedProduct &&
-          <CheckoutModal product={selectedProduct} onClose={() => setSelectedProduct(null)}
-            onOrderPlaced={() => { setSelectedProduct(null); setRefreshKey((k) => k + 1); }} />
+        <CheckoutModal product={selectedProduct} onClose={() => setSelectedProduct(null)}
+        onOrderPlaced={() => {setSelectedProduct(null);setRefreshKey((k) => k + 1);}} />
         }
         {customSent &&
-          <CustomRequestSuccessModal onClose={() => setCustomSent(false)} />
+        <CustomRequestSuccessModal onClose={() => setCustomSent(false)} />
         }
       </AnimatePresence>
     </div>);
