@@ -66,7 +66,7 @@ export default function Home() {
 
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
           className="relative z-10 text-center">
-          <h1 className="font-tactical text-6xl sm:text-8xl md:text-9xl text-white mt-6 leading-none">
+          <h1 style={{ fontFamily: "'Bitsumishi', sans-serif" }} className="text-6xl sm:text-8xl md:text-9xl text-white mt-6 leading-none uppercase">
             CHOKEPOINT
           </h1>
           <p className="font-mono-ui text-[11px] tracking-[0.5em] text-[#ff0000] uppercase mt-3">
