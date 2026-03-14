@@ -9,7 +9,8 @@ import CheckoutModal from '@/components/cp/CheckoutModal';
 import ProductDetailModal from '@/components/cp/ProductDetailModal';
 import CustomRequestSuccessModal from '@/components/cp/CustomRequestSuccessModal';
 import CPLogo from '@/components/cp/CPLogo';
-import { ChevronDown, Send } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import CustomGearForm from '@/components/cp/CustomGearForm';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
