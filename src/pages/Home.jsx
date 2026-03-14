@@ -172,9 +172,17 @@ export default function Home() {
       </footer>
 
       <AnimatePresence>
+        {detailProduct &&
+          <ProductDetailModal product={detailProduct}
+            onClose={() => setDetailProduct(null)}
+            onOrder={(p) => { setDetailProduct(null); setSelectedProduct(p); }} />
+        }
         {selectedProduct &&
-        <CheckoutModal product={selectedProduct} onClose={() => setSelectedProduct(null)}
-        onOrderPlaced={() => {setSelectedProduct(null);setRefreshKey((k) => k + 1);}} />
+          <CheckoutModal product={selectedProduct} onClose={() => setSelectedProduct(null)}
+            onOrderPlaced={() => { setSelectedProduct(null); setRefreshKey((k) => k + 1); }} />
+        }
+        {customSent &&
+          <CustomRequestSuccessModal onClose={() => setCustomSent(false)} />
         }
       </AnimatePresence>
     </div>);
