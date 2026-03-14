@@ -6,7 +6,7 @@ import ProductPreviewModal from '@/components/cp/ProductPreviewModal';
 import { Plus, Eye, Archive, Edit2, CheckCircle, Clock, X, Trash2, ImagePlus, XCircle } from 'lucide-react';
 
 const GI_SIZE_GROUPS = [
-  { label: 'Adult & Unisex (A-Sizes)', sizes: ['A0','A1','A2','A3','A4','A5','A6','A0L','A1L','A2L','A3L','A4L','A0H','A1H','A2H','A3H','A4H','A1S','A2S','A3S'] },
+  { label: 'Adult & Unisex (A-Sizes)', sizes: ['A00','A0','A1','A2','A3','A4','A5','A6','A0L','A1L','A2L','A3L','A4L','A0H','A1H','A2H','A3H','A4H','A1S','A2S','A3S'] },
   { label: 'Female (F/W Sizes)', sizes: ['F0','F1','F2','F3','F4','F5'] },
   { label: 'Kids M-Series (Mini)', sizes: ['M0000','M000','M00','M0','M1','M2','M3','M4','M5'] },
   { label: 'Kids K-Series', sizes: ['K00','K0','K1','K2','K3','K4'] },
