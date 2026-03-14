@@ -53,7 +53,8 @@ export default function ProductCard({ product, onOrder, onPreview }) {
 
         <button
           onClick={() => !isSoldOut && onOrder(product)}
-          disabled={isSoldOut} className="bg-slate-50 mt-4 py-3 text-xs font-mono-ui uppercase tracking-[0.2em] w-full transition-all duration-200 btn-glow-orange">
+          disabled={isSoldOut}
+          className={`mt-4 w-full py-3 font-mono-ui text-xs tracking-[0.2em] uppercase transition-all duration-200 ${isSoldOut ? 'bg-[#1a1a1a] text-[#444] border border-[#222] cursor-not-allowed' : 'btn-glow-orange'}`}>
 
 
 
