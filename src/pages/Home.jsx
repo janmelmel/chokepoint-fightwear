@@ -122,24 +122,9 @@ export default function Home() {
             <p className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest mb-2">Bespoke</p>
             <h2 className="font-tactical text-4xl sm:text-5xl text-white">Custom Gear</h2>
             <div className="w-12 h-px bg-[#333] mx-auto mt-4 mb-4" />
-            <p className="font-inter text-sm text-[#666]">Team kits, custom patches, academy sets. Min. 10 pieces.</p>
+            <p className="font-inter text-sm text-[#666]">Team kits, custom patches, academy sets.</p>
           </div>
-
-          <form onSubmit={handleCustomSubmit} className="space-y-3">
-            <input value={customForm.name} onChange={(e) => setCustomForm((p) => ({ ...p, name: e.target.value }))}
-            required placeholder="Your Name"
-            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
-            <input value={customForm.email} onChange={(e) => setCustomForm((p) => ({ ...p, email: e.target.value }))}
-            required type="email" placeholder="Email Address"
-            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
-            <textarea value={customForm.details} onChange={(e) => setCustomForm((p) => ({ ...p, details: e.target.value }))}
-            required rows={4} placeholder="Describe your design, quantity, team name..."
-            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333] resize-none" />
-            <button type="submit" disabled={customSubmitting} className="bg-green-600 text-green-50 py-4 text-xs font-mono-ui uppercase tracking-[0.3em] rounded-[40px] btn-glow-orange w-full flex items-center justify-center gap-2 disabled:opacity-50">
-
-              <Send className="w-4 h-4" /> {customSubmitting ? 'Sending...' : 'Submit Request'}
-            </button>
-          </form>
+          <CustomGearForm onSuccess={() => setCustomSent(true)} />
         </section>
       </main>
 
