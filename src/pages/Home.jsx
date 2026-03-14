@@ -49,12 +49,16 @@ export default function Home() {
 
   const handleCustomSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch('https://formspree.io/f/yourformid', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(customForm)
+    setCustomSubmitting(true);
+    await base44.entities.CustomRequest.create({
+      name: customForm.name,
+      email: customForm.email,
+      details: customForm.details,
+      status: 'New',
     });
-    if (res.ok) {setCustomSent(true);setCustomForm({ name: '', email: '', details: '' });}
+    setCustomForm({ name: '', email: '', details: '' });
+    setCustomSent(true);
+    setCustomSubmitting(false);
   };
 
   return (
