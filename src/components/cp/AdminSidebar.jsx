@@ -16,6 +16,7 @@ export default function AdminSidebar({ user, collapsed = false }) {
     { label: 'Products', icon: Package, to: createPageUrl('StaffProducts') },
     { label: 'Categories', icon: Tag, to: createPageUrl('StaffCategories') },
     { label: 'Orders', icon: ShoppingBag, to: createPageUrl('StaffOrders') },
+    { label: 'Custom Requests', icon: Paintbrush, to: createPageUrl('StaffCustomRequests') },
     ...(isAdmin ? [{ label: 'Accounts', icon: Users, to: createPageUrl('AdminAccounts'), adminOnly: true }] : []),
   ];
 
