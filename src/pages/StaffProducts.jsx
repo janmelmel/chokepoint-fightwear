@@ -290,8 +290,18 @@ export default function StaffProducts() {
                     {form.images.length > 0 &&
                   <div className="flex flex-wrap gap-2 mb-2">
                         {form.images.map((url, idx) =>
-                    <div key={idx} className="relative group w-20 h-20 border border-[#333] overflow-hidden">
+                    <div key={idx} className={`relative group w-20 h-20 border overflow-hidden ${idx === 0 ? 'border-[#ff8c00]' : 'border-[#333]'}`}>
                             <img src={url} className="w-full h-full object-cover opacity-80" />
+                            {idx === 0 && (
+                              <span className="absolute bottom-0 left-0 right-0 font-mono-ui text-[8px] text-center bg-[#ff8c00] text-black py-0.5 uppercase tracking-wider">Cover</span>
+                            )}
+                            {idx !== 0 && (
+                              <button type="button" title="Set as cover"
+                                onClick={() => setForm(f => ({ ...f, images: [url, ...f.images.filter((_, i) => i !== idx)] }))}
+                                className="absolute bottom-0 left-0 right-0 font-mono-ui text-[8px] text-center bg-black/70 text-[#ff8c00] py-0.5 uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                                Set Cover
+                              </button>
+                            )}
                             <button type="button" onClick={() => removeImage(idx)}
                       className="absolute top-0.5 right-0.5 text-white bg-black/70 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                               <XCircle className="w-4 h-4" />
