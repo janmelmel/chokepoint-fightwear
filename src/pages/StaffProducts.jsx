@@ -95,6 +95,23 @@ export default function StaffProducts() {
     await loadData();
   };
 
+  const duplicateProduct = (p) => {
+    setEditProduct(null);
+    setForm({
+      name: p.name + ' (Copy)',
+      category_id: p.category_id || '',
+      price: p.price,
+      description: p.description || '',
+      images: p.images || [],
+      status: 'Draft',
+      is_preorder: !!p.is_preorder,
+      stock_limit: p.stock_limit || 0,
+      sizes: p.sizes || [],
+      edition: p.edition || '',
+    });
+    setShowForm(true);
+  };
+
   const deleteProduct = async (id) => {
     if (!window.confirm('Permanently delete this product? This cannot be undone.')) return;
     await base44.entities.Product.delete(id);
