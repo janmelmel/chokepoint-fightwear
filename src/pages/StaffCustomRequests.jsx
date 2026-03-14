@@ -75,7 +75,8 @@ export default function StaffCustomRequests() {
                       <p className="font-mono-ui text-xs text-white truncate">{r.name}</p>
                       <p className="font-mono-ui text-[10px] text-[#555] truncate">{r.email}</p>
                     </div>
-                    <p className="font-mono-ui text-[10px] text-[#444] hidden sm:block max-w-xs truncate">{r.details}</p>
+                    <p className="font-mono-ui text-[10px] text-[#ff8c00] hidden sm:block flex-shrink-0">{r.category || '—'}</p>
+                    <p className="font-mono-ui text-[10px] text-[#444] hidden md:block max-w-xs truncate">{r.details}</p>
                     <select value={r.status || 'New'}
                       onClick={e => e.stopPropagation()}
                       onChange={e => updateStatus(r.id, e.target.value)}
