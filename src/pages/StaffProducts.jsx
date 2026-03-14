@@ -193,6 +193,9 @@ export default function StaffProducts() {
                       <button onClick={() => openEdit(p)} className="btn-glow-white p-2 flex-shrink-0" title="Edit">
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
+                      <button onClick={() => duplicateProduct(p)} className="btn-glow-white p-2 flex-shrink-0" title="Duplicate">
+                        <Copy className="w-3.5 h-3.5" />
+                      </button>
                       {isAdmin && p.status === 'Pending Review' &&
                   <button onClick={() => approve(p.id)} className="btn-glow-orange flex-1 py-2 font-mono-ui text-[10px] tracking-widest uppercase flex items-center justify-center gap-1">
                           <CheckCircle className="w-3 h-3" /> Approve
