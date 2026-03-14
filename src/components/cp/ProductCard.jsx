@@ -11,38 +11,38 @@ export default function ProductCard({ product, onOrder, onPreview }) {
     <div className="card-tactical group overflow-hidden">
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-[#0d0d0d]">
-        {product.images?.[0] ? (
-          <img src={product.images[0]} alt={product.name}
-            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
+        {product.images?.[0] ?
+        <img src={product.images[0]} alt={product.name}
+        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" /> :
+
+        <div className="w-full h-full flex items-center justify-center">
             <span className="font-tactical text-6xl text-[#222]">CP</span>
           </div>
-        )}
+        }
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
 
-        {product.is_preorder && !isSoldOut && (
-          <span className="absolute top-3 left-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 bg-[#ff8c00] text-black font-bold">
+        {product.is_preorder && !isSoldOut &&
+        <span className="absolute top-3 left-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 bg-[#ff8c00] text-black font-bold">
             PRE-ORDER
           </span>
-        )}
-        {isSoldOut && (
-          <span className="absolute top-3 left-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 bg-[#ff0000]/80 text-white">
+        }
+        {isSoldOut &&
+        <span className="absolute top-3 left-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 bg-[#ff0000]/80 text-white">
             SOLD OUT
           </span>
-        )}
-        {isLowStock && (
-          <span className="absolute top-3 right-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 border border-[#ff0000]/50 text-[#ff0000]">
+        }
+        {isLowStock &&
+        <span className="absolute top-3 right-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 border border-[#ff0000]/50 text-[#ff0000]">
             {stockLeft} LEFT
           </span>
-        )}
+        }
 
-        {onPreview && (
-          <button onClick={() => onPreview(product)}
-            className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-[#111]/80 border border-[#333] text-[#888] hover:text-white">
+        {onPreview &&
+        <button onClick={() => onPreview(product)}
+        className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-[#111]/80 border border-[#333] text-[#888] hover:text-white">
             <Eye className="w-4 h-4" />
           </button>
-        )}
+        }
       </div>
 
       {/* Info */}
@@ -53,15 +53,15 @@ export default function ProductCard({ product, onOrder, onPreview }) {
 
         <button
           onClick={() => !isSoldOut && onOrder(product)}
-          disabled={isSoldOut}
-          className={`mt-4 w-full py-3 font-mono-ui text-xs tracking-[0.2em] uppercase transition-all duration-200 ${
-            isSoldOut
-              ? 'bg-[#1a1a1a] text-[#444] border border-[#222] cursor-not-allowed'
-              : 'btn-glow-orange'
-          }`}>
+          disabled={isSoldOut} className="bg-slate-50 mt-4 py-3 text-xs font-mono-ui uppercase tracking-[0.2em] w-full transition-all duration-200 btn-glow-orange">
+
+
+
+
+
           {isSoldOut ? 'Sold Out' : product.is_preorder ? 'Pre-order Now' : 'Add to Bag'}
         </button>
       </div>
-    </div>
-  );
+    </div>);
+
 }
