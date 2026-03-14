@@ -5,7 +5,23 @@ import AdminSidebar from '@/components/cp/AdminSidebar';
 import ProductPreviewModal from '@/components/cp/ProductPreviewModal';
 import { Plus, Eye, Archive, Edit2, CheckCircle, Clock, X, Trash2, ImagePlus, XCircle } from 'lucide-react';
 
-const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL'];
+const GI_SIZE_GROUPS = [
+  { label: 'Adult & Unisex (A-Sizes)', sizes: ['A0','A1','A2','A3','A4','A5','A6','A0L','A1L','A2L','A3L','A4L','A0H','A1H','A2H','A3H','A4H','A1S','A2S','A3S'] },
+  { label: 'Female (F/W Sizes)', sizes: ['F0','F1','F2','F3','F4','F5'] },
+  { label: 'Kids M-Series (Mini)', sizes: ['M0000','M000','M00','M0','M1','M2','M3','M4','M5'] },
+  { label: 'Kids K-Series', sizes: ['K00','K0','K1','K2','K3','K4'] },
+  { label: 'Kids C-Series (Children)', sizes: ['C000','C00','C0','C1','C2','C3'] },
+  { label: 'Kids Y-Series (Youth)', sizes: ['Y0','Y1','Y2','Y3'] },
+];
+
+const NOGI_SIZE_GROUPS = [
+  { label: 'Unisex', sizes: ['XS','S','M','L','XL','XXL','2XL','3XL','4XL','5XL'] },
+  { label: 'Kids', sizes: ['KXS','KS','KM','KL','KXL'] },
+];
+
+const DEFAULT_SIZE_GROUPS = [
+  { label: 'Sizes', sizes: ['XS','S','M','L','XL','XXL','2XL','3XL'] },
+];
 
 const STATUS_STYLE = {
   'Draft': 'text-[#555] border-[#333]',
