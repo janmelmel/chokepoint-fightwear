@@ -46,20 +46,6 @@ export default function Home() {
   const uncategorized = products.filter((p) => !p.category_id || !categories.find((c) => c.id === p.category_id));
   if (uncategorized.length) grouped.push({ cat: { id: 'misc', name: 'All Gear', slug: 'misc' }, items: uncategorized });
 
-  const handleCustomSubmit = async (e) => {
-    e.preventDefault();
-    setCustomSubmitting(true);
-    await base44.entities.CustomRequest.create({
-      name: customForm.name,
-      email: customForm.email,
-      details: customForm.details,
-      status: 'New'
-    });
-    setCustomForm({ name: '', email: '', details: '' });
-    setCustomSent(true);
-    setCustomSubmitting(false);
-  };
-
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <StickyHeader onCartClick={() => {}} />
