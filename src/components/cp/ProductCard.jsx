@@ -9,8 +9,8 @@ export default function ProductCard({ product, onOrder, onPreview }) {
 
   return (
     <div className="card-tactical group overflow-hidden">
-      {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-[#0d0d0d]">
+      {/* Image — click to open detail */}
+      <div className="relative aspect-square overflow-hidden bg-[#0d0d0d] cursor-pointer" onClick={() => onPreview && onPreview(product)}>
         {product.images?.[0] ?
         <img src={product.images[0]} alt={product.name}
         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" /> :
