@@ -14,6 +14,7 @@ import StaffOrders from './pages/StaffOrders';
 import StaffProducts from './pages/StaffProducts';
 import StaffCategories from './pages/StaffCategories';
 import AdminAccounts from './pages/AdminAccounts';
+import StaffCustomRequests from './pages/StaffCustomRequests';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -40,6 +41,7 @@ const AuthenticatedApp = () => {
       <Route path="/StaffProducts" element={<StaffProducts />} />
       <Route path="/StaffCategories" element={<StaffCategories />} />
       <Route path="/AdminAccounts" element={<AdminAccounts />} />
+      <Route path="/StaffCustomRequests" element={<StaffCustomRequests />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
