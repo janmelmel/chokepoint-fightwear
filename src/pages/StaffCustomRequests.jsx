@@ -111,9 +111,64 @@ export default function StaffCustomRequests() {
                 <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Customer</p>
                 <p className="font-mono-ui text-sm text-white">{selected.name}</p>
                 <p className="font-mono-ui text-xs text-[#888]">{selected.email}</p>
+                {selected.phone && <p className="font-mono-ui text-xs text-[#666]">{selected.phone}</p>}
               </div>
+              {selected.category && (
+                <div>
+                  <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Category</p>
+                  <p className="font-mono-ui text-xs text-[#ff8c00]">{selected.category}</p>
+                </div>
+              )}
+              {selected.rashguard_sleeve && (
+                <div>
+                  <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Sleeve</p>
+                  <p className="font-mono-ui text-xs text-white">{selected.rashguard_sleeve}</p>
+                </div>
+              )}
+              {selected.shorts_slit && (
+                <div>
+                  <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Slit Option</p>
+                  <p className="font-mono-ui text-xs text-white">{selected.shorts_slit}</p>
+                </div>
+              )}
+              {(selected.gi_colors?.length > 0 || selected.gi_color_request) && (
+                <div>
+                  <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Gi Colors</p>
+                  {selected.gi_colors?.length > 0 && <p className="font-mono-ui text-xs text-white">{selected.gi_colors.join(', ')}</p>}
+                  {selected.gi_color_request && <p className="font-mono-ui text-xs text-[#aaa]">Custom: {selected.gi_color_request}</p>}
+                </div>
+              )}
+              {selected.color_hex && (
+                <div>
+                  <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Primary Color</p>
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 border border-[#333]" style={{ backgroundColor: selected.color_hex }} />
+                    <p className="font-mono-ui text-xs text-white">{selected.color_hex.toUpperCase()}</p>
+                  </div>
+                </div>
+              )}
+              {selected.quantity && (
+                <div>
+                  <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Quantity</p>
+                  <p className="font-mono-ui text-xs text-white">{selected.quantity} pcs</p>
+                </div>
+              )}
+              {selected.mat_sqm && (
+                <div>
+                  <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Mat Area</p>
+                  <p className="font-mono-ui text-xs text-white">{selected.mat_sqm} sqm · ₱{(selected.mat_sqm * 2350).toLocaleString()} est.</p>
+                </div>
+              )}
+              {selected.design_image_url && (
+                <div>
+                  <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Design Reference</p>
+                  <a href={selected.design_image_url} target="_blank" rel="noreferrer">
+                    <img src={selected.design_image_url} className="w-full max-h-40 object-contain border border-[#333]" alt="design" />
+                  </a>
+                </div>
+              )}
               <div>
-                <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Request Details</p>
+                <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Details / Notes</p>
                 <p className="font-mono-ui text-xs text-[#aaa] leading-relaxed whitespace-pre-wrap">{selected.details || '—'}</p>
               </div>
               <div>
