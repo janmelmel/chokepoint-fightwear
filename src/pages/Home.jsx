@@ -6,8 +6,10 @@ import { base44 } from '@/api/base44Client';
 import StickyHeader from '@/components/cp/StickyHeader';
 import ProductCard from '@/components/cp/ProductCard';
 import CheckoutModal from '@/components/cp/CheckoutModal';
+import ProductDetailModal from '@/components/cp/ProductDetailModal';
+import CustomRequestSuccessModal from '@/components/cp/CustomRequestSuccessModal';
 import CPLogo from '@/components/cp/CPLogo';
-import { ChevronDown, Send, Shield } from 'lucide-react';
+import { ChevronDown, Send } from 'lucide-react';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
