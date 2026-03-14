@@ -140,32 +140,21 @@ export default function Home() {
             <p className="font-inter text-sm text-[#666]">Team kits, custom patches, academy sets. Min. 10 pieces.</p>
           </div>
 
-          {customSent ?
-          <div className="text-center py-10 border border-[#333] bg-[#111]">
-              <Shield className="w-8 h-8 text-[#ff8c00] mx-auto mb-3" />
-              <p className="font-tactical text-2xl text-white">Request Received</p>
-              <p className="font-mono-ui text-xs text-[#555] mt-1">We'll reach out within 24–48 hours.</p>
-              <button onClick={() => setCustomSent(false)} className="mt-4 font-mono-ui text-[10px] text-[#444] hover:text-[#888] underline">
-                Send another
-              </button>
-            </div> :
-
           <form onSubmit={handleCustomSubmit} className="space-y-3">
-              <input value={customForm.name} onChange={(e) => setCustomForm((p) => ({ ...p, name: e.target.value }))}
-            required placeholder="Your Name"
-            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
-              <input value={customForm.email} onChange={(e) => setCustomForm((p) => ({ ...p, email: e.target.value }))}
-            required type="email" placeholder="Email Address"
-            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
-              <textarea value={customForm.details} onChange={(e) => setCustomForm((p) => ({ ...p, details: e.target.value }))}
-            required rows={4} placeholder="Describe your design, quantity, team name..."
-            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333] resize-none" />
-              <button type="submit" className="bg-green-500 text-slate-950 py-4 text-xs font-mono-ui uppercase tracking-[0.3em] rounded-[40px] btn-glow-orange w-full flex items-center justify-center gap-2">
-
-                <Send className="w-4 h-4" /> Submit Request
-              </button>
-            </form>
-          }
+            <input value={customForm.name} onChange={(e) => setCustomForm((p) => ({ ...p, name: e.target.value }))}
+              required placeholder="Your Name"
+              className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
+            <input value={customForm.email} onChange={(e) => setCustomForm((p) => ({ ...p, email: e.target.value }))}
+              required type="email" placeholder="Email Address"
+              className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
+            <textarea value={customForm.details} onChange={(e) => setCustomForm((p) => ({ ...p, details: e.target.value }))}
+              required rows={4} placeholder="Describe your design, quantity, team name..."
+              className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333] resize-none" />
+            <button type="submit" disabled={customSubmitting}
+              className="btn-glow-orange w-full py-4 font-mono-ui text-xs tracking-[0.3em] uppercase flex items-center justify-center gap-2 disabled:opacity-50">
+              <Send className="w-4 h-4" /> {customSubmitting ? 'Sending...' : 'Submit Request'}
+            </button>
+          </form>
         </section>
       </main>
 
