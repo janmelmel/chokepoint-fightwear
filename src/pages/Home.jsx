@@ -18,9 +18,7 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [detailProduct, setDetailProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [customForm, setCustomForm] = useState({ name: '', email: '', details: '' });
   const [customSent, setCustomSent] = useState(false);
-  const [customSubmitting, setCustomSubmitting] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
