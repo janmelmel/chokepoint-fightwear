@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X, MessageCircle, CreditCard, ChevronDown } from 'lucide-react';
+import { X, MessageCircle, Mail } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+
+const FB_URL = 'https://www.facebook.com/profile.php?id=61571430141920';
+const IG_URL = 'https://www.instagram.com/chokepoint_fightwear/';
+const EMAIL = 'chokepoint-fightwear@gmail.com';
 
 export default function CheckoutModal({ product, onClose, onOrderPlaced }) {
   const [size, setSize] = useState('');
