@@ -25,22 +25,22 @@ export default function Home() {
   const loadData = async () => {
     setLoading(true);
     const [prods, cats] = await Promise.all([
-      base44.entities.Product.filter({ status: 'Live', is_archived: false }),
-      base44.entities.Category.filter({ is_active: true }),
-    ]);
-    const catMap = Object.fromEntries(cats.map(c => [c.id, c.name]));
-    setProducts(prods.map(p => ({ ...p, category_name: catMap[p.category_id] || '' })));
+    base44.entities.Product.filter({ status: 'Live', is_archived: false }),
+    base44.entities.Category.filter({ is_active: true })]
+    );
+    const catMap = Object.fromEntries(cats.map((c) => [c.id, c.name]));
+    setProducts(prods.map((p) => ({ ...p, category_name: catMap[p.category_id] || '' })));
     setCategories(cats);
     setLoading(false);
   };
 
   const grouped = categories.reduce((acc, cat) => {
-    const items = products.filter(p => p.category_id === cat.id);
+    const items = products.filter((p) => p.category_id === cat.id);
     if (items.length) acc.push({ cat, items });
     return acc;
   }, []);
 
-  const uncategorized = products.filter(p => !p.category_id || !categories.find(c => c.id === p.category_id));
+  const uncategorized = products.filter((p) => !p.category_id || !categories.find((c) => c.id === p.category_id));
   if (uncategorized.length) grouped.push({ cat: { id: 'misc', name: 'All Gear', slug: 'misc' }, items: uncategorized });
 
   const handleCustomSubmit = async (e) => {
@@ -48,9 +48,9 @@ export default function Home() {
     const res = await fetch('https://formspree.io/f/yourformid', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(customForm),
+      body: JSON.stringify(customForm)
     });
-    if (res.ok) { setCustomSent(true); setCustomForm({ name: '', email: '', details: '' }); }
+    if (res.ok) {setCustomSent(true);setCustomForm({ name: '', email: '', details: '' });}
   };
 
   return (
@@ -60,12 +60,12 @@ export default function Home() {
       {/* HERO */}
       <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
         <div className="absolute inset-0"
-          style={{ backgroundImage: 'radial-gradient(ellipse at center, #1a0000 0%, #0a0a0a 70%)', opacity: 0.6 }} />
+        style={{ backgroundImage: 'radial-gradient(ellipse at center, #1a0000 0%, #0a0a0a 70%)', opacity: 0.6 }} />
         <div className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 40px,#fff 40px,#fff 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,#fff 40px,#fff 41px)' }} />
+        style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 40px,#fff 40px,#fff 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,#fff 40px,#fff 41px)' }} />
 
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
-          className="relative z-10 text-center">
+        className="relative z-10 text-center">
           <h1 style={{ fontFamily: "'Bitsumishi', sans-serif" }} className="text-6xl sm:text-8xl md:text-9xl text-white mt-6 leading-none uppercase">
             CHOKEPOINT
           </h1>
@@ -74,13 +74,13 @@ export default function Home() {
           </p>
           <div className="w-24 h-px bg-[#ff8c00] mx-auto mt-6 mb-8" />
           <a href="#gear"
-            className="btn-glow-orange font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 inline-block">
+          className="btn-glow-orange font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 inline-block">
             Shop the Drop
           </a>
         </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2">
+        className="absolute bottom-8 left-1/2 -translate-x-1/2">
           <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.8 }}>
             <ChevronDown className="w-5 h-5 text-[#444]" />
           </motion.div>
@@ -89,19 +89,19 @@ export default function Home() {
 
       {/* PRODUCTS */}
       <main id="gear" className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="card-tactical aspect-square animate-pulse" />
-            ))}
-          </div>
-        ) : grouped.length === 0 ? (
-          <div className="text-center py-20">
+        {loading ?
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(6)].map((_, i) =>
+          <div key={i} className="card-tactical aspect-square animate-pulse" />
+          )}
+          </div> :
+        grouped.length === 0 ?
+        <div className="text-center py-20">
             <p className="font-mono-ui text-[#444] text-sm">No products live yet. Check back soon.</p>
-          </div>
-        ) : (
-          grouped.map(({ cat, items }) => (
-            <section key={cat.id} id={cat.slug || cat.id} className="mb-16">
+          </div> :
+
+        grouped.map(({ cat, items }) =>
+        <section key={cat.id} id={cat.slug || cat.id} className="mb-16">
               <div className="flex items-center gap-4 mb-8">
                 <div>
                   <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Collection</p>
@@ -111,17 +111,17 @@ export default function Home() {
                 <span className="font-mono-ui text-[11px] text-[#444]">{items.length} items</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {items.map((p, i) => (
-                  <motion.div key={p.id}
-                    initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
+                {items.map((p, i) =>
+            <motion.div key={p.id}
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
                     <ProductCard product={p} onOrder={setSelectedProduct} />
                   </motion.div>
-                ))}
+            )}
               </div>
             </section>
-          ))
-        )}
+        )
+        }
 
         {/* CUSTOM GEAR */}
         <section id="custom" className="border-t border-[#1a1a1a] pt-16 max-w-2xl mx-auto">
@@ -132,32 +132,32 @@ export default function Home() {
             <p className="font-inter text-sm text-[#666]">Team kits, custom patches, academy sets. Min. 10 pieces.</p>
           </div>
 
-          {customSent ? (
-            <div className="text-center py-10 border border-[#333] bg-[#111]">
+          {customSent ?
+          <div className="text-center py-10 border border-[#333] bg-[#111]">
               <Shield className="w-8 h-8 text-[#ff8c00] mx-auto mb-3" />
               <p className="font-tactical text-2xl text-white">Request Received</p>
               <p className="font-mono-ui text-xs text-[#555] mt-1">We'll reach out within 24–48 hours.</p>
               <button onClick={() => setCustomSent(false)} className="mt-4 font-mono-ui text-[10px] text-[#444] hover:text-[#888] underline">
                 Send another
               </button>
-            </div>
-          ) : (
-            <form onSubmit={handleCustomSubmit} className="space-y-3">
-              <input value={customForm.name} onChange={e => setCustomForm(p => ({ ...p, name: e.target.value }))}
-                required placeholder="Your Name"
-                className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
-              <input value={customForm.email} onChange={e => setCustomForm(p => ({ ...p, email: e.target.value }))}
-                required type="email" placeholder="Email Address"
-                className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
-              <textarea value={customForm.details} onChange={e => setCustomForm(p => ({ ...p, details: e.target.value }))}
-                required rows={4} placeholder="Describe your design, quantity, team name..."
-                className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333] resize-none" />
-              <button type="submit"
-                className="btn-glow-orange w-full py-4 font-mono-ui text-xs tracking-[0.3em] uppercase flex items-center justify-center gap-2">
+            </div> :
+
+          <form onSubmit={handleCustomSubmit} className="space-y-3">
+              <input value={customForm.name} onChange={(e) => setCustomForm((p) => ({ ...p, name: e.target.value }))}
+            required placeholder="Your Name"
+            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
+              <input value={customForm.email} onChange={(e) => setCustomForm((p) => ({ ...p, email: e.target.value }))}
+            required type="email" placeholder="Email Address"
+            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333]" />
+              <textarea value={customForm.details} onChange={(e) => setCustomForm((p) => ({ ...p, details: e.target.value }))}
+            required rows={4} placeholder="Describe your design, quantity, team name..."
+            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#333] resize-none" />
+              <button type="submit" className="bg-green-500 text-slate-950 py-4 text-xs font-mono-ui uppercase tracking-[0.3em] rounded-[40px] btn-glow-orange w-full flex items-center justify-center gap-2">
+
                 <Send className="w-4 h-4" /> Submit Request
               </button>
             </form>
-          )}
+          }
         </section>
       </main>
 
@@ -175,11 +175,11 @@ export default function Home() {
       </footer>
 
       <AnimatePresence>
-        {selectedProduct && (
-          <CheckoutModal product={selectedProduct} onClose={() => setSelectedProduct(null)}
-            onOrderPlaced={() => { setSelectedProduct(null); setRefreshKey(k => k + 1); }} />
-        )}
+        {selectedProduct &&
+        <CheckoutModal product={selectedProduct} onClose={() => setSelectedProduct(null)}
+        onOrderPlaced={() => {setSelectedProduct(null);setRefreshKey((k) => k + 1);}} />
+        }
       </AnimatePresence>
-    </div>
-  );
+    </div>);
+
 }
