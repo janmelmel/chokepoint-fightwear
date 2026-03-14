@@ -18,11 +18,11 @@ export default function CheckoutModal({ product, onClose, onOrderPlaced }) {
   const isSoldOut = product.stock_limit > 0 && product.total_ordered >= product.stock_limit;
   const sizes = product.sizes?.length ? product.sizes : ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
-  const messengerMsg = encodeURIComponent(
+  const orderMsg = encodeURIComponent(
     `Hi! I want to ${product.is_preorder ? 'pre-order' : 'order'}:\n\n📦 ${product.name}\n📏 Size: ${size || 'TBD'}\n💰 ₱${Number(product.price).toLocaleString()}\n\nName: ${name}\nPhone: ${phone}`
   );
 
-  const handleProceed = async (payMethod) => {
+  const handleContact = async (method) => {
     if (!name || !size) return;
     setSaving(true);
     try {
@@ -37,7 +37,7 @@ export default function CheckoutModal({ product, onClose, onOrderPlaced }) {
         size,
         quantity: 1,
         total_amount: product.price,
-        payment_method: payMethod,
+        payment_method: method,
         status: 'Processing',
         is_preorder: !!product.is_preorder
       });
@@ -51,10 +51,16 @@ export default function CheckoutModal({ product, onClose, onOrderPlaced }) {
       setSaving(false);
     }
 
-    if (payMethod === 'Messenger') {
-      window.open(`https://m.me/yourpage?text=${messengerMsg}`, '_blank');
+    if (method === 'Facebook') {
+      window.open(`${FB_URL}`, '_blank');
+    } else if (method === 'Instagram') {
+      window.open(`${IG_URL}`, '_blank');
+    } else if (method === 'Email') {
+      const subject = encodeURIComponent(`Order: ${product.name} - Size ${size}`);
+      const body = orderMsg;
+      window.open(`mailto:${EMAIL}?subject=${subject}&body=${body}`, '_blank');
     } else {
-      window.open('https://paymongo.page/l/chokepoint-fightwear', '_blank');
+      window.open(`${FB_URL}`, '_blank');
     }
     onClose();
   };
