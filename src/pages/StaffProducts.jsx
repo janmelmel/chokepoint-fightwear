@@ -103,6 +103,15 @@ export default function StaffProducts() {
 
   const toggleSize = (s) => setForm((f) => ({ ...f, sizes: f.sizes.includes(s) ? f.sizes.filter((x) => x !== s) : [...f.sizes, s] }));
 
+  const getSizeGroups = () => {
+    const cat = categories.find(c => c.id === form.category_id);
+    if (!cat) return DEFAULT_SIZE_GROUPS;
+    const name = cat.name.toLowerCase();
+    if (name.includes('gi') && !name.includes('no')) return GI_SIZE_GROUPS;
+    if (name.includes('no-gi') || name.includes('no gi') || name.includes('nogi')) return NOGI_SIZE_GROUPS;
+    return DEFAULT_SIZE_GROUPS;
+  };
+
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const handleImageUpload = async (e) => {
