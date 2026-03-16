@@ -22,7 +22,7 @@ export default function Home() {
 
   useEffect(() => {
     loadData();
-  }, [refreshKey]);
+  }, []);
 
   const loadData = async () => {
     setLoading(true);
