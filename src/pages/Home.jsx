@@ -97,7 +97,7 @@ export default function Home() {
         {/* CUSTOM GEAR */}
         <section id="custom" className="border-t border-[#1a1a1a] pt-16 max-w-2xl mx-auto">
           <div className="text-center mb-10">
-            <p className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest mb-2">Bespoke</p>
+            <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest mb-2">Bespoke</p>
             <h2 className="font-tactical text-4xl sm:text-5xl text-white">Custom Gear</h2>
             <div className="w-12 h-px bg-[#333] mx-auto mt-4 mb-4" />
             <p className="font-inter text-sm text-[#666]">Team kits, custom patches, academy sets.</p>
