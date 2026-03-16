@@ -40,14 +40,32 @@ export default function Home() {
     setLoading(false);
   };
 
-  const grouped = categories.reduce((acc, cat) => {
-    const items = products.filter((p) => p.category_id === cat.id);
-    if (items.length) acc.push({ cat, items });
+  // Build two-level hierarchy: parents → subcategories → products
+  const parentCats = categories.filter(c => !c.parent_id);
+  const childCats = categories.filter(c => !!c.parent_id);
+
+  const grouped = parentCats.reduce((acc, parent) => {
+    const subs = childCats.filter(c => c.parent_id === parent.id);
+    if (subs.length) {
+      // Has subcategories — group products under each sub
+      const subGroups = subs.reduce((sa, sub) => {
+        const items = products.filter(p => p.category_id === sub.id);
+        if (items.length) sa.push({ sub, items });
+        return sa;
+      }, []);
+      // Also grab products directly under parent (no sub)
+      const directItems = products.filter(p => p.category_id === parent.id);
+      if (subGroups.length || directItems.length) acc.push({ cat: parent, subGroups, directItems });
+    } else {
+      // No subcategories — flat list
+      const items = products.filter(p => p.category_id === parent.id);
+      if (items.length) acc.push({ cat: parent, subGroups: [], directItems: items });
+    }
     return acc;
   }, []);
 
   const uncategorized = products.filter((p) => !p.category_id || !categories.find((c) => c.id === p.category_id));
-  if (uncategorized.length) grouped.push({ cat: { id: 'misc', name: 'All Gear', slug: 'misc' }, items: uncategorized });
+  if (uncategorized.length) grouped.push({ cat: { id: 'misc', name: 'All Gear', slug: 'misc' }, subGroups: [], directItems: uncategorized });
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
