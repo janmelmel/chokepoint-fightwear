@@ -8,13 +8,15 @@ import ProductCard from '@/components/cp/ProductCard';
 import ProductDetailModal from '@/components/cp/ProductDetailModal';
 import CustomRequestSuccessModal from '@/components/cp/CustomRequestSuccessModal';
 import CartDrawer from '@/components/cp/CartDrawer';
+import HeroSlideshow from '@/components/cp/HeroSlideshow';
+import FeaturedProducts from '@/components/cp/FeaturedProducts';
 import CPLogo from '@/components/cp/CPLogo';
-import { ChevronDown } from 'lucide-react';
 import CustomGearForm from '@/components/cp/CustomGearForm';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [banners, setBanners] = useState([]);
   const [detailProduct, setDetailProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [customSent, setCustomSent] = useState(false);
@@ -26,13 +28,15 @@ export default function Home() {
 
   const loadData = async () => {
     setLoading(true);
-    const [prods, cats] = await Promise.all([
-    base44.entities.Product.filter({ status: 'Live', is_archived: false }),
-    base44.entities.Category.filter({ is_active: true })]
-    );
+    const [prods, cats, bans] = await Promise.all([
+      base44.entities.Product.filter({ status: 'Live', is_archived: false }),
+      base44.entities.Category.filter({ is_active: true }),
+      base44.entities.HeroBanner.filter({ is_active: true }, 'sort_order', 10),
+    ]);
     const catMap = Object.fromEntries(cats.map((c) => [c.id, c.name]));
     setProducts(prods.map((p) => ({ ...p, category_name: catMap[p.category_id] || '' })));
     setCategories(cats);
+    setBanners(bans);
     setLoading(false);
   };
 
