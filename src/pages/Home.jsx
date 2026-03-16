@@ -55,8 +55,11 @@ export default function Home() {
 
       <HeroSlideshow banners={banners} />
 
+      {/* FEATURED */}
+      <FeaturedProducts products={products.filter(p => p.is_featured)} onPreview={setDetailProduct} />
+
       {/* PRODUCTS */}
-      <main id="gear" className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
+      <main id="gear" className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         {loading ?
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[...Array(6)].map((_, i) =>
