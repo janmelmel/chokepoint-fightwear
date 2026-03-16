@@ -188,6 +188,12 @@ export default function StaffProducts() {
                       </span>
                     </div>
                     <div className="bg-transparent text-slate-50 mt-4 flex items-center gap-2">
+                      <button
+                        onClick={() => base44.entities.Product.update(p.id, { is_featured: !p.is_featured }).then(loadData)}
+                        title={p.is_featured ? 'Remove from Featured' : 'Add to Featured'}
+                        className={`p-2 flex-shrink-0 border transition-all ${p.is_featured ? 'border-[#ff8c00] text-[#ff8c00] bg-[#ff8c00]/10' : 'btn-glow-white'}`}>
+                        <Star className="w-3.5 h-3.5" />
+                      </button>
                       <button onClick={() => setPreviewProduct(p)} className="btn-glow-white p-2 flex-shrink-0" title="Preview">
                         <Eye className="w-3.5 h-3.5" />
                       </button>
