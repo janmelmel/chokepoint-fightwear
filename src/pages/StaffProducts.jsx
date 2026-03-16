@@ -73,7 +73,7 @@ export default function StaffProducts() {
 
   const openEdit = (p) => {
     setEditProduct(p);
-    setForm({ name: p.name, category_id: p.category_id || '', price: p.price, description: p.description || '', images: p.images || [], status: p.status, is_preorder: !!p.is_preorder, stock_limit: p.stock_limit || 0, sizes: p.sizes || [], edition: p.edition || '' });
+    setForm({ name: p.name, category_id: p.category_id || '', price: p.price, description: p.description || '', images: p.images || [], status: p.status, is_preorder: !!p.is_preorder, is_featured: !!p.is_featured, stock_limit: p.stock_limit || 0, sizes: p.sizes || [], edition: p.edition || '' });
     setShowForm(true);
   };
 
@@ -105,6 +105,7 @@ export default function StaffProducts() {
       images: p.images || [],
       status: 'Draft',
       is_preorder: !!p.is_preorder,
+      is_featured: false,
       stock_limit: p.stock_limit || 0,
       sizes: p.sizes || [],
       edition: p.edition || '',
