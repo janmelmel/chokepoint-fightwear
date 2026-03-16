@@ -16,6 +16,7 @@ import StaffCategories from './pages/StaffCategories';
 import AdminAccounts from './pages/AdminAccounts';
 import StaffCustomRequests from './pages/StaffCustomRequests';
 import Checkout from './pages/Checkout';
+import StaffHero from './pages/StaffHero';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
