@@ -181,7 +181,7 @@ export default function StaffProducts() {
                       <div className="min-w-0">
                         <p className="font-mono-ui text-[10px] text-[#555] truncate">{p.category_name}</p>
                         <p className="font-tactical text-lg text-white truncate">{p.name}</p>
-                        <p className="font-mono-ui text-sm text-[#ff8c00]">₱{Number(p.price).toLocaleString()}</p>
+                        <p className="font-mono-ui text-sm text-[#ff6b00] font-bold">₱{Number(p.price).toLocaleString()}</p>
                       </div>
                       <span className={`font-mono-ui text-[9px] uppercase tracking-wider border px-2 py-1 flex-shrink-0 ${STATUS_STYLE[p.status] || 'text-[#555] border-[#333]'}`}>
                         {p.status}
@@ -191,7 +191,7 @@ export default function StaffProducts() {
                       <button
                         onClick={() => base44.entities.Product.update(p.id, { is_featured: !p.is_featured }).then(loadData)}
                         title={p.is_featured ? 'Remove from Featured' : 'Add to Featured'}
-                        className={`p-2 flex-shrink-0 border transition-all ${p.is_featured ? 'border-[#ff8c00] text-[#ff8c00] bg-[#ff8c00]/10' : 'btn-glow-white'}`}>
+                        className={`p-2 flex-shrink-0 border transition-all ${p.is_featured ? 'border-[#ff6b00] text-[#ff6b00] bg-[#ff6b00]/10' : 'btn-glow-white'}`}>
                         <Star className="w-3.5 h-3.5" />
                       </button>
                       <button onClick={() => setPreviewProduct(p)} className="btn-glow-white p-2 flex-shrink-0" title="Preview">
