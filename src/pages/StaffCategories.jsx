@@ -98,6 +98,7 @@ export default function StaffCategories() {
                       <button onClick={() => toggle(parent)} className={`transition-colors ${parent.is_active !== false ? 'text-green-400 hover:text-red-400' : 'text-[#444] hover:text-green-400'}`}>
                         {parent.is_active !== false ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6" />}
                       </button>
+                      <button onClick={() => deleteCategory(parent)} style={{ background: 'transparent', border: '1px solid #ff0000', color: '#ff0000', cursor: 'pointer' }} className="p-2"><Trash2 className="w-3.5 h-3.5" /></button>
                     </div>
                   </div>
 
