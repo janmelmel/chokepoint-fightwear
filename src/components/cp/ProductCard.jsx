@@ -55,12 +55,38 @@ export default function ProductCard({ product, onOrder, onPreview }) {
         <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
         <p className="font-mono-ui text-base text-[#ff8c00] mt-2">₱{Number(product.price).toLocaleString()}</p>
 
+        {/* Size selector */}
+        {sizes.length > 0 && !isSoldOut && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {sizes.map((s) => (
+              <button key={s} onClick={() => setSelectedSize(s)}
+                className={`px-2.5 py-1 font-mono-ui text-[10px] border transition-all ${
+                  selectedSize === s
+                    ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]'
+                    : 'border-[#333] text-[#555] hover:border-[#555]'
+                }`}>
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+
         <button
-          onClick={() => !isSoldOut && onOrder(product)}
-          disabled={isSoldOut} className="bg-green-500 text-[#fcf7f7] mt-4 py-3 text-xs font-mono-ui uppercase tracking-[0.2em] rounded-[40px] w-full transition-all duration-200 btn-glow-orange">
-
-
-          {isSoldOut ? 'Sold Out' : product.is_preorder ? 'Pre-order Now' : 'Add to Bag'}
+          onClick={() => {
+            if (isSoldOut) return;
+            const sizeToUse = selectedSize || (sizes.length === 0 ? 'One Size' : null);
+            if (!sizeToUse) return;
+            addToCart(product, sizeToUse);
+            setAdded(true);
+            setTimeout(() => setAdded(false), 1800);
+          }}
+          disabled={isSoldOut || (sizes.length > 0 && !selectedSize)}
+          className="mt-4 py-3 text-xs font-mono-ui uppercase tracking-[0.2em] w-full btn-glow-orange flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+          {isSoldOut ? 'Sold Out' : added ? (
+            <><Check className="w-3.5 h-3.5" /> Added!</>
+          ) : (
+            <><ShoppingBag className="w-3.5 h-3.5" /> {product.is_preorder ? 'Pre-order' : 'Add to Bag'}</>
+          )}
         </button>
       </div>
     </div>);
