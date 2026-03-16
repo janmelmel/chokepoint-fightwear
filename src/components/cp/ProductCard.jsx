@@ -62,7 +62,7 @@ export default function ProductCard({ product, onOrder, onPreview }) {
               <button key={s} onClick={() => setSelectedSize(s)}
                 className={`px-2.5 py-1 font-mono-ui text-[10px] border transition-all ${
                   selectedSize === s
-                    ? 'border-[#ff6b00] bg-[#ff6b00]/15 text-[#ff6b00]'
+                    ? 'border-[#ff6b00] bg-[#ff6b00] text-white font-bold'
                     : 'border-[#444] text-[#aaa] hover:border-[#888] hover:text-white'
                 }`}>
                 {s}
