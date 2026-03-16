@@ -74,12 +74,13 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #1a1a1a !important;
+  background: #1c1c1c !important;
   border: 1px solid #444 !important;
-  color: #ccc !important;
+  color: #d0d0d0 !important;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  border-radius: 0 !important;
 }
 .btn-glow-white:hover:not(:disabled) {
   border-color: #fff !important;
@@ -87,7 +88,7 @@ body {
   background: #2a2a2a !important;
 }
 .btn-glow-white:disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
@@ -104,8 +105,9 @@ body {
 }
 
 .card-tactical {
-  background: #111;
-  border: 1px solid #333;
+  background: #1c1c1c;
+  border: 1px solid #333333;
+  border-radius: 0;
 }
 
 .scrollbar-tactical::-webkit-scrollbar { width: 4px; }
