@@ -49,18 +49,13 @@ export default function ProductCard({ product, onOrder, onPreview }) {
         }
       </div>
 
-      {/* Info */}
-      <div className="p-4">
-        <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
-        <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
-        <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
-
-        {/* Size selector */}
-        {sizes.length > 0 && !isSoldOut && (
-          <div className="mt-3 flex flex-wrap gap-1.5">
+      {/* Size selector — above the Add to Bag button, overlaid at bottom of image */}
+      {sizes.length > 0 && !isSoldOut && (
+        <div className="px-4 pt-3 pb-0">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-tactical pb-1" style={{ scrollbarWidth: 'thin' }}>
             {sizes.map((s) => (
               <button key={s} onClick={() => setSelectedSize(s)}
-                className={`px-2.5 py-1 font-mono-ui text-[10px] border transition-all ${
+                className={`flex-shrink-0 px-2.5 py-1 font-mono-ui text-[10px] border transition-all ${
                   selectedSize === s
                     ? 'border-[#ff6b00] bg-[#ff6b00] text-white font-bold'
                     : 'border-[#444] text-[#aaa] hover:border-[#888] hover:text-white'
@@ -69,7 +64,14 @@ export default function ProductCard({ product, onOrder, onPreview }) {
               </button>
             ))}
           </div>
-        )}
+        </div>
+      )}
+
+      {/* Info */}
+      <div className="p-4 pt-3">
+        <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
+        <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
+        <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
 
         <button
           onClick={() => {
