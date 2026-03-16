@@ -93,7 +93,8 @@ export default function StaffOrders() {
                     {STAGES.map(s => <option key={s}>{s}</option>)}
                   </select>
                   <button onClick={batchUpdate} disabled={!batchStatus || updating}
-                    className="btn-glow-orange px-4 py-2 font-mono-ui text-xs tracking-widest uppercase disabled:opacity-40 flex items-center gap-2">
+                    style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
+                    className="px-4 py-2 font-mono-ui text-xs tracking-widest uppercase disabled:opacity-40 flex items-center gap-2">
                     {updating && <RefreshCw className="w-3 h-3 animate-spin" />}
                     Apply
                   </button>
