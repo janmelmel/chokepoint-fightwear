@@ -86,7 +86,7 @@ export default function StaffOrders() {
               {/* Batch */}
               {selected.size > 0 && (
                 <div className="flex items-center gap-2">
-                  <span className="font-mono-ui text-[10px] text-[#ff8c00]">{selected.size} selected</span>
+                  <span className="font-mono-ui text-[10px] text-[#ff6b00]">{selected.size} selected</span>
                   <select value={batchStatus} onChange={e => setBatchStatus(e.target.value)}
                     className="bg-[#111] border border-[#333] text-white font-mono-ui text-xs px-3 py-2 focus:outline-none focus:border-[#ff8c00]/60">
                     <option value="">Set Status...</option>
