@@ -126,10 +126,9 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
               <button
                 onClick={() => { onClose(); onOrder(product); }}
                 disabled={isSoldOut}
+                style={isSoldOut ? {} : { background: '#ff6b00', border: '1px solid #ff6b00', color: '#ffffff', fontWeight: 700, cursor: 'pointer' }}
                 className={`w-full py-3.5 font-mono-ui text-sm tracking-widest uppercase transition-all ${
-                  isSoldOut
-                    ? 'bg-[#1a1a1a] text-[#444] border border-[#222] cursor-not-allowed'
-                    : 'btn-glow-orange'
+                  isSoldOut ? 'bg-[#1a1a1a] text-[#444] border border-[#222] cursor-not-allowed' : ''
                 }`}>
                 {isSoldOut ? 'Sold Out' : product.is_preorder ? 'Pre-order Now' : 'Add to Bag'}
               </button>
