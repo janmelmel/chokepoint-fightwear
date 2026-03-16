@@ -7,12 +7,12 @@
 
 :root {
   --bg: #0a0a0a;
-  --surface: #111111;
+  --surface: #1c1c1c;
   --border: #333333;
   --red: #ff0000;
-  --orange: #ff8c00;
+  --orange: #ff6b00;
   --text: #f0f0f0;
-  --muted: #666666;
+  --muted: #888888;
 }
 
 * { box-sizing: border-box; }
@@ -52,19 +52,21 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ff8c00 !important;
-  border: 1px solid #ff8c00 !important;
-  color: #000 !important;
+  background: #ff6b00 !important;
+  border: 1px solid #ff6b00 !important;
+  color: #fff !important;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
+  border-radius: 0 !important;
 }
 .btn-glow-orange:hover:not(:disabled) {
-  background: #ffa020 !important;
-  box-shadow: 0 0 16px rgba(255,140,0,0.6), 0 0 32px rgba(255,140,0,0.3);
+  background: #ff8c00 !important;
+  border-color: #ff8c00 !important;
+  box-shadow: 0 0 18px rgba(255,107,0,0.55), 0 0 36px rgba(255,107,0,0.25);
 }
 .btn-glow-orange:disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
