@@ -81,7 +81,7 @@ export default function ProductCard({ product, onOrder, onPreview }) {
             setTimeout(() => setAdded(false), 1800);
           }}
           disabled={isSoldOut || (sizes.length > 0 && !selectedSize)}
-          className="mt-4 py-3 text-xs font-mono-ui uppercase tracking-[0.2em] w-full btn-glow-orange flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+          className="mt-4 py-3 font-mono-ui text-xs uppercase tracking-[0.2em] w-full flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed" style={{background:'#ff6b00', border:'1px solid #ff6b00', color:'#fff', fontWeight:700, cursor:'pointer'}}>
           {isSoldOut ? 'Sold Out' : added ? (
             <><Check className="w-3.5 h-3.5" /> Added!</>
           ) : (
