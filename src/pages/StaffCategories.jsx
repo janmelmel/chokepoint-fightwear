@@ -52,6 +52,12 @@ export default function StaffCategories() {
     await load();
   };
 
+  const deleteCategory = async (c) => {
+    if (!window.confirm(`Delete "${c.name}"? This cannot be undone.`)) return;
+    await base44.entities.Category.delete(c.id);
+    await load();
+  };
+
   // Separate parents and children
   const parents = cats.filter((c) => !c.parent_id);
   const childrenOf = (parentId) => cats.filter((c) => c.parent_id === parentId);
