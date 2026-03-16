@@ -45,6 +45,7 @@ const AuthenticatedApp = () => {
       <Route path="/AdminAccounts" element={<AdminAccounts />} />
       <Route path="/StaffCustomRequests" element={<StaffCustomRequests />} />
       <Route path="/Checkout" element={<Checkout />} />
+      <Route path="/StaffHero" element={<StaffHero />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
