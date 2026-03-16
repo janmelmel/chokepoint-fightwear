@@ -224,7 +224,8 @@ export default function Checkout() {
               </button>
 
               <button onClick={() => handleContact('Email')} disabled={!name || submitting}
-                className="w-full py-3.5 font-mono-ui text-sm uppercase tracking-widest btn-glow-white flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                style={{ background: '#1c1c1c', border: '1px solid #444', color: '#d0d0d0' }}
+                className="w-full py-3.5 font-mono-ui text-sm uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
                 <Mail className="w-4 h-4" />
                 Send via Email
               </button>
