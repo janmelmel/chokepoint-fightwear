@@ -354,13 +354,23 @@ export default function StaffProducts() {
                       ))}
                     </div>
                   </div>
-                  <div className="col-span-2 flex items-center gap-3">
-                    <input type="checkbox" id="preorder" checked={form.is_preorder}
-                  onChange={(e) => setForm((f) => ({ ...f, is_preorder: e.target.checked }))}
-                  className="accent-[#ff8c00]" />
-                    <label htmlFor="preorder" className="font-mono-ui text-xs text-[#888] uppercase tracking-wider cursor-pointer">
-                      Is Pre-Order
-                    </label>
+                  <div className="col-span-2 flex items-center gap-6">
+                    <div className="flex items-center gap-3">
+                      <input type="checkbox" id="preorder" checked={form.is_preorder}
+                    onChange={(e) => setForm((f) => ({ ...f, is_preorder: e.target.checked }))}
+                    className="accent-[#ff8c00]" />
+                      <label htmlFor="preorder" className="font-mono-ui text-xs text-[#888] uppercase tracking-wider cursor-pointer">
+                        Pre-Order
+                      </label>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <input type="checkbox" id="featured" checked={form.is_featured}
+                    onChange={(e) => setForm((f) => ({ ...f, is_featured: e.target.checked }))}
+                    className="accent-[#ff8c00]" />
+                      <label htmlFor="featured" className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-wider cursor-pointer flex items-center gap-1">
+                        <Star className="w-3 h-3" /> Featured
+                      </label>
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-3 pt-2">
