@@ -102,7 +102,7 @@ export default function Staff() {
                   </div>
                   <span className={`font-mono-ui text-[10px] uppercase tracking-wider px-2 py-1 border flex-shrink-0 ${
                     o.status === 'Completed' ? 'border-green-500/30 text-green-400' :
-                    o.status === 'Out for Delivery' ? 'border-[#ff8c00]/30 text-[#ff8c00]' :
+                    o.status === 'Out for Delivery' ? 'border-[#ff6b00]/30 text-[#ff6b00]' :
                     o.status === 'Packing' ? 'border-blue-500/30 text-blue-400' :
                     'border-[#333] text-[#666]'
                   }`}>{o.status}</span>

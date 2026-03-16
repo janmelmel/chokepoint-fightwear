@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const STATUSES = ['New', 'In Review', 'Quoted', 'Confirmed', 'Declined'];
 
 const STATUS_COLOR = {
-  'New': 'text-[#ff8c00] border-[#ff8c00]/30',
+  'New': 'text-[#ff6b00] border-[#ff6b00]/30',
   'In Review': 'text-blue-400 border-blue-400/30',
   'Quoted': 'text-yellow-400 border-yellow-400/30',
   'Confirmed': 'text-green-400 border-green-400/30',
