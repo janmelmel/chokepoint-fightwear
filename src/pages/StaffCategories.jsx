@@ -106,7 +106,7 @@ export default function StaffCategories() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <button onClick={() => openEdit(child)} className="btn-glow-white p-2"><Edit2 className="w-3.5 h-3.5" /></button>
+                        <button onClick={() => openEdit(child)} style={{background:'#1c1c1c',border:'1px solid #444',color:'#d0d0d0',cursor:'pointer'}} className="p-2"><Edit2 className="w-3.5 h-3.5" /></button>
                         <button onClick={() => toggle(child)} className={`transition-colors ${child.is_active !== false ? 'text-green-400 hover:text-red-400' : 'text-[#444] hover:text-green-400'}`}>
                           {child.is_active !== false ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6" />}
                         </button>
