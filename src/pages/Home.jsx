@@ -53,35 +53,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#0a0a0a]">
       <StickyHeader onCartClick={() => setCartOpen(true)} />
 
-      {/* HERO */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
-        <div className="absolute inset-0"
-        style={{ backgroundImage: 'radial-gradient(ellipse at center, #1a0000 0%, #0a0a0a 70%)', opacity: 0.6 }} />
-        <div className="absolute inset-0 opacity-[0.03]"
-        style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 40px,#fff 40px,#fff 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,#fff 40px,#fff 41px)' }} />
-
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
-        className="relative z-10 text-center">
-          <h1 style={{ fontFamily: "'Bitsumishi', sans-serif" }} className="text-6xl sm:text-8xl md:text-9xl text-white mt-6 leading-none uppercase">
-            CHOKEPOINT
-          </h1>
-          <p className="font-mono-ui text-[11px] tracking-[0.5em] text-[#ff0000] uppercase mt-3">
-            No Escape From Chokepoint
-          </p>
-          <div className="w-24 h-px bg-[#ff8c00] mx-auto mt-6 mb-8" />
-          <a href="#gear"
-          className="btn-glow-orange font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 inline-block">
-            Shop the Drop
-          </a>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.8 }}>
-            <ChevronDown className="w-5 h-5 text-[#444]" />
-          </motion.div>
-        </motion.div>
-      </section>
+      <HeroSlideshow banners={banners} />
 
       {/* PRODUCTS */}
       <main id="gear" className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
