@@ -78,7 +78,7 @@ export default function Checkout() {
           <p className="font-mono-ui text-sm text-[#666] max-w-xs">
             Thanks {name}! We've logged your order. Please complete payment via your chosen channel.
           </p>
-          <Link to="/Home" className="btn-glow-orange inline-block px-8 py-3 font-mono-ui text-xs tracking-widest uppercase mt-4">
+          <Link to="/Home" style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }} className="inline-block px-8 py-3 font-mono-ui text-xs tracking-widest uppercase mt-4">
             Back to Store
           </Link>
         </motion.div>
