@@ -212,7 +212,8 @@ function StaffNotes({ request, onSave }) {
         className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-xs px-3 py-2 focus:outline-none focus:border-[#ff8c00]/60 resize-none"
         placeholder="Add internal notes..." />
       <button onClick={handleSave}
-        className="btn-glow-orange w-full py-2 font-mono-ui text-[10px] tracking-widest uppercase">
+        style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
+        className="w-full py-2 font-mono-ui text-[10px] tracking-widest uppercase">
         {saved ? 'Saved ✓' : 'Save Notes'}
       </button>
     </div>
