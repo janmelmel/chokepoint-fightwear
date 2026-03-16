@@ -158,11 +158,15 @@ export default function StaffHero() {
                 <div>
                   <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-2">Hero Image *</label>
                   {form.image_url ? (
-                    <div className="relative w-full h-40 border border-[#ff8c00] overflow-hidden mb-2">
-                      <img src={form.image_url} className="w-full h-full object-cover" alt="" />
-                      <button onClick={() => setForm(f => ({ ...f, image_url: '' }))}
-                        className="absolute top-2 right-2 bg-black/70 text-white p-1">
-                        <X className="w-4 h-4" />
+                    <div className="mb-2 space-y-2">
+                      <ImagePositioner
+                        imageUrl={form.image_url}
+                        position={form.image_position}
+                        onChange={(pos) => setForm(f => ({ ...f, image_position: pos }))}
+                      />
+                      <button onClick={() => setForm(f => ({ ...f, image_url: '', image_position: '50% 50%' }))}
+                        className="font-mono-ui text-[10px] text-[#ff0000]/60 hover:text-[#ff0000] uppercase tracking-widest flex items-center gap-1 transition-colors">
+                        <X className="w-3 h-3" /> Remove image
                       </button>
                     </div>
                   ) : (
