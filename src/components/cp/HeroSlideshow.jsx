@@ -42,7 +42,7 @@ export default function HeroSlideshow({ banners, onShopClick }) {
           transition={{ duration: 0.8 }}
           className="absolute inset-0"
         >
-          <img src={banner.image_url} alt={banner.title || 'Hero'} className="w-full h-full object-cover" />
+          <img src={banner.image_url} alt={banner.title || 'Hero'} className="w-full h-full object-cover" style={{ objectPosition: banner.image_position || '50% 50%' }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
         </motion.div>
       </AnimatePresence>
