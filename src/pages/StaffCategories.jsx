@@ -84,10 +84,11 @@ export default function StaffCategories() {
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <button onClick={() => openCreate(parent.id)}
-                        className="btn-glow-white px-3 py-1.5 font-mono-ui text-[10px] uppercase tracking-wider flex items-center gap-1">
+                        style={{background:'#1c1c1c',border:'1px solid #444',color:'#d0d0d0',fontWeight:600,cursor:'pointer'}}
+                        className="px-3 py-1.5 font-mono-ui text-[10px] uppercase tracking-wider flex items-center gap-1">
                         <Plus className="w-3 h-3" /> Sub
                       </button>
-                      <button onClick={() => openEdit(parent)} className="btn-glow-white p-2"><Edit2 className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => openEdit(parent)} style={{background:'#1c1c1c',border:'1px solid #444',color:'#d0d0d0',cursor:'pointer'}} className="p-2"><Edit2 className="w-3.5 h-3.5" /></button>
                       <button onClick={() => toggle(parent)} className={`transition-colors ${parent.is_active !== false ? 'text-green-400 hover:text-red-400' : 'text-[#444] hover:text-green-400'}`}>
                         {parent.is_active !== false ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6" />}
                       </button>
