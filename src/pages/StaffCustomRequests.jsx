@@ -117,7 +117,7 @@ export default function StaffCustomRequests() {
               {selected.category && (
                 <div>
                   <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Category</p>
-                  <p className="font-mono-ui text-xs text-[#ff8c00]">{selected.category}</p>
+                  <p className="font-mono-ui text-xs text-[#ff6b00]">{selected.category}</p>
                 </div>
               )}
               {selected.rashguard_sleeve && (
