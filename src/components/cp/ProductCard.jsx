@@ -26,7 +26,7 @@ export default function ProductCard({ product, onOrder, onPreview }) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
 
         {product.is_preorder && !isSoldOut &&
-        <span className="absolute top-3 left-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 bg-[#ff8c00] text-black font-bold">
+        <span className="absolute top-3 left-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 bg-[#ff6b00] text-white font-bold">
             PRE-ORDER
           </span>
         }
@@ -53,7 +53,7 @@ export default function ProductCard({ product, onOrder, onPreview }) {
       <div className="p-4">
         <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
         <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
-        <p className="font-mono-ui text-base text-[#ff8c00] mt-2">₱{Number(product.price).toLocaleString()}</p>
+        <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
 
         {/* Size selector */}
         {sizes.length > 0 && !isSoldOut && (
