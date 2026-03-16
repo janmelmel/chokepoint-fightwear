@@ -107,7 +107,7 @@ export default function Home() {
             <motion.div key={p.id}
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
-                    <ProductCard product={p} onOrder={setSelectedProduct} onPreview={setDetailProduct} />
+                    <ProductCard product={p} onPreview={setDetailProduct} />
                   </motion.div>
             )}
               </div>
