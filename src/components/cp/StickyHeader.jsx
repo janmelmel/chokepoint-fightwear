@@ -58,7 +58,7 @@ export default function StickyHeader({ onCartClick }) {
           <button onClick={onCartClick} className="relative text-[#888] hover:text-white transition-colors">
             <ShoppingBag className="w-5 h-5" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#ff8c00] text-black text-[10px] font-bold rounded-full flex items-center justify-center font-mono-ui">
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#ff6b00] text-white text-[10px] font-bold flex items-center justify-center font-mono-ui">
                 {cartCount}
               </span>
             )}
@@ -70,7 +70,7 @@ export default function StickyHeader({ onCartClick }) {
           <button onClick={onCartClick} className="relative text-[#888] hover:text-white">
             <ShoppingBag className="w-5 h-5" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#ff8c00] text-black text-[10px] font-bold rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#ff6b00] text-white text-[10px] font-bold flex items-center justify-center">
                 {cartCount}
               </span>
             )}
