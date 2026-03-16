@@ -55,9 +55,9 @@ export default function HeroSlideshow({ banners }) {
           style={{ opacity: contentOpacity }}
         >
           <h1 style={{ fontFamily: "'Bitsumishi', sans-serif" }} className="text-6xl sm:text-8xl md:text-9xl text-white mt-6 leading-none uppercase">CHOKEPOINT</h1>
-          <p className="font-mono-ui text-[11px] tracking-[0.5em] text-[#ff0000] uppercase mt-3">No Escape From Chokepoint</p>
-          <div className="w-24 h-px bg-[#ff8c00] mx-auto mt-6 mb-8" />
-          <a href="#gear" className="font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 inline-block bg-[#ff8c00] text-black font-bold hover:bg-[#ffa020] transition-all">
+          <p className="font-mono-ui text-[11px] tracking-[0.5em] text-[#ff6b00] uppercase mt-3">No Escape From Chokepoint</p>
+          <div className="w-24 h-px bg-[#ff6b00] mx-auto mt-6 mb-8" />
+          <a href="#gear" className="font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 inline-block bg-[#ff6b00] text-white font-bold hover:bg-[#ff8c00] transition-all">
             Shop the Drop
           </a>
         </motion.div>
@@ -120,7 +120,7 @@ export default function HeroSlideshow({ banners }) {
             transition={{ duration: 0.5 }}
           >
             {banner.subtitle && (
-              <p className="font-mono-ui text-[11px] tracking-[0.4em] text-[#ff8c00] uppercase mb-3">{banner.subtitle}</p>
+              <p className="font-mono-ui text-[11px] tracking-[0.4em] text-[#ff6b00] uppercase mb-3">{banner.subtitle}</p>
             )}
             {banner.title && (
               <h2
