@@ -79,12 +79,17 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
           {/* Info */}
           <div className="p-6 space-y-4 flex flex-col">
             <div>
-              <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">
-                {product.category_name || 'Fightwear'}
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">
+                  {product.category_name || 'Fightwear'}
+                </p>
                 {product.is_preorder && !isSoldOut && (
-                  <span className="ml-2 text-[#ff8c00]">· Pre-Order</span>
+                  <span className="font-mono-ui text-[10px] uppercase tracking-widest px-2 py-0.5 bg-[#ff6b00] text-white font-bold">Pre-Order</span>
                 )}
-              </p>
+                {isSoldOut && (
+                  <span className="font-mono-ui text-[10px] uppercase tracking-widest px-2 py-0.5 bg-[#ff0000]/80 text-white">Sold Out</span>
+                )}
+              </div>
               <h2 className="font-tactical text-3xl text-white mt-1 leading-tight">{product.name}</h2>
               {product.edition && (
                 <p className="font-mono-ui text-xs text-[#ff8c00] mt-1">{product.edition}</p>
