@@ -47,7 +47,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      <StickyHeader onCartClick={() => {}} />
+      <StickyHeader onCartClick={() => setCartOpen(true)} />
 
       {/* HERO */}
       <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
