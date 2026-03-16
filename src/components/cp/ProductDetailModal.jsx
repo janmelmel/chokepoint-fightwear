@@ -91,7 +91,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
               )}
             </div>
 
-            <p className="font-mono-ui text-2xl text-white">₱{Number(product.price).toLocaleString()}</p>
+            <p className="font-mono-ui text-2xl text-[#ff6b00] font-bold">₱{Number(product.price).toLocaleString()}</p>
 
             {product.description && (
               <p className="text-[#888] text-sm leading-relaxed">{product.description}</p>
