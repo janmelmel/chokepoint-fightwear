@@ -3,13 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
 import { Plus, Trash2, X, ImagePlus, ChevronUp, ChevronDown, Eye, EyeOff } from 'lucide-react';
+import ImagePositioner from '@/components/cp/ImagePositioner';
 
 export default function StaffHero() {
   const [user, setUser] = useState(null);
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: '', subtitle: '', image_url: '', cta_label: 'Shop Now', cta_href: '#gear', sort_order: 0, is_active: true });
+  const [form, setForm] = useState({ title: '', subtitle: '', image_url: '', image_position: '50% 50%', cta_label: 'Shop Now', cta_href: '#gear', sort_order: 0, is_active: true });
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export default function StaffHero() {
   };
 
   const openCreate = () => {
-    setForm({ title: '', subtitle: '', image_url: '', cta_label: 'Shop Now', cta_href: '#gear', sort_order: banners.length, is_active: true });
+    setForm({ title: '', subtitle: '', image_url: '', image_position: '50% 50%', cta_label: 'Shop Now', cta_href: '#gear', sort_order: banners.length, is_active: true });
     setShowForm(true);
   };
 

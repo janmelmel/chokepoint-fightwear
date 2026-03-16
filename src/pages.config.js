@@ -51,8 +51,11 @@ import AdminAccounts from './pages/AdminAccounts';
 import Home from './pages/Home';
 import Staff from './pages/Staff';
 import StaffCategories from './pages/StaffCategories';
+import StaffCustomRequests from './pages/StaffCustomRequests';
 import StaffOrders from './pages/StaffOrders';
 import StaffProducts from './pages/StaffProducts';
+import Checkout from './pages/Checkout';
+import StaffHero from './pages/StaffHero';
 
 
 export const PAGES = {
@@ -60,8 +63,11 @@ export const PAGES = {
     "Home": Home,
     "Staff": Staff,
     "StaffCategories": StaffCategories,
+    "StaffCustomRequests": StaffCustomRequests,
     "StaffOrders": StaffOrders,
     "StaffProducts": StaffProducts,
+    "Checkout": Checkout,
+    "StaffHero": StaffHero,
 }
 
 export const pagesConfig = {
