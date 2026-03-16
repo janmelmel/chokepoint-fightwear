@@ -56,15 +56,16 @@ body {
   border: 1px solid #ff6b00 !important;
   color: #ffffff !important;
   font-weight: 700 !important;
-  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
   border-radius: 0 !important;
+  text-decoration: none !important;
 }
 .btn-glow-orange:hover:not(:disabled) {
   background: #ff8c00 !important;
   border-color: #ff8c00 !important;
   box-shadow: 0 0 18px rgba(255,107,0,0.55), 0 0 36px rgba(255,107,0,0.25);
+  color: #ffffff !important;
 }
 .btn-glow-orange:disabled {
   opacity: 0.35;
@@ -78,10 +79,11 @@ body {
   background: #1c1c1c !important;
   border: 1px solid #444 !important;
   color: #d0d0d0 !important;
-  font-weight: 600;
+  font-weight: 600 !important;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
   border-radius: 0 !important;
+  text-decoration: none !important;
 }
 .btn-glow-white:hover:not(:disabled) {
   border-color: #fff !important;
