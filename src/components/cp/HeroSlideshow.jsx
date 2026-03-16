@@ -132,7 +132,7 @@ export default function HeroSlideshow({ banners }) {
             )}
             <a
               href={banner.cta_href || '#gear'}
-              className="inline-block font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 bg-[#ff8c00] text-black font-bold hover:bg-[#ffa020] transition-all"
+              className="inline-block font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 bg-[#ff6b00] text-white font-bold hover:bg-[#ff8c00] transition-all"
             >
               {banner.cta_label || 'Shop Now'}
             </a>
