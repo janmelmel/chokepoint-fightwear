@@ -66,7 +66,7 @@ export default function StaffCategories() {
               <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Inventory</p>
               <h1 className="font-tactical text-4xl text-white">Categories</h1>
             </div>
-            <button onClick={() => openCreate()} className="btn-glow-orange px-5 py-3 text-xs font-mono-ui uppercase tracking-widest flex items-center gap-2">
+            <button onClick={() => openCreate()} style={{background:'#ff6b00',border:'1px solid #ff6b00',color:'#fff',fontWeight:700}} className="px-5 py-3 text-xs font-mono-ui uppercase tracking-widest flex items-center gap-2 cursor-pointer">
               <Plus className="w-4 h-4" /> New Category
             </button>
           </div>
