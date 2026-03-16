@@ -37,8 +37,8 @@ export default function AdminSidebar({ user, collapsed = false }) {
             <Link key={l.to} to={l.to}
               className={`flex items-center gap-3 px-3 py-2.5 font-mono-ui text-xs uppercase tracking-wider transition-all ${
                 active
-                  ? 'bg-[#ff8c00]/10 text-[#ff8c00] border-l-2 border-[#ff8c00]'
-                  : 'text-[#555] hover:text-white hover:bg-[#111]'
+                  ? 'bg-[#ff6b00]/10 text-[#ff6b00] border-l-2 border-[#ff6b00]'
+                  : 'text-[#888] hover:text-white hover:bg-[#222]'
               }`}>
               <l.icon className="w-4 h-4 flex-shrink-0" />
               {l.label}
@@ -58,7 +58,7 @@ export default function AdminSidebar({ user, collapsed = false }) {
         </button>
         <div className="px-3 py-2">
           <p className="font-mono-ui text-[9px] text-[#333] truncate">{user?.email}</p>
-          <p className="font-mono-ui text-[9px] text-[#ff8c00]">{user?.role?.toUpperCase()}</p>
+          <p className="font-mono-ui text-[9px] text-[#ff6b00]">{user?.role?.toUpperCase()}</p>
         </div>
       </div>
     </aside>
