@@ -89,27 +89,54 @@ export default function Home() {
             <p className="font-mono-ui text-[#444] text-sm">No products live yet. Check back soon.</p>
           </div> :
 
-        grouped.map(({ cat, items }) =>
-        <section key={cat.id} id={cat.slug || cat.id} className="mb-16">
+        grouped.map(({ cat, subGroups, directItems }) => {
+          const totalItems = directItems.length + subGroups.reduce((s, sg) => s + sg.items.length, 0);
+          return (
+            <section key={cat.id} id={cat.slug || cat.id} className="mb-20">
+              {/* Parent header */}
               <div className="flex items-center gap-4 mb-8">
                 <div>
                   <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Collection</p>
                   <h2 className="font-tactical text-4xl sm:text-5xl text-white">{cat.name}</h2>
                 </div>
                 <div className="flex-1 h-px bg-[#1a1a1a]" />
-                <span className="font-mono-ui text-[11px] text-[#444]">{items.length} items</span>
+                <span className="font-mono-ui text-[11px] text-[#444]">{totalItems} items</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {items.map((p, i) =>
-            <motion.div key={p.id}
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
-                    <ProductCard product={p} onPreview={setDetailProduct} />
-                  </motion.div>
-            )}
-              </div>
+
+              {/* Subcategory groups */}
+              {subGroups.map(({ sub, items }) => (
+                <div key={sub.id} id={sub.slug || sub.id} className="mb-10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-1 h-5 bg-[#ff6b00]" />
+                    <h3 className="font-tactical text-2xl text-[#ccc] uppercase">{sub.name}</h3>
+                    <div className="flex-1 h-px bg-[#1a1a1a]" />
+                    <span className="font-mono-ui text-[10px] text-[#444]">{items.length}</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {items.map((p, i) => (
+                      <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
+                        <ProductCard product={p} onPreview={setDetailProduct} />
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {/* Direct items under parent (no sub) */}
+              {directItems.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {directItems.map((p, i) => (
+                    <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
+                      <ProductCard product={p} onPreview={setDetailProduct} />
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </section>
-        )
+          );
+        })
         }
 
         {/* CUSTOM GEAR */}
