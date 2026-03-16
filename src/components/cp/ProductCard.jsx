@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye } from 'lucide-react';
+import { Eye, ShoppingBag, Check } from 'lucide-react';
+import { addToCart } from '@/lib/cartStore';
 
 export default function ProductCard({ product, onOrder, onPreview }) {
   const isSoldOut = product.stock_limit > 0 && product.total_ordered >= product.stock_limit;

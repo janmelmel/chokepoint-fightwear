@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import CPLogo from './CPLogo';
 import { ShoppingBag, Menu, X } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
 
 export default function StickyHeader({ cartCount = 0, onCartClick }) {
   const [scrolled, setScrolled] = useState(false);
