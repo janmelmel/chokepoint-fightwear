@@ -367,7 +367,7 @@ export default function StaffProducts() {
                       <input type="checkbox" id="featured" checked={form.is_featured}
                     onChange={(e) => setForm((f) => ({ ...f, is_featured: e.target.checked }))}
                     className="accent-[#ff8c00]" />
-                      <label htmlFor="featured" className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-wider cursor-pointer flex items-center gap-1">
+                      <label htmlFor="featured" className="font-mono-ui text-xs text-[#ff6b00] uppercase tracking-wider cursor-pointer flex items-center gap-1">
                         <Star className="w-3 h-3" /> Featured
                       </label>
                     </div>
