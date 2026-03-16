@@ -97,12 +97,14 @@ export default function CartDrawer({ open, onClose }) {
                   <span className="font-mono-ui text-xs text-[#555] uppercase tracking-widest">Total</span>
                   <span className="font-tactical text-2xl text-white">₱{total.toLocaleString()}</span>
                 </div>
-                <Link to="/Checkout" onClick={onClose} className="bg-green-500 text-slate-50 py-3.5 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange w-full flex items-center justify-center gap-2">
-
+                <Link to="/Checkout" onClick={onClose}
+                  style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
+                  className="py-3.5 text-xs font-mono-ui uppercase tracking-widest w-full flex items-center justify-center gap-2">
                   Proceed to Checkout
                 </Link>
-                <button onClick={onClose} className="bg-slate-50 py-2.5 text-xs font-mono-ui uppercase tracking-widest btn-glow-white w-full">
-
+                <button onClick={onClose}
+                  style={{ background: '#1c1c1c', border: '1px solid #444', color: '#d0d0d0' }}
+                  className="py-2.5 text-xs font-mono-ui uppercase tracking-widest w-full">
                   Continue Shopping
                 </button>
               </div>
