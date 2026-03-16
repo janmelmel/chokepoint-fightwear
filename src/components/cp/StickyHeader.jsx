@@ -5,7 +5,8 @@ import CPLogo from './CPLogo';
 import { ShoppingBag, Menu, X } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 
-export default function StickyHeader({ cartCount = 0, onCartClick }) {
+export default function StickyHeader({ onCartClick }) {
+  const { count: cartCount } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 

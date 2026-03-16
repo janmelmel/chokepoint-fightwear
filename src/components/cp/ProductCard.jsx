@@ -4,9 +4,12 @@ import { Eye, ShoppingBag, Check } from 'lucide-react';
 import { addToCart } from '@/lib/cartStore';
 
 export default function ProductCard({ product, onOrder, onPreview }) {
+  const [selectedSize, setSelectedSize] = useState('');
+  const [added, setAdded] = useState(false);
   const isSoldOut = product.stock_limit > 0 && product.total_ordered >= product.stock_limit;
   const stockLeft = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : null;
   const isLowStock = stockLeft !== null && stockLeft <= 5 && stockLeft > 0;
+  const sizes = product.sizes?.length ? product.sizes : [];
 
   return (
     <div className="card-tactical group overflow-hidden">
