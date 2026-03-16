@@ -109,7 +109,7 @@ export default function Checkout() {
           {cart.length === 0 ? (
             <div className="card-tactical p-8 text-center">
               <p className="font-mono-ui text-sm text-[#333]">Your bag is empty.</p>
-              <Link to="/Home" className="btn-glow-white inline-block mt-4 px-6 py-2.5 font-mono-ui text-xs tracking-widest uppercase">
+              <Link to="/Home" style={{ background: '#1c1c1c', border: '1px solid #444', color: '#d0d0d0' }} className="inline-block mt-4 px-6 py-2.5 font-mono-ui text-xs tracking-widest uppercase">
                 Shop Now
               </Link>
             </div>
