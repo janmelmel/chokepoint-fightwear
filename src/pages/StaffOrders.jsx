@@ -8,7 +8,7 @@ const STAGES = ['Processing', 'Packing', 'Out for Delivery', 'Completed', 'Cance
 const STAGE_COLOR = {
   'Processing': 'text-yellow-400 border-yellow-400/30',
   'Packing': 'text-blue-400 border-blue-400/30',
-  'Out for Delivery': 'text-[#ff8c00] border-[#ff8c00]/30',
+  'Out for Delivery': 'text-[#ff6b00] border-[#ff6b00]/30',
   'Completed': 'text-green-400 border-green-400/30',
   'Cancelled': 'text-[#ff0000] border-[#ff0000]/30',
 };
