@@ -132,6 +132,10 @@ export default function StaffHero() {
                         <ChevronDown className="w-3.5 h-3.5" />
                       </button>
                     </div>
+                    <button onClick={() => openEdit(b)} title="Edit"
+                      className="p-2 border border-[#333] text-[#555] hover:text-white hover:border-[#555] transition-all">
+                      <Edit2 className="w-4 h-4" />
+                    </button>
                     <button onClick={() => toggleActive(b)} title={b.is_active ? 'Hide' : 'Show'}
                       className="p-2 border border-[#333] text-[#555] hover:text-white hover:border-[#555] transition-all">
                       {b.is_active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
