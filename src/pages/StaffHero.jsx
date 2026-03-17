@@ -167,7 +167,7 @@ export default function StaffHero() {
               onClick={e => e.stopPropagation()}
               className="w-full max-w-md bg-[#111] border border-[#333] max-h-[90vh] overflow-y-auto scrollbar-tactical">
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#222]">
-                <h2 className="font-tactical text-2xl text-white">New Banner</h2>
+                <h2 className="font-tactical text-2xl text-white">{editBanner ? 'Edit Banner' : 'New Banner'}</h2>
                 <button onClick={() => setShowForm(false)} className="text-[#555] hover:text-white"><X className="w-5 h-5" /></button>
               </div>
               <div className="p-5 space-y-4">
