@@ -74,7 +74,7 @@ export default function ProductCard({ product, onOrder, onPreview }) {
         <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
 
         <button
-          style={isSoldOut ? {} : { background:'#ff6b00', border:'1px solid #ff6b00', color:'#fff', fontWeight:700, cursor:'pointer' }}
+          style={isSoldOut ? { background:'#1a1a1a', border:'1px solid #222', color:'#444', cursor:'not-allowed' } : { background:'#ff6b00', border:'1px solid #ff6b00', color:'#fff', fontWeight:700, cursor:'pointer' }}
           onClick={() => {
             if (isSoldOut) return;
             const sizeToUse = selectedSize || (sizes.length === 0 ? 'One Size' : null);
@@ -84,7 +84,7 @@ export default function ProductCard({ product, onOrder, onPreview }) {
             setTimeout(() => setAdded(false), 1800);
           }}
           disabled={isSoldOut || (sizes.length > 0 && !selectedSize)}
-          className="mt-4 py-3 font-mono-ui text-xs uppercase tracking-[0.2em] w-full flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed" style={{background:'#ff6b00', border:'1px solid #ff6b00', color:'#fff', fontWeight:700, cursor:'pointer'}}>
+          className="mt-auto py-3 font-mono-ui text-xs uppercase tracking-[0.2em] w-full flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
           {isSoldOut ? 'Sold Out' : added ? (
             <><Check className="w-3.5 h-3.5" /> Added!</>
           ) : (
