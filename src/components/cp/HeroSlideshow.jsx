@@ -5,7 +5,16 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 export default function HeroSlideshow({ banners }) {
   const [idx, setIdx] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef(null);
+
+  // Detect mobile
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // Auto-advance slides
   useEffect(() => {
@@ -14,26 +23,23 @@ export default function HeroSlideshow({ banners }) {
     return () => clearInterval(t);
   }, [banners.length]);
 
-  // Scroll-based parallax + dimming
+  // Scroll-based parallax + dimming (desktop only)
   useEffect(() => {
     const onScroll = () => {
-      if (!sectionRef.current) return;
+      if (!sectionRef.current || isMobile) return;
       const rect = sectionRef.current.getBoundingClientRect();
       const sectionH = sectionRef.current.offsetHeight;
-      // progress: 0 at top of section, 1 when section fully scrolled past
       const progress = Math.min(1, Math.max(0, -rect.top / sectionH));
       setScrollProgress(progress);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [isMobile]);
 
-  // Parallax offset: image moves up slower than scroll (sticky reveal)
-  const parallaxY = scrollProgress * 30; // 0% → 30% translateY
-  // Dim overlay: 0 → 0.82 as progress goes 0 → 1
-  const dimOpacity = scrollProgress * 0.82;
-  // Content fades out as user scrolls
-  const contentOpacity = Math.max(0, 1 - scrollProgress * 2.5);
+  // Disable parallax on mobile so image isn't cropped
+  const parallaxY = isMobile ? 0 : scrollProgress * 20;
+  const dimOpacity = isMobile ? 0 : scrollProgress * 0.82;
+  const contentOpacity = isMobile ? 1 : Math.max(0, 1 - scrollProgress * 2.5);
 
   if (!banners.length) {
     return (
