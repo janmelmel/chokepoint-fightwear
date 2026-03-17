@@ -74,6 +74,7 @@ export default function ProductCard({ product, onOrder, onPreview }) {
         <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
 
         <button
+          style={isSoldOut ? {} : { background:'#ff6b00', border:'1px solid #ff6b00', color:'#fff', fontWeight:700, cursor:'pointer' }}
           onClick={() => {
             if (isSoldOut) return;
             const sizeToUse = selectedSize || (sizes.length === 0 ? 'One Size' : null);
