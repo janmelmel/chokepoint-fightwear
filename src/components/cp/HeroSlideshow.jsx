@@ -91,7 +91,7 @@ export default function HeroSlideshow({ banners }) {
             src={banner.image_url}
             alt={banner.title || 'Hero'}
             className="w-full h-full object-cover"
-            style={{ objectPosition: banner.image_position || '50% 20%' }}
+            style={{ objectPosition: banner.image_position || '50% 50%' }}
           />
         </motion.div>
       </AnimatePresence>
