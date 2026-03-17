@@ -83,9 +83,8 @@ export default function HeroSlideshow({ banners }) {
           className="absolute inset-0 will-change-transform"
           style={{
             transform: `translateY(${parallaxY}%)`,
-            // Extend height so parallax never shows gaps
-            top: '-15%',
-            bottom: '-15%',
+            top: '-10%',
+            bottom: '-10%',
           }}
         >
           <img
