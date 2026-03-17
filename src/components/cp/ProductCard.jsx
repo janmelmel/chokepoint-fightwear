@@ -12,7 +12,7 @@ export default function ProductCard({ product, onOrder, onPreview }) {
   const sizes = product.sizes?.length ? product.sizes : [];
 
   return (
-    <div className="card-tactical group overflow-hidden">
+    <div className="card-tactical group overflow-hidden flex flex-col h-full">
       {/* Image — click to open detail */}
       <div className="relative aspect-square overflow-hidden bg-[#0d0d0d] cursor-pointer" onClick={() => onPreview && onPreview(product)}>
         {product.images?.[0] ?
