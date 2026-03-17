@@ -10,6 +10,7 @@ export default function StaffHero() {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editBanner, setEditBanner] = useState(null);
   const [form, setForm] = useState({ title: '', subtitle: '', image_url: '', image_position: '50% 50%', cta_label: 'Shop Now', cta_href: '#gear', sort_order: 0, is_active: true });
   const [uploading, setUploading] = useState(false);
 
