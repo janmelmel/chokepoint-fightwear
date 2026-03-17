@@ -213,7 +213,7 @@ export default function StaffHero() {
                   <button onClick={() => setShowForm(false)} className="flex-1 py-3 border border-[#333] text-[#555] font-mono-ui text-xs uppercase tracking-widest hover:border-[#555] hover:text-white transition-all">Cancel</button>
                   <button onClick={handleSave} disabled={!form.image_url}
                     className="flex-1 py-3 bg-[#ff8c00] text-black font-bold font-mono-ui text-xs uppercase tracking-widest hover:bg-[#ffa020] disabled:opacity-40 disabled:cursor-not-allowed transition-all">
-                    Add Banner
+                    {editBanner ? 'Save Changes' : 'Add Banner'}
                   </button>
                 </div>
               </div>
