@@ -53,8 +53,13 @@ export default function StaffHero() {
 
   const handleSave = async () => {
     if (!form.image_url) return;
-    await base44.entities.HeroBanner.create({ ...form, sort_order: Number(form.sort_order) });
+    if (editBanner) {
+      await base44.entities.HeroBanner.update(editBanner.id, { ...form, sort_order: Number(form.sort_order) });
+    } else {
+      await base44.entities.HeroBanner.create({ ...form, sort_order: Number(form.sort_order) });
+    }
     setShowForm(false);
+    setEditBanner(null);
     await load();
   };
 
