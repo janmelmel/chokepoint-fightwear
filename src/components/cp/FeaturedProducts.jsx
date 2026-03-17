@@ -15,9 +15,9 @@ export default function FeaturedProducts({ products, onPreview }) {
         <div className="flex-1 h-px bg-[#ff8c00]/20" />
         <span className="font-mono-ui text-[11px] text-[#444]">{products.length} items</span>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
         {products.map((p, i) => (
-          <motion.div key={p.id}
+          <motion.div key={p.id} className="flex flex-col"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
             <ProductCard product={p} onPreview={onPreview} />
