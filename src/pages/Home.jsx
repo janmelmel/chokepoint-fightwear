@@ -112,9 +112,9 @@ export default function Home() {
                     <div className="flex-1 h-px bg-[#1a1a1a]" />
                     <span className="font-mono-ui text-[10px] text-[#444]">{items.length}</span>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
                     {items.map((p, i) => (
-                      <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                      <motion.div key={p.id} className="flex flex-col" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
                         <ProductCard product={p} onPreview={setDetailProduct} />
                       </motion.div>
@@ -125,9 +125,9 @@ export default function Home() {
 
               {/* Direct items under parent (no sub) */}
               {directItems.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
                   {directItems.map((p, i) => (
-                    <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                    <motion.div key={p.id} className="flex flex-col" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
                       <ProductCard product={p} onPreview={setDetailProduct} />
                     </motion.div>
