@@ -30,7 +30,14 @@ export default function StaffHero() {
   };
 
   const openCreate = () => {
+    setEditBanner(null);
     setForm({ title: '', subtitle: '', image_url: '', image_position: '50% 50%', cta_label: 'Shop Now', cta_href: '#gear', sort_order: banners.length, is_active: true });
+    setShowForm(true);
+  };
+
+  const openEdit = (b) => {
+    setEditBanner(b);
+    setForm({ title: b.title || '', subtitle: b.subtitle || '', image_url: b.image_url, image_position: b.image_position || '50% 50%', cta_label: b.cta_label || 'Shop Now', cta_href: b.cta_href || '#gear', sort_order: b.sort_order || 0, is_active: b.is_active });
     setShowForm(true);
   };
 
