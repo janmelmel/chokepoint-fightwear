@@ -49,29 +49,29 @@ export default function ProductCard({ product, onOrder, onPreview }) {
         }
       </div>
 
-      {/* Size selector — above the Add to Bag button, overlaid at bottom of image */}
-      {sizes.length > 0 && !isSoldOut && (
-        <div className="px-4 pt-3 pb-0">
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-tactical pb-1" style={{ scrollbarWidth: 'thin' }}>
-            {sizes.map((s) => (
-              <button key={s} onClick={() => setSelectedSize(s)}
-                className={`flex-shrink-0 px-2.5 py-1 font-mono-ui text-[10px] border transition-all ${
-                  selectedSize === s
-                    ? 'border-[#ff6b00] bg-[#ff6b00] text-white font-bold'
-                    : 'border-[#444] text-[#aaa] hover:border-[#888] hover:text-white'
-                }`}>
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Info */}
-      <div className="p-4 pt-3 flex flex-col flex-1">
+      <div className="p-4 flex flex-col flex-1">
         <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
         <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
         <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
+
+        {/* Size selector — fixed height so all cards stay same height */}
+        <div className="h-8 mt-3">
+          {sizes.length > 0 && !isSoldOut && (
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-tactical" style={{ scrollbarWidth: 'none' }}>
+              {sizes.map((s) => (
+                <button key={s} onClick={() => setSelectedSize(s)}
+                  className={`flex-shrink-0 px-2.5 py-1 font-mono-ui text-[10px] border transition-all ${
+                    selectedSize === s
+                      ? 'border-[#ff6b00] bg-[#ff6b00] text-white font-bold'
+                      : 'border-[#444] text-[#aaa] hover:border-[#888] hover:text-white'
+                  }`}>
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
         <button
           style={isSoldOut ? { background:'#1a1a1a', border:'1px solid #222', color:'#444', cursor:'not-allowed' } : { background:'#ff6b00', border:'1px solid #ff6b00', color:'#fff', fontWeight:700, cursor:'pointer' }}
