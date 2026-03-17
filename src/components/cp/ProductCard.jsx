@@ -68,7 +68,7 @@ export default function ProductCard({ product, onOrder, onPreview }) {
       )}
 
       {/* Info */}
-      <div className="p-4 pt-3">
+      <div className="p-4 pt-3 flex flex-col flex-1">
         <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
         <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
         <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
