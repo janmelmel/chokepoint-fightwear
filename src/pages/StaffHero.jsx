@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
-import { Plus, Trash2, X, ImagePlus, ChevronUp, ChevronDown, Eye, EyeOff } from 'lucide-react';
+import { Plus, Trash2, X, ImagePlus, ChevronUp, ChevronDown, Eye, EyeOff, Edit2 } from 'lucide-react';
 import ImagePositioner from '@/components/cp/ImagePositioner';
 
 export default function StaffHero() {
