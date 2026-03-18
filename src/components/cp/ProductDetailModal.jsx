@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, Package } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Package, Ruler, ShoppingBag, Check } from 'lucide-react';
+import SizeChartModal from './SizeChartModal';
+import { addToCart } from '@/lib/cartStore';
 
 export default function ProductDetailModal({ product, onClose, onOrder }) {
   const images = product.images?.length ? product.images : [];
   const [activeIdx, setActiveIdx] = useState(0);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [showSizeChart, setShowSizeChart] = useState(false);
+  const [added, setAdded] = useState(false);
+  const [sizeError, setSizeError] = useState(false);
   const isSoldOut = product.stock_limit > 0 && product.total_ordered >= product.stock_limit;
   const stockLeft = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : null;
+  const sizes = product.sizes?.length ? product.sizes : [];
 
   const prev = () => setActiveIdx(i => (i - 1 + images.length) % images.length);
   const next = () => setActiveIdx(i => (i + 1) % images.length);
@@ -102,12 +109,32 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
               <p className="text-[#888] text-sm leading-relaxed">{product.description}</p>
             )}
 
-            {product.sizes?.length > 0 && (
+            {sizes.length > 0 && (
               <div>
-                <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-2">Available Sizes</p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">
+                    Select Size {sizeError && <span className="text-[#ff0000] ml-2">← Please select a size</span>}
+                  </p>
+                  <button
+                    onClick={() => setShowSizeChart(true)}
+                    className="flex items-center gap-1 font-mono-ui text-[10px] text-[#ff8c00] hover:text-white uppercase tracking-widest transition-colors"
+                  >
+                    <Ruler className="w-3 h-3" /> Size Guide
+                  </button>
+                </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {product.sizes.map(s => (
-                    <span key={s} className="px-2.5 py-1 border border-[#333] font-mono-ui text-xs text-[#888]">{s}</span>
+                  {sizes.map(s => (
+                    <button
+                      key={s}
+                      onClick={() => { setSelectedSize(s); setSizeError(false); }}
+                      className={`px-3 py-1.5 border font-mono-ui text-xs transition-all ${
+                        selectedSize === s
+                          ? 'border-[#ff8c00] bg-[#ff8c00] text-white font-bold'
+                          : 'border-[#333] text-[#888] hover:border-[#555] hover:text-white'
+                      }`}
+                    >
+                      {s}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -124,18 +151,52 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
 
             <div className="mt-auto pt-4">
               <button
-                onClick={() => { onClose(); onOrder(product); }}
+                onClick={() => {
+                  if (isSoldOut) return;
+                  const sizeToUse = selectedSize || (sizes.length === 0 ? 'One Size' : null);
+                  if (!sizeToUse) {
+                    setSizeError(true);
+                    return;
+                  }
+                  addToCart(product, sizeToUse);
+                  setAdded(true);
+                  setTimeout(() => {
+                    setAdded(false);
+                    onClose();
+                    onOrder(product);
+                  }, 800);
+                }}
                 disabled={isSoldOut}
-                style={isSoldOut ? {} : { background: '#ff6b00', border: '1px solid #ff6b00', color: '#ffffff', fontWeight: 700, cursor: 'pointer' }}
-                className={`w-full py-3.5 font-mono-ui text-sm tracking-widest uppercase transition-all ${
-                  isSoldOut ? 'bg-[#1a1a1a] text-[#444] border border-[#222] cursor-not-allowed' : ''
-                }`}>
-                {isSoldOut ? 'Sold Out' : product.is_preorder ? 'Pre-order Now' : 'Add to Bag'}
+                style={
+                  isSoldOut
+                    ? { background: '#1a1a1a', border: '1px solid #222', color: '#444', cursor: 'not-allowed' }
+                    : (sizes.length > 0 && !selectedSize)
+                    ? { background: '#333', border: '1px solid #444', color: '#666', cursor: 'not-allowed' }
+                    : { background: '#ff6b00', border: '1px solid #ff6b00', color: '#ffffff', fontWeight: 700, cursor: 'pointer' }
+                }
+                className="w-full py-3.5 font-mono-ui text-sm tracking-widest uppercase transition-all flex items-center justify-center gap-2"
+              >
+                {isSoldOut ? (
+                  'Sold Out'
+                ) : added ? (
+                  <><Check className="w-4 h-4" /> Added!</>
+                ) : (sizes.length > 0 && !selectedSize) ? (
+                  'Select a Size'
+                ) : (
+                  <><ShoppingBag className="w-4 h-4" /> {product.is_preorder ? 'Pre-order Now' : 'Add to Bag'}</>
+                )}
               </button>
             </div>
           </div>
         </div>
       </motion.div>
+
+      {/* Size Chart Modal */}
+      <AnimatePresence>
+        {showSizeChart && (
+          <SizeChartModal onClose={() => setShowSizeChart(false)} />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

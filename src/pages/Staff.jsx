@@ -38,7 +38,7 @@ export default function Staff() {
   };
 
   const StatCard = ({ label, value, icon: Icon, color = '#ff8c00', sub }) => (  // eslint-disable-line
-    <div className="card-tactical p-5">
+    <div className="bg-[#1c1c1c] border border-[#333] p-5">
       <div className="flex items-start justify-between">
         <div>
           <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{label}</p>
