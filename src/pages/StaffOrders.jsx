@@ -198,6 +198,49 @@ export default function StaffOrders() {
         </div>
       </div>
     </div>
+      {/* Delivery Modal */}
+      <AnimatePresence>
+        {deliveryModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
+            onClick={() => setDeliveryModal(null)}>
+            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
+              onClick={e => e.stopPropagation()}
+              className="w-full max-w-sm bg-[#111] border border-[#333]">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-[#222]">
+                <h2 className="font-tactical text-2xl text-white">Out for Delivery</h2>
+                <button onClick={() => setDeliveryModal(null)} className="text-[#555] hover:text-white"><X className="w-5 h-5" /></button>
+              </div>
+              <div className="p-5 space-y-4">
+                <div>
+                  <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Logistics</label>
+                  <select value={logistics} onChange={e => setLogistics(e.target.value)}
+                    className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60">
+                    {LOGISTICS.map(l => <option key={l}>{l}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Tracking Number</label>
+                  <input value={trackingNumber} onChange={e => setTrackingNumber(e.target.value)}
+                    placeholder="e.g. 1234567890"
+                    className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
+                </div>
+                <div className="flex gap-3 pt-1">
+                  <button onClick={() => setDeliveryModal(null)}
+                    className="flex-1 py-3 border border-[#333] text-[#555] font-mono-ui text-xs uppercase tracking-widest hover:border-[#555] hover:text-white transition-all">
+                    Cancel
+                  </button>
+                  <button onClick={confirmDelivery} disabled={!trackingNumber || updating}
+                    style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
+                    className="flex-1 py-3 font-mono-ui text-xs uppercase tracking-widest disabled:opacity-40">
+                    {updating ? 'Saving...' : 'Confirm'}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </StaffGuard>);
 
 }
