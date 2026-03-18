@@ -74,7 +74,13 @@ export default function ProductCard({ product, onOrder, onPreview }) {
         </div>
 
         <button
-          style={isSoldOut ? { background:'#1a1a1a', border:'1px solid #222', color:'#444', cursor:'not-allowed' } : { background:'#ff6b00', border:'1px solid #ff6b00', color:'#fff', fontWeight:700, cursor:'pointer' }}
+          style={
+            isSoldOut 
+              ? { background:'#1a1a1a', border:'1px solid #222', color:'#444', cursor:'not-allowed' }
+              : (sizes.length > 0 && !selectedSize)
+              ? { background:'#333', border:'1px solid #444', color:'#666', cursor:'not-allowed' }
+              : { background:'#ff6b00', border:'1px solid #ff6b00', color:'#fff', fontWeight:700, cursor:'pointer' }
+          }
           onClick={() => {
             if (isSoldOut) return;
             const sizeToUse = selectedSize || (sizes.length === 0 ? 'One Size' : null);
@@ -84,9 +90,11 @@ export default function ProductCard({ product, onOrder, onPreview }) {
             setTimeout(() => setAdded(false), 1800);
           }}
           disabled={isSoldOut || (sizes.length > 0 && !selectedSize)}
-          className="mt-auto py-3 font-mono-ui text-xs uppercase tracking-[0.2em] w-full flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+          className="mt-auto py-3 font-mono-ui text-xs uppercase tracking-[0.2em] w-full flex items-center justify-center gap-2">
           {isSoldOut ? 'Sold Out' : added ? (
             <><Check className="w-3.5 h-3.5" /> Added!</>
+          ) : (sizes.length > 0 && !selectedSize) ? (
+            'Select Size'
           ) : (
             <><ShoppingBag className="w-3.5 h-3.5" /> {product.is_preorder ? 'Pre-order' : 'Add to Bag'}</>
           )}
