@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
 import StaffGuard from '@/components/cp/StaffGuard';
-import { UserPlus, Shield, User, X } from 'lucide-react';
+import { UserPlus, Shield, User, X, Trash2, Ban } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminAccounts() {
@@ -43,6 +43,18 @@ export default function AdminAccounts() {
 
   const changeRole = async (uid, role) => {
     await base44.entities.User.update(uid, { role });
+    await load();
+  };
+
+  const deleteUser = async (uid) => {
+    if (!window.confirm('Remove this staff account? They will lose all access.')) return;
+    await base44.entities.User.delete(uid);
+    await load();
+  };
+
+  const toggleDisable = async (u) => {
+    const newRole = u.role === 'disabled' ? 'user' : 'disabled';
+    await base44.entities.User.update(u.id, { role: newRole });
     await load();
   };
 
@@ -87,15 +99,22 @@ export default function AdminAccounts() {
                       <p className="font-mono-ui text-[10px] text-[#555] truncate">{u.email}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      {u.id !== user.id ?
-                    <select value={u.role || 'user'} onChange={(e) => changeRole(u.id, e.target.value)}
-                    className="bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-[10px] px-2 py-1.5 focus:outline-none focus:border-[#ff8c00]/60">
-                          <option value="user">Staff</option>
-                          <option value="admin">Admin</option>
-                        </select> :
-
-                    <span className="font-mono-ui text-[10px] text-[#ff8c00] border border-[#ff8c00]/30 px-2 py-1">YOU</span>
-                    }
+                      {u.id !== user.id ? (
+                        <>
+                          <select value={u.role === 'disabled' ? 'disabled' : (u.role || 'user')} onChange={(e) => changeRole(u.id, e.target.value)}
+                            className="bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-[10px] px-2 py-1.5 focus:outline-none focus:border-[#ff8c00]/60">
+                            <option value="user">Staff</option>
+                            <option value="admin">Admin</option>
+                            <option value="disabled">Disabled</option>
+                          </select>
+                          <button onClick={() => deleteUser(u.id)} title="Delete account"
+                            className="p-1.5 border border-[#ff0000]/30 text-[#ff0000]/50 hover:border-[#ff0000] hover:text-[#ff0000] transition-all">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </>
+                      ) : (
+                        <span className="font-mono-ui text-[10px] text-[#ff8c00] border border-[#ff8c00]/30 px-2 py-1">YOU</span>
+                      )}
                     </div>
                   </div>
                 )}

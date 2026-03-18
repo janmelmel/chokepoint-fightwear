@@ -20,9 +20,9 @@ export default function StaffGuard({ children, adminOnly = false }) {
         return;
       }
 
-      // Only admin role can access staff portal
+      // Only admin role can access staff portal — role 'user' goes to homepage
       if (u.role !== 'admin') {
-        setStatus('denied');
+        window.location.href = '/Home';
         return;
       }
 

@@ -12,13 +12,13 @@ export default function AdminSidebar({ user, collapsed = false }) {
   const isAdmin = user?.role === 'admin';
 
   const links = [
-    { label: 'Dashboard', icon: LayoutDashboard, to: createPageUrl('Staff'), adminOnly: true },
+    { label: 'Dashboard', icon: LayoutDashboard, to: createPageUrl('Staff') },
     { label: 'Products', icon: Package, to: createPageUrl('StaffProducts') },
     { label: 'Categories', icon: Tag, to: createPageUrl('StaffCategories') },
     { label: 'Orders', icon: ShoppingBag, to: createPageUrl('StaffOrders') },
     { label: 'Hero Banners', icon: ImageIcon, to: createPageUrl('StaffHero') },
     { label: 'Custom Requests', icon: Paintbrush, to: createPageUrl('StaffCustomRequests') },
-    ...(isAdmin ? [{ label: 'Accounts', icon: Users, to: createPageUrl('AdminAccounts'), adminOnly: true }] : []),
+    ...(isAdmin ? [{ label: 'Accounts', icon: Users, to: createPageUrl('AdminAccounts') }] : []),
   ];
 
   return (
