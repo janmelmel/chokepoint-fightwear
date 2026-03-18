@@ -32,7 +32,7 @@ export default function Checkout() {
     .join('\n');
 
   const orderMsg = encodeURIComponent(
-    `Hi! I'd like to place an order:\n\n${itemsSummary}\n\n💰 Total: ₱${subtotal.toLocaleString()}\n\nName: ${name}\nPhone: ${phone}`
+    `Hi! I'd like to place an order:\n\n${itemsSummary}${promoCode ? `\n\n🏷️ Promo: ${promoCode.code} (-₱${discount.toLocaleString()})` : ''}\n\n💰 Total: ₱${total.toLocaleString()}\n\nName: ${name}\nPhone: ${phone}`
   );
 
   const handleContact = async (method) => {
@@ -51,7 +51,7 @@ export default function Checkout() {
           customer_phone: phone,
           size: item.size,
           quantity: item.quantity,
-          total_amount: item.price * item.quantity,
+          total_amount: item.price * item.quantity - (discount > 0 ? Math.round((item.price * item.quantity / subtotal) * discount) : 0),
           payment_method: method,
           status: 'Processing',
           is_preorder: !!item.is_preorder,
