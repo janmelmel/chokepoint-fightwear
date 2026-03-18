@@ -17,7 +17,7 @@ export default function AboutSection() {
     {
       icon: Users,
       title: 'Community Driven',
-      desc: 'Built by grapplers, for grapplers. We're part of the community we serve.'
+      desc: "Built by grapplers, for grapplers. We're part of the community we serve."
     }
   ];
 
