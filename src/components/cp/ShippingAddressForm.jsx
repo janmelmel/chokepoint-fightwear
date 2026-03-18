@@ -9,7 +9,7 @@ import {
   SHIPPING_ZONES,
 } from '@/lib/philippineAddress';
 
-const INPUT_CLASS = "w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60";
+const INPUT_CLASS = "w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 appearance-none";
 const LABEL_CLASS = "font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1";
 
 export default function ShippingAddressForm({ value, onChange, errors }) {
