@@ -157,36 +157,83 @@ export default function StaffOrders() {
               </div>
 
               <div className="divide-y divide-[#1a1a1a]">
-                {filtered.map((order) =>
-                <div key={order.id}
-                className={`flex items-center gap-3 px-4 py-3 hover:bg-[#111] transition-colors ${selected.has(order.id) ? 'bg-[#ff8c00]/5' : ''}`}>
+                {filtered.map((order) => (
+                <div key={order.id} className={`${selected.has(order.id) ? 'bg-[#ff8c00]/5' : ''}`}>
+                  {/* Main row */}
+                  <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#111] transition-colors">
                     <button onClick={() => toggleSelect(order.id)} className="text-[#555] hover:text-[#ff8c00] flex-shrink-0">
-                      {selected.has(order.id) ?
-                    <CheckSquare className="w-4 h-4 text-[#ff8c00]" /> :
-                    <Square className="w-4 h-4" />}
+                      {selected.has(order.id) ? <CheckSquare className="w-4 h-4 text-[#ff8c00]" /> : <Square className="w-4 h-4" />}
                     </button>
 
                     <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
                       <div>
                         <p className="font-mono-ui text-xs text-white truncate">{order.customer_name}</p>
                         <p className="font-mono-ui text-[10px] text-[#555]">{order.order_number || order.id.slice(-6)}</p>
+                        {order.customer_phone && <p className="font-mono-ui text-[10px] text-[#444]">{order.customer_phone}</p>}
                       </div>
                       <div className="hidden sm:block">
                         <p className="font-mono-ui text-xs text-[#888] truncate">{order.product_name}</p>
                         <p className="font-mono-ui text-[10px] text-[#555]">Size: {order.size} · {order.payment_method}</p>
+                        {order.custom_print_text && (
+                          <p className="font-mono-ui text-[10px] text-[#ff8c00] flex items-center gap-1">
+                            <Printer className="w-3 h-3" /> {order.custom_print_text}
+                          </p>
+                        )}
                       </div>
                       <div className="hidden sm:block">
                         <p className="font-mono-ui text-xs text-[#ff8c00]">₱{Number(order.total_amount || 0).toLocaleString()}</p>
+                        {order.shipping_fee > 0 && <p className="font-mono-ui text-[10px] text-[#555]">+₱{order.shipping_fee} ship</p>}
                         {order.is_preorder && <span className="font-mono-ui text-[9px] text-[#555]">PRE-ORDER</span>}
                       </div>
                     </div>
 
-                    <select value={order.status} onChange={(e) => updateSingle(order.id, e.target.value)}
-                  className={`bg-[#0a0a0a] border font-mono-ui text-[10px] px-2 py-1.5 focus:outline-none transition-colors flex-shrink-0 ${STAGE_COLOR[order.status] || 'border-[#333] text-[#666]'}`}>
-                      {STAGES.map((s) => <option key={s} value={s}>{s}</option>)}
-                    </select>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {/* Expand button for shipping details */}
+                      {(order.shipping_province || order.shipping_street) && (
+                        <button onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                          className={`p-1.5 border transition-all ${expandedOrder === order.id ? 'border-[#ff8c00]/50 text-[#ff8c00]' : 'border-[#333] text-[#555] hover:text-white hover:border-[#555]'}`}
+                          title="Shipping details">
+                          <MapPin className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                      <select value={order.status} onChange={(e) => updateSingle(order.id, e.target.value)}
+                        className={`bg-[#0a0a0a] border font-mono-ui text-[10px] px-2 py-1.5 focus:outline-none transition-colors ${STAGE_COLOR[order.status] || 'border-[#333] text-[#666]'}`}>
+                        {STAGES.map((s) => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
                   </div>
-                )}
+
+                  {/* Expanded Shipping Details */}
+                  {expandedOrder === order.id && (
+                    <div className="px-12 py-3 bg-[#0d0d0d] border-t border-[#1a1a1a] grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Ship To</p>
+                        <p className="font-mono-ui text-xs text-white">{order.customer_name}</p>
+                        <p className="font-mono-ui text-[10px] text-[#888]">{order.customer_phone}</p>
+                        <p className="font-mono-ui text-[10px] text-[#888]">{order.customer_email}</p>
+                        <div className="mt-1.5 font-mono-ui text-[10px] text-[#888] leading-relaxed">
+                          {order.shipping_street && <span>{order.shipping_street}, </span>}
+                          {order.shipping_barangay && <span>{order.shipping_barangay}, </span>}
+                          {order.shipping_city && <span>{order.shipping_city}, </span>}
+                          {order.shipping_province && <span>{order.shipping_province} </span>}
+                          {order.shipping_postal_code && <span>{order.shipping_postal_code}</span>}
+                        </div>
+                        {order.shipping_delivery_notes && (
+                          <p className="font-mono-ui text-[10px] text-[#ff8c00] mt-1">Note: {order.shipping_delivery_notes}</p>
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Shipping</p>
+                        <p className="font-mono-ui text-[10px] text-[#888]">Zone: {order.shipping_zone || '—'}</p>
+                        <p className="font-mono-ui text-[10px] text-[#888]">Fee: {order.shipping_fee ? `₱${order.shipping_fee}` : 'TBD'}</p>
+                        {order.tracking_number && (
+                          <p className="font-mono-ui text-[10px] text-[#ff8c00] mt-1">{order.logistics}: {order.tracking_number}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                ))}
 
                 {filtered.length === 0 &&
                 <div className="text-center py-12">
