@@ -20,15 +20,8 @@ export default function StaffGuard({ children, adminOnly = false }) {
         return;
       }
 
-      // User exists in the system (invited users only have records here)
-      // Check role: admin or user (staff)
-      const allowed = u.role === 'admin' || u.role === 'user';
-      if (!allowed) {
-        setStatus('denied');
-        return;
-      }
-
-      if (adminOnly && u.role !== 'admin') {
+      // Only admin role can access staff portal
+      if (u.role !== 'admin') {
         setStatus('denied');
         return;
       }

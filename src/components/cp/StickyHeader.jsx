@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import CPLogo from './CPLogo';
-import { ShoppingBag, Menu, X, ChevronDown } from 'lucide-react';
+import { ShoppingBag, Menu, X, ChevronDown, UserCircle } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { base44 } from '@/api/base44Client';
 
@@ -12,6 +12,7 @@ export default function StickyHeader({ onCartClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [authUser, setAuthUser] = useState(undefined); // undefined=loading, null=guest
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -24,6 +25,7 @@ export default function StickyHeader({ onCartClick }) {
       const cats = await base44.entities.Category.filter({ is_active: true }, 'sort_order');
       setCategories(cats);
     })();
+    base44.auth.me().then(u => setAuthUser(u)).catch(() => setAuthUser(null));
   }, []);
 
   const parents = categories.filter(c => !c.parent_id);
@@ -111,6 +113,26 @@ export default function StickyHeader({ onCartClick }) {
               </span>
             )}
           </button>
+
+          {/* Profile / Login button */}
+          {authUser === null ? (
+            <button onClick={() => base44.auth.redirectToLogin(window.location.href)}
+              title="Login"
+              className="text-[#555] hover:text-white transition-colors">
+              <UserCircle className="w-5 h-5" />
+            </button>
+          ) : authUser?.role === 'admin' ? (
+            <Link to="/Staff" title="Staff Portal"
+              className="text-[#ff8c00] hover:text-white transition-colors">
+              <UserCircle className="w-5 h-5" />
+            </Link>
+          ) : authUser ? (
+            <button onClick={() => base44.auth.logout(window.location.href)}
+              title={authUser.email}
+              className="text-[#555] hover:text-[#ff0000] transition-colors">
+              <UserCircle className="w-5 h-5" />
+            </button>
+          ) : null}
         </div>
 
         {/* Mobile */}
@@ -123,6 +145,16 @@ export default function StickyHeader({ onCartClick }) {
               </span>
             )}
           </button>
+          {/* Mobile profile/login */}
+          {authUser === null ? (
+            <button onClick={() => base44.auth.redirectToLogin(window.location.href)} className="text-[#555] hover:text-white">
+              <UserCircle className="w-5 h-5" />
+            </button>
+          ) : authUser?.role === 'admin' ? (
+            <Link to="/Staff" className="text-[#ff8c00] hover:text-white">
+              <UserCircle className="w-5 h-5" />
+            </Link>
+          ) : null}
           <button onClick={() => setMenuOpen(!menuOpen)} className="text-[#888] hover:text-white">
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
