@@ -341,7 +341,7 @@ export default function StaffProducts() {
                       {isAdmin && <option>Live</option>}
                     </select>
                   </div>
-                  {!form.is_preorder && (
+                  {form.order_type !== 'contact_to_order' && form.order_type !== 'preorder' && (
                   <div>
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Global Stock Limit (0=unlimited)</label>
                     <input type="number" value={form.stock_limit} onChange={(e) => setForm((f) => ({ ...f, stock_limit: e.target.value }))}
@@ -472,14 +472,6 @@ export default function StaffProducts() {
                   </div>
 
                   <div className="col-span-2 flex items-center gap-6">
-                    <div className="flex items-center gap-3">
-                      <input type="checkbox" id="preorder" checked={form.is_preorder}
-                    onChange={(e) => setForm((f) => ({ ...f, is_preorder: e.target.checked }))}
-                    className="accent-[#ff8c00]" />
-                      <label htmlFor="preorder" className="font-mono-ui text-xs text-[#888] uppercase tracking-wider cursor-pointer">
-                        Pre-Order
-                      </label>
-                    </div>
                     <div className="flex items-center gap-3">
                       <input type="checkbox" id="featured" checked={form.is_featured}
                     onChange={(e) => setForm((f) => ({ ...f, is_featured: e.target.checked }))}
