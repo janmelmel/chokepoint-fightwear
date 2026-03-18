@@ -87,7 +87,8 @@ export default function StaffProducts() {
       price: Number(form.price),
       stock_limit: Number(form.stock_limit),
       shipping_fee_override: form.shipping_fee_override !== '' ? Number(form.shipping_fee_override) : null,
-      stock_per_size: form.is_preorder ? {} : form.stock_per_size,
+      stock_per_size: form.order_type === 'contact_to_order' || form.is_preorder ? {} : form.stock_per_size,
+      is_preorder: form.order_type === 'preorder',
     };
     if (editProduct) await base44.entities.Product.update(editProduct.id, data);
     else await base44.entities.Product.create(data);
@@ -114,6 +115,8 @@ export default function StaffProducts() {
       description: p.description || '',
       images: p.images || [],
       status: 'Draft',
+      order_type: p.order_type || 'add_to_bag',
+      inquiry_note: p.inquiry_note || '',
       is_preorder: !!p.is_preorder,
       is_featured: false,
       stock_limit: p.stock_limit || 0,
