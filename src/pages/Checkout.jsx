@@ -88,7 +88,7 @@ export default function Checkout() {
       await base44.integrations.Core.SendEmail({
         to: email,
         subject: `Order Confirmed #${orderNum} — Chokepoint Fightwear`,
-        body: `Hi ${name}!\n\nYour order has been received. Here's your summary:\n\nOrder #: ${orderNum}\n\n${itemsList}${discount > 0 ? `\nDiscount: -₱${discount.toLocaleString()}` : ''}\nTotal: ₱${total.toLocaleString()}\n\nTo track your order, visit:\nhttps://chopkepoint-fightwear.base44.app/TrackOrder\n\nUse your order number: ${orderNum}\n\nWe'll be in touch once your order is being processed. Thank you for supporting Chokepoint Fightwear!\n\n— Chokepoint Fightwear Team`,
+        body: `Hi ${name}!\n\nYour order has been received. Here's your summary:\n\nOrder #: ${orderNum}\n\n${itemsList}${discount > 0 ? `\nDiscount: -₱${discount.toLocaleString()}` : ''}\nTotal: ₱${total.toLocaleString()}\n\nTo track your order, visit:\n${window.location.origin}/TrackOrder\n\nUse your order number: ${orderNum}\n\nWe'll be in touch once your order is being processed. Thank you for supporting Chokepoint Fightwear!\n\n— Chokepoint Fightwear Team`,
       });
     }
 
@@ -159,7 +159,7 @@ export default function Checkout() {
       await base44.integrations.Core.SendEmail({
         to: email,
         subject: `Order Confirmed #${orderNum} — Chokepoint Fightwear`,
-        body: `Hi ${name}!\n\nYour order has been received. Here's your summary:\n\nOrder #: ${orderNum}\n\n${itemsList}${discount > 0 ? `\nDiscount: -₱${discount.toLocaleString()}` : ''}\nTotal: ₱${total.toLocaleString()}\n\nTo track your order, visit:\nhttps://chopkepoint-fightwear.base44.app/TrackOrder\n\nUse your order number: ${orderNum}\n\nWe'll be in touch once your order is being processed. Thank you for supporting Chokepoint Fightwear!\n\n— Chokepoint Fightwear Team`,
+        body: `Hi ${name}!\n\nYour order has been received. Here's your summary:\n\nOrder #: ${orderNum}\n\n${itemsList}${discount > 0 ? `\nDiscount: -₱${discount.toLocaleString()}` : ''}\nTotal: ₱${total.toLocaleString()}\n\nTo track your order, visit:\n${window.location.origin}/TrackOrder\n\nUse your order number: ${orderNum}\n\nWe'll be in touch once your order is being processed. Thank you for supporting Chokepoint Fightwear!\n\n— Chokepoint Fightwear Team`,
       });
     }
 
