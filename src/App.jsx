@@ -20,6 +20,7 @@ import StaffHero from './pages/StaffHero';
 import Category from './pages/Category';
 import TrackOrder from './pages/TrackOrder';
 import FAQ from './pages/FAQ';
+import OrderConfirmed from './pages/OrderConfirmed';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();

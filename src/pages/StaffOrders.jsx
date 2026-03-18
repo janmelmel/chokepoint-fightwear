@@ -179,6 +179,14 @@ export default function StaffOrders() {
                             <Printer className="w-3 h-3" /> {order.custom_print_text}
                           </p>
                         )}
+                      {order.payment_status && (
+                        <p className={`font-mono-ui text-[10px] flex items-center gap-1 ${
+                          order.payment_status === 'Paid' ? 'text-green-400' : order.payment_status === 'Failed' ? 'text-[#ff0000]' : 'text-yellow-400'
+                        }`}>
+                          <CreditCard className="w-3 h-3" /> {order.payment_status}
+                          {order.paymongo_payment_method && ` · ${order.paymongo_payment_method}`}
+                        </p>
+                      )}
                       </div>
                       <div className="hidden sm:block">
                         <p className="font-mono-ui text-xs text-[#ff8c00]">₱{Number(order.total_amount || 0).toLocaleString()}</p>
