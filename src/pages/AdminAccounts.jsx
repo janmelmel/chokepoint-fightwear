@@ -141,9 +141,9 @@ export default function AdminAccounts() {
                   </select>
                 </div>
                 <div className="flex gap-3 pt-2">
-                  <button onClick={() => setShowInvite(false)} className="btn-glow-white flex-1 py-3 font-mono-ui text-xs tracking-widest uppercase">Cancel</button>
-                  <button onClick={handleInvite} disabled={!inviteEmail || inviting}
-                  className="btn-glow-orange flex-1 py-3 font-mono-ui text-xs tracking-widest uppercase disabled:opacity-50">
+                  <button onClick={() => setShowInvite(false)} className="bg-red-600 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-white flex-1">Cancel</button>
+                  <button onClick={handleInvite} disabled={!inviteEmail || inviting} className="bg-green-500 text-gray-50 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange flex-1 disabled:opacity-50">
+                    
                     {inviting ? 'Sending...' : 'Send Invite'}
                   </button>
                 </div>
