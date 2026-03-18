@@ -1,6 +1,6 @@
 /**
  * Cart store using localStorage.
- * Cart item shape: { id, productId, name, price, image, size, quantity, is_preorder }
+ * Cart item shape: { id, productId, name, price, image, size, quantity, is_preorder, custom_text, shipping_fee_override }
  */
 
 const STORAGE_KEY = 'cp_cart';
@@ -18,15 +18,20 @@ function saveCart(cart) {
   window.dispatchEvent(new Event('cp_cart_updated'));
 }
 
-export function addToCart(product, size, quantity = 1) {
+export function addToCart(product, size, quantity = 1, customText = '') {
   const cart = getCart();
-  const stockLimit = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : Infinity;
+  // Per-size stock support
+  const sizeStock = product.stock_per_size?.[size];
+  const globalStock = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : Infinity;
+  const stockLimit = sizeStock != null ? sizeStock : globalStock;
+
   const existingIdx = cart.findIndex(
     (i) => i.productId === product.id && i.size === size
   );
   if (existingIdx >= 0) {
     const newQty = cart[existingIdx].quantity + quantity;
     cart[existingIdx].quantity = Math.min(newQty, stockLimit);
+    if (customText) cart[existingIdx].custom_text = customText;
   } else {
     cart.push({
       id: `${product.id}-${size}-${Date.now()}`,
@@ -37,7 +42,11 @@ export function addToCart(product, size, quantity = 1) {
       size,
       quantity: Math.min(quantity, stockLimit),
       is_preorder: !!product.is_preorder,
-      stock_limit: product.stock_limit > 0 ? stockLimit : null,
+      stock_limit: stockLimit !== Infinity ? stockLimit : null,
+      custom_text: customText || '',
+      shipping_fee_override: product.shipping_fee_override ?? null,
+      allow_custom_print: !!product.allow_custom_print,
+      custom_print_label: product.custom_print_label || '',
     });
   }
   saveCart(cart);

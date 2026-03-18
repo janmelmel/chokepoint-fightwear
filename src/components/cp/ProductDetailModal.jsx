@@ -11,12 +11,59 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [added, setAdded] = useState(false);
   const [sizeError, setSizeError] = useState(false);
-  const isSoldOut = product.stock_limit > 0 && product.total_ordered >= product.stock_limit;
-  const stockLeft = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : null;
+  const [customText, setCustomText] = useState('');
+  const [customTextError, setCustomTextError] = useState(false);
+
   const sizes = product.sizes?.length ? product.sizes : [];
+  const isPreorder = !!product.is_preorder;
+  const allowCustomPrint = !!product.allow_custom_print;
+
+  // Per-size stock check
+  const getSizeStock = (s) => {
+    if (product.stock_per_size && product.stock_per_size[s] != null) {
+      return product.stock_per_size[s];
+    }
+    return null; // no per-size stock set → use global
+  };
+
+  const isSizeSoldOut = (s) => {
+    if (isPreorder) return false;
+    const sizeStock = getSizeStock(s);
+    if (sizeStock != null) return sizeStock <= 0;
+    // fallback to global stock
+    return product.stock_limit > 0 && product.total_ordered >= product.stock_limit;
+  };
+
+  const globalSoldOut = !isPreorder && product.stock_limit > 0 && product.total_ordered >= product.stock_limit && !product.stock_per_size;
+  const stockLeft = product.stock_limit > 0 && !product.stock_per_size
+    ? product.stock_limit - (product.total_ordered || 0)
+    : null;
 
   const prev = () => setActiveIdx(i => (i - 1 + images.length) % images.length);
   const next = () => setActiveIdx(i => (i + 1) % images.length);
+
+  const handleAddToCart = () => {
+    if (globalSoldOut) return;
+
+    const sizeToUse = selectedSize || (sizes.length === 0 ? 'One Size' : null);
+    if (!sizeToUse) { setSizeError(true); return; }
+    if (isSizeSoldOut(sizeToUse)) return;
+
+    if (allowCustomPrint && !customText.trim()) {
+      setCustomTextError(true);
+      return;
+    }
+
+    addToCart(product, sizeToUse, 1, customText.trim());
+    setAdded(true);
+    setTimeout(() => {
+      setAdded(false);
+      onClose();
+      onOrder(product);
+    }, 800);
+  };
+
+  const selectedSizeSoldOut = selectedSize && isSizeSoldOut(selectedSize);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -42,8 +89,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
             <div className="relative aspect-square">
               {images.length > 0 ? (
                 <>
-                  <img src={images[activeIdx]} alt={product.name}
-                    className="w-full h-full object-cover" />
+                  <img src={images[activeIdx]} alt={product.name} className="w-full h-full object-cover" />
                   {images.length > 1 && (
                     <>
                       <button onClick={prev}
@@ -90,10 +136,10 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
                 <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">
                   {product.category_name || 'Fightwear'}
                 </p>
-                {product.is_preorder && !isSoldOut && (
+                {isPreorder && !globalSoldOut && (
                   <span className="font-mono-ui text-[10px] uppercase tracking-widest px-2 py-0.5 bg-[#ff6b00] text-white font-bold">Pre-Order</span>
                 )}
-                {isSoldOut && (
+                {globalSoldOut && (
                   <span className="font-mono-ui text-[10px] uppercase tracking-widest px-2 py-0.5 bg-[#ff0000]/80 text-white">Sold Out</span>
                 )}
               </div>
@@ -109,37 +155,55 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
               <p className="text-[#888] text-sm leading-relaxed">{product.description}</p>
             )}
 
+            {/* Size Selection */}
             {sizes.length > 0 && (
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">
                     Select Size {sizeError && <span className="text-[#ff0000] ml-2">← Please select a size</span>}
                   </p>
-                  <button
-                    onClick={() => setShowSizeChart(true)}
-                    className="flex items-center gap-1 font-mono-ui text-[10px] text-[#ff8c00] hover:text-white uppercase tracking-widest transition-colors"
-                  >
+                  <button onClick={() => setShowSizeChart(true)}
+                    className="flex items-center gap-1 font-mono-ui text-[10px] text-[#ff8c00] hover:text-white uppercase tracking-widest transition-colors">
                     <Ruler className="w-3 h-3" /> Size Guide
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {sizes.map(s => (
-                    <button
-                      key={s}
-                      onClick={() => { setSelectedSize(s); setSizeError(false); }}
-                      className={`px-3 py-1.5 border font-mono-ui text-xs transition-all ${
-                        selectedSize === s
-                          ? 'border-[#ff8c00] bg-[#ff8c00] text-white font-bold'
-                          : 'border-[#333] text-[#888] hover:border-[#555] hover:text-white'
-                      }`}
-                    >
-                      {s}
-                    </button>
-                  ))}
+                  {sizes.map(s => {
+                    const soldOut = isSizeSoldOut(s);
+                    const sizeStock = getSizeStock(s);
+                    const lowStock = !isPreorder && sizeStock != null && sizeStock > 0 && sizeStock <= 3;
+                    return (
+                      <div key={s} className="relative">
+                        <button
+                          onClick={() => { if (!soldOut) { setSelectedSize(s); setSizeError(false); } }}
+                          disabled={soldOut}
+                          className={`px-3 py-1.5 border font-mono-ui text-xs transition-all ${
+                            soldOut
+                              ? 'border-[#222] text-[#333] cursor-not-allowed line-through'
+                              : selectedSize === s
+                              ? 'border-[#ff8c00] bg-[#ff8c00] text-white font-bold'
+                              : 'border-[#333] text-[#888] hover:border-[#555] hover:text-white'
+                          }`}
+                        >
+                          {s}
+                        </button>
+                        {soldOut && (
+                          <span className="absolute -top-1.5 -right-1.5 font-mono-ui text-[7px] bg-[#ff0000]/80 text-white px-1 uppercase">Out</span>
+                        )}
+                        {lowStock && (
+                          <span className="absolute -top-1.5 -right-1.5 font-mono-ui text-[7px] bg-[#ff6b00]/80 text-white px-1 uppercase">{sizeStock}</span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
+                {selectedSizeSoldOut && (
+                  <p className="font-mono-ui text-[10px] text-[#ff0000] mt-1">This size is sold out</p>
+                )}
               </div>
             )}
 
+            {/* Global stock indicator */}
             {stockLeft !== null && (
               <div className="flex items-center gap-2">
                 <Package className="w-4 h-4 text-[#555]" />
@@ -149,26 +213,30 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
               </div>
             )}
 
+            {/* Custom Print */}
+            {allowCustomPrint && (
+              <div>
+                <label className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest block mb-1">
+                  {product.custom_print_label || 'Custom Print Text'} *
+                </label>
+                <input
+                  value={customText}
+                  onChange={e => { setCustomText(e.target.value); setCustomTextError(false); }}
+                  placeholder="Enter your text here..."
+                  className={`w-full bg-[#0d0d0d] border text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 ${customTextError ? 'border-[#ff0000]' : 'border-[#333]'}`}
+                />
+                {customTextError && (
+                  <p className="font-mono-ui text-[10px] text-[#ff0000] mt-0.5">This field is required before adding to bag</p>
+                )}
+              </div>
+            )}
+
             <div className="mt-auto pt-4">
               <button
-                onClick={() => {
-                  if (isSoldOut) return;
-                  const sizeToUse = selectedSize || (sizes.length === 0 ? 'One Size' : null);
-                  if (!sizeToUse) {
-                    setSizeError(true);
-                    return;
-                  }
-                  addToCart(product, sizeToUse);
-                  setAdded(true);
-                  setTimeout(() => {
-                    setAdded(false);
-                    onClose();
-                    onOrder(product);
-                  }, 800);
-                }}
-                disabled={isSoldOut}
+                onClick={handleAddToCart}
+                disabled={globalSoldOut || selectedSizeSoldOut}
                 style={
-                  isSoldOut
+                  globalSoldOut || selectedSizeSoldOut
                     ? { background: '#1a1a1a', border: '1px solid #222', color: '#444', cursor: 'not-allowed' }
                     : (sizes.length > 0 && !selectedSize)
                     ? { background: '#333', border: '1px solid #444', color: '#666', cursor: 'not-allowed' }
@@ -176,14 +244,14 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
                 }
                 className="w-full py-3.5 font-mono-ui text-sm tracking-widest uppercase transition-all flex items-center justify-center gap-2"
               >
-                {isSoldOut ? (
+                {globalSoldOut || selectedSizeSoldOut ? (
                   'Sold Out'
                 ) : added ? (
                   <><Check className="w-4 h-4" /> Added!</>
                 ) : (sizes.length > 0 && !selectedSize) ? (
                   'Select a Size'
                 ) : (
-                  <><ShoppingBag className="w-4 h-4" /> {product.is_preorder ? 'Pre-order Now' : 'Add to Bag'}</>
+                  <><ShoppingBag className="w-4 h-4" /> {isPreorder ? 'Pre-order Now' : 'Add to Bag'}</>
                 )}
               </button>
             </div>
