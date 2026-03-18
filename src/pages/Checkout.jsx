@@ -45,6 +45,67 @@ export default function Checkout() {
     `Hi! I'd like to place an order:\n\n${itemsSummary}${promoCode ? `\n\n🏷️ Promo: ${promoCode.code} (-₱${discount.toLocaleString()})` : ''}\n\n💰 Total: ₱${total.toLocaleString()}\n\nName: ${name}\nPhone: ${phone}`
   );
 
+  const handlePaymongo = async () => {
+    if (!name || cart.length === 0) return;
+    setPaymongoLoading(true);
+    setPaymongoError('');
+
+    const orderNum = `CP-${Date.now().toString().slice(-6)}`;
+
+    // Create orders first
+    await Promise.all(
+      cart.map(async (item) => {
+        await base44.entities.Order.create({
+          order_number: orderNum,
+          product_id: item.productId,
+          product_name: item.name,
+          customer_name: name,
+          customer_email: email,
+          customer_phone: phone,
+          size: item.size,
+          quantity: item.quantity,
+          total_amount: item.price * item.quantity - (discount > 0 ? Math.round((item.price * item.quantity / subtotal) * discount) : 0),
+          payment_method: 'GCash',
+          status: 'Processing',
+          is_preorder: !!item.is_preorder,
+          notes: 'PayMongo online payment',
+        });
+        if (item.productId) {
+          const products = await base44.entities.Product.filter({ id: item.productId });
+          const product = products[0];
+          if (product) {
+            await base44.entities.Product.update(item.productId, {
+              total_ordered: (product.total_ordered || 0) + item.quantity,
+            });
+          }
+        }
+      })
+    );
+
+    const res = await base44.functions.invoke('createPaymongoPayment', {
+      amount: total,
+      description: `Chokepoint Order #${orderNum}`,
+      customerName: name,
+      customerEmail: email,
+      customerPhone: phone,
+      lineItems: cart.map((i) => ({
+        name: i.name,
+        size: i.size,
+        price: i.price,
+        quantity: i.quantity,
+      })),
+    });
+
+    clearCart();
+
+    if (res.data?.checkout_url) {
+      window.location.href = res.data.checkout_url;
+    } else {
+      setPaymongoError(res.data?.error || 'Could not create payment. Try again.');
+      setPaymongoLoading(false);
+    }
+  };
+
   const handleContact = async (method) => {
     if (!name || cart.length === 0) return;
     setSubmitting(true);
