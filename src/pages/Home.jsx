@@ -153,7 +153,6 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="border-t border-[#1a1a1a] py-10 px-4 text-center">
-        <CPLogo size={32} variant="white" />
         <p className="font-mono-ui text-[10px] text-[#333] tracking-widest uppercase mt-3">
           © 2026 Chokepoint Fightwear
         </p>
