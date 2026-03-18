@@ -6,6 +6,7 @@ import { useCart } from '@/hooks/useCart';
 import { removeFromCart, updateQuantity, clearCart } from '@/lib/cartStore';
 import { base44 } from '@/api/base44Client';
 import CPLogo from '@/components/cp/CPLogo';
+import PromoCodeInput from '@/components/cp/PromoCodeInput';
 
 const FB_URL = 'https://www.facebook.com/profile.php?id=61571430141920';
 const IG_URL = 'https://www.instagram.com/chokepoint_fightwear/';
@@ -19,8 +20,11 @@ export default function Checkout() {
   const [phone, setPhone] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [promoCode, setPromoCode] = useState(null);
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+  const discount = promoCode?.type === 'percent' ? Math.round(subtotal * (promoCode.value / 100)) : 0;
+  const total = subtotal - discount;
   const itemCount = cart.reduce((s, i) => s + i.quantity, 0);
 
   const itemsSummary = cart
@@ -160,18 +164,27 @@ export default function Checkout() {
 
           {/* Totals */}
           {cart.length > 0 && (
-            <div className="card-tactical p-4 space-y-2">
-              <div className="flex justify-between font-mono-ui text-xs text-[#555]">
-                <span>Items ({itemCount})</span>
-                <span>₱{subtotal.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between font-mono-ui text-xs text-[#555]">
-                <span>Shipping</span>
-                <span>Arranged via chat</span>
-              </div>
-              <div className="border-t border-[#222] pt-2 flex justify-between items-center">
-                <span className="font-mono-ui text-xs text-[#888] uppercase tracking-wider">Order Total</span>
-                <span className="font-tactical text-3xl text-white">₱{subtotal.toLocaleString()}</span>
+            <div className="card-tactical p-4 space-y-3">
+              <PromoCodeInput onApply={setPromoCode} appliedCode={promoCode} />
+              <div className="space-y-2 pt-2 border-t border-[#222]">
+                <div className="flex justify-between font-mono-ui text-xs text-[#555]">
+                  <span>Items ({itemCount})</span>
+                  <span>₱{subtotal.toLocaleString()}</span>
+                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between font-mono-ui text-xs text-[#22c55e]">
+                    <span>Discount ({promoCode.code})</span>
+                    <span>-₱{discount.toLocaleString()}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-mono-ui text-xs text-[#555]">
+                  <span>Shipping</span>
+                  <span>Arranged via chat</span>
+                </div>
+                <div className="border-t border-[#222] pt-2 flex justify-between items-center">
+                  <span className="font-mono-ui text-xs text-[#888] uppercase tracking-wider">Order Total</span>
+                  <span className="font-tactical text-3xl text-white">₱{total.toLocaleString()}</span>
+                </div>
               </div>
             </div>
           )}

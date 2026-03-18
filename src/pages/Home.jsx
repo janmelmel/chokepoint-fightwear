@@ -12,6 +12,8 @@ import HeroSlideshow from '@/components/cp/HeroSlideshow';
 import FeaturedProducts from '@/components/cp/FeaturedProducts';
 import CPLogo from '@/components/cp/CPLogo';
 import CustomGearForm from '@/components/cp/CustomGearForm';
+import AboutSection from '@/components/cp/AboutSection';
+import FooterLinks from '@/components/cp/FooterLinks';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -151,17 +153,11 @@ export default function Home() {
         </section>
       </main>
 
+      {/* ABOUT SECTION */}
+      <AboutSection />
+
       {/* FOOTER */}
-      <footer className="border-t border-[#1a1a1a] py-10 px-4 text-center">
-        <p className="text-gray-50 mt-3 font-mono-ui uppercase tracking-widest">© 2026 CHOKEPOINT FIGHTWEAR
-
-        </p>
-        <div className="mt-4">
-          
-
-          
-        </div>
-      </footer>
+      <FooterLinks />
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
