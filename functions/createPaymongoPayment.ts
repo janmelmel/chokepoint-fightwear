@@ -4,34 +4,38 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    const { amount, description, customerName, customerEmail, customerPhone, lineItems } = await req.json();
+    const { amount, customerName, customerEmail, customerPhone, lineItems, orderIds, orderNumbers } = await req.json();
 
-    if (!amount || !description) {
+    if (!amount || !lineItems?.length) {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     const secretKey = Deno.env.get('PAYMONGO_SECRET_KEY');
     const authHeader = 'Basic ' + btoa(secretKey + ':');
+    const origin = req.headers.get('origin') || 'https://chokepoint-fightwear.base44.app';
 
-    // Build line items for PayMongo
-    const pmLineItems = (lineItems || []).map((item) => ({
+    const pmLineItems = lineItems.map((item) => ({
       currency: 'PHP',
-      amount: Math.round(item.price * 100), // PayMongo uses centavos
-      description: `${item.name} (${item.size})`,
+      amount: Math.round(item.price * 100),
+      description: [item.size && `Size: ${item.size}`, item.custom_text && `Print: ${item.custom_text}`].filter(Boolean).join(' | ') || item.name,
       name: item.name,
       quantity: item.quantity,
     }));
 
-    // If no line items provided, create a single item
-    if (pmLineItems.length === 0) {
+    // Add shipping as line item if present
+    if (lineItems[0]?.shipping_fee > 0) {
       pmLineItems.push({
         currency: 'PHP',
-        amount: Math.round(amount * 100),
-        description: description,
-        name: description,
+        amount: Math.round(lineItems[0].shipping_fee * 100),
+        description: 'Shipping Fee',
+        name: 'Shipping',
         quantity: 1,
       });
     }
+
+    // Encode order IDs into redirect URLs
+    const encodedIds = encodeURIComponent(JSON.stringify(orderIds || []));
+    const encodedNums = encodeURIComponent(JSON.stringify(orderNumbers || []));
 
     const payload = {
       data: {
@@ -45,20 +49,17 @@ Deno.serve(async (req) => {
           show_description: true,
           show_line_items: true,
           line_items: pmLineItems,
-          payment_method_types: ['card', 'gcash', 'paymaya'],
-          description: description,
-          success_url: `${req.headers.get('origin') || 'https://chokepoint-fightwear.base44.app'}/Checkout?payment=success`,
-          cancel_url: `${req.headers.get('origin') || 'https://chokepoint-fightwear.base44.app'}/Checkout?payment=cancelled`,
+          payment_method_types: ['card', 'gcash', 'paymaya', 'grab_pay'],
+          description: `Chokepoint Fightwear Order`,
+          success_url: `${origin}/OrderConfirmed?status=success&orderIds=${encodedIds}&orderNumbers=${encodedNums}&name=${encodeURIComponent(customerName || '')}`,
+          cancel_url: `${origin}/Checkout?payment=cancelled`,
         },
       },
     };
 
     const response = await fetch('https://api.paymongo.com/v1/checkout_sessions', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: authHeader,
-      },
+      headers: { 'Content-Type': 'application/json', Authorization: authHeader },
       body: JSON.stringify(payload),
     });
 
