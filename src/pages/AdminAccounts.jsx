@@ -47,7 +47,7 @@ export default function AdminAccounts() {
   };
 
   return (
-    <StaffGuard adminOnly={true}>
+    <StaffGuard>
     <div className="min-h-screen bg-[#0a0a0a] flex">
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">

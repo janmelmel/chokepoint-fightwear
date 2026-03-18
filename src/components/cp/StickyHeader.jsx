@@ -195,10 +195,7 @@ export default function StickyHeader({ onCartClick }) {
             className="block font-mono-ui text-[11px] text-[#888] hover:text-white tracking-widest uppercase py-2 border-b border-[#1a1a1a]">
             FAQ
           </Link>
-          <Link to={createPageUrl('Staff')} onClick={() => setMenuOpen(false)}
-            className="block font-mono-ui text-[10px] text-[#444] hover:text-[#666] tracking-widest uppercase py-2">
-            Staff Portal
-          </Link>
+
         </div>
       )}
     </header>
