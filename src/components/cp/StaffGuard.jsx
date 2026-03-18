@@ -20,8 +20,9 @@ export default function StaffGuard({ children, adminOnly = false }) {
         return;
       }
 
-      // Only admin role can access staff portal — role 'user' goes to homepage
-      if (u.role !== 'admin') {
+      // Both admin and user (staff) roles can access the staff portal
+      // Disabled accounts and regular customers are redirected to Home
+      if (u.role !== 'admin' && u.role !== 'user') {
         window.location.href = '/Home';
         return;
       }
