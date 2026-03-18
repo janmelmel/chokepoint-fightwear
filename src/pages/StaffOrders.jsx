@@ -5,6 +5,7 @@ import { CheckSquare, Square, RefreshCw, ChevronDown, Filter } from 'lucide-reac
 import StaffGuard from '@/components/cp/StaffGuard';
 
 const STAGES = ['Processing', 'Packing', 'Out for Delivery', 'Completed', 'Cancelled'];
+const LOGISTICS = ['LBC', 'J&T', 'Capex', 'DHL', 'UPS'];
 
 const STAGE_COLOR = {
   'Processing': 'text-yellow-400 border-yellow-400/30',
