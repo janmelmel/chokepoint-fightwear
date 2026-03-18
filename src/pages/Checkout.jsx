@@ -41,9 +41,11 @@ export default function Checkout() {
     setSubmitting(true);
 
     const orderNum = `CP-${Date.now().toString().slice(-6)}`;
+
+    // Create orders and update stock (total_ordered) for each item
     await Promise.all(
-      cart.map((item) =>
-        base44.entities.Order.create({
+      cart.map(async (item) => {
+        await base44.entities.Order.create({
           order_number: orderNum,
           product_id: item.productId,
           product_name: item.name,
@@ -56,8 +58,19 @@ export default function Checkout() {
           payment_method: method,
           status: 'Processing',
           is_preorder: !!item.is_preorder,
-        })
-      )
+        });
+
+        // Increment total_ordered on the product to track stock
+        if (item.productId) {
+          const products = await base44.entities.Product.filter({ id: item.productId });
+          const product = products[0];
+          if (product) {
+            await base44.entities.Product.update(item.productId, {
+              total_ordered: (product.total_ordered || 0) + item.quantity,
+            });
+          }
+        }
+      })
     );
 
     clearCart();
