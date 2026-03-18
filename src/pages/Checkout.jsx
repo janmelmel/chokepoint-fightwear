@@ -82,6 +82,16 @@ export default function Checkout() {
       })
     );
 
+    // Send confirmation email if email provided
+    if (email) {
+      const itemsList = cart.map(i => `${i.name} (Size: ${i.size}) x${i.quantity} — ₱${(i.price * i.quantity).toLocaleString()}`).join('\n');
+      await base44.integrations.Core.SendEmail({
+        to: email,
+        subject: `Order Confirmed #${orderNum} — Chokepoint Fightwear`,
+        body: `Hi ${name}!\n\nYour order has been received. Here's your summary:\n\nOrder #: ${orderNum}\n\n${itemsList}${discount > 0 ? `\nDiscount: -₱${discount.toLocaleString()}` : ''}\nTotal: ₱${total.toLocaleString()}\n\nTo track your order, visit:\nhttps://chopkepoint-fightwear.base44.app/TrackOrder\n\nUse your order number: ${orderNum}\n\nWe'll be in touch once your order is being processed. Thank you for supporting Chokepoint Fightwear!\n\n— Chokepoint Fightwear Team`,
+      });
+    }
+
     const res = await base44.functions.invoke('createPaymongoPayment', {
       amount: total,
       description: `Chokepoint Order #${orderNum}`,
