@@ -300,6 +300,37 @@ export default function StaffProducts() {
                       {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                   </div>
+                  <div className="col-span-2">
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Order Type</label>
+                    <div className="flex gap-3">
+                      {[
+                        { value: 'add_to_bag', label: 'Add to Bag' },
+                        { value: 'preorder', label: 'Pre-Order' },
+                        { value: 'contact_to_order', label: 'Contact to Order' },
+                      ].map(opt => (
+                        <button key={opt.value} type="button"
+                          onClick={() => setForm(f => ({ ...f, order_type: opt.value }))}
+                          className={`flex-1 py-2 font-mono-ui text-[10px] uppercase tracking-wider border transition-all ${
+                            form.order_type === opt.value
+                              ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]'
+                              : 'border-[#333] text-[#555] hover:border-[#555] hover:text-[#888]'
+                          }`}>
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {form.order_type === 'contact_to_order' && (
+                    <div className="col-span-2">
+                      <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Inquiry Note (shown to customers)</label>
+                      <input value={form.inquiry_note}
+                        onChange={e => setForm(f => ({ ...f, inquiry_note: e.target.value }))}
+                        placeholder="e.g. Price varies by size and design. Contact us for a custom quote."
+                        className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
+                    </div>
+                  )}
+
                   <div>
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Status</label>
                     <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
