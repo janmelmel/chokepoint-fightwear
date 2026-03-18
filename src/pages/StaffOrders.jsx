@@ -24,6 +24,9 @@ export default function StaffOrders() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [filterStatus, setFilterStatus] = useState('All');
+  const [deliveryModal, setDeliveryModal] = useState(null); // { orderId, isBatch }
+  const [logistics, setLogistics] = useState('LBC');
+  const [trackingNumber, setTrackingNumber] = useState('');
 
   useEffect(() => {
     (async () => {
