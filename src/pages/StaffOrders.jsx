@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
 import { CheckSquare, Square, RefreshCw, ChevronDown, Filter } from 'lucide-react';
+import StaffGuard from '@/components/cp/StaffGuard';
 
 const STAGES = ['Processing', 'Packing', 'Out for Delivery', 'Completed', 'Cancelled'];
 

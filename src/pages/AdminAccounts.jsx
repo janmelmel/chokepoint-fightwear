@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
+import StaffGuard from '@/components/cp/StaffGuard';
 import { UserPlus, Shield, User, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

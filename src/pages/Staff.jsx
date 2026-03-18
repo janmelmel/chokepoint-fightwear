@@ -4,6 +4,7 @@ import AdminSidebar from '@/components/cp/AdminSidebar';
 import { ShoppingBag, Package, TrendingUp, Clock, Truck, CheckCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import StaffGuard from '@/components/cp/StaffGuard';
 
 export default function Staff() {
   const [user, setUser] = useState(null);
