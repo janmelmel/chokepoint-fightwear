@@ -303,8 +303,34 @@ export default function Checkout() {
           </div>
 
           {cart.length > 0 && (
-            <div className="space-y-2 pt-2">
-              <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-3">Contact us to complete order</p>
+            <div className="space-y-4 pt-2">
+
+              {/* PayMongo Online Payment */}
+              <div className="space-y-2">
+                <p className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest">Pay Online</p>
+                <button onClick={handlePaymongo} disabled={!name || paymongoLoading || submitting}
+                  style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
+                  className="w-full py-4 font-mono-ui text-sm uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                  {paymongoLoading ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+                  ) : (
+                    <><CreditCard className="w-4 h-4" /> Pay with GCash / Maya / Card</>
+                  )}
+                </button>
+                {paymongoError && (
+                  <p className="font-mono-ui text-[10px] text-[#ff0000]">{paymongoError}</p>
+                )}
+                <p className="font-mono-ui text-[9px] text-[#444] text-center">Secured by PayMongo · GCash · Maya · Visa · Mastercard</p>
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-[#222]" />
+                <span className="font-mono-ui text-[9px] text-[#444] uppercase tracking-widest">or contact us manually</span>
+                <div className="flex-1 h-px bg-[#222]" />
+              </div>
+
+              <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Contact us to complete order</p>
 
               <button onClick={() => handleContact('Facebook')} disabled={!name || submitting}
                 style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
