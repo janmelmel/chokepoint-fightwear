@@ -381,6 +381,61 @@ export default function StaffProducts() {
                       ))}
                     </div>
                   </div>
+                  {/* Stock Per Size — only if not preorder and sizes selected */}
+                  {!form.is_preorder && form.sizes.length > 0 && (
+                    <div className="col-span-2">
+                      <label className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest block mb-2">Stock Per Size</label>
+                      <p className="font-mono-ui text-[9px] text-[#444] mb-2">Leave blank for unlimited stock for that size</p>
+                      <div className="space-y-1.5">
+                        {form.sizes.map(s => (
+                          <div key={s} className="flex items-center gap-3">
+                            <span className="font-mono-ui text-xs text-[#888] w-12 flex-shrink-0">{s}</span>
+                            <input
+                              type="number"
+                              min="0"
+                              value={form.stock_per_size[s] ?? ''}
+                              onChange={e => setStockForSize(s, e.target.value)}
+                              placeholder="∞"
+                              className="w-28 bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-1.5 focus:outline-none focus:border-[#ff8c00]/60"
+                            />
+                            <span className="font-mono-ui text-[10px] text-[#444]">units</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Custom Print Toggle */}
+                  <div className="col-span-2 border border-[#222] p-3 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <input type="checkbox" id="customPrint" checked={form.allow_custom_print}
+                        onChange={e => setForm(f => ({ ...f, allow_custom_print: e.target.checked }))}
+                        className="accent-[#ff8c00]" />
+                      <label htmlFor="customPrint" className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-wider cursor-pointer">
+                        Allow Custom Name/Print
+                      </label>
+                    </div>
+                    {form.allow_custom_print && (
+                      <div>
+                        <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Custom Print Label (shown to customer)</label>
+                        <input value={form.custom_print_label}
+                          onChange={e => setForm(f => ({ ...f, custom_print_label: e.target.value }))}
+                          placeholder="e.g. Enter your name for jersey print"
+                          className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Shipping Fee Override */}
+                  <div className="col-span-2">
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Shipping Fee Override (₱)</label>
+                    <input type="number" min="0" value={form.shipping_fee_override}
+                      onChange={e => setForm(f => ({ ...f, shipping_fee_override: e.target.value }))}
+                      placeholder="Leave blank for zone-based rate"
+                      className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
+                    <p className="font-mono-ui text-[9px] text-[#444] mt-0.5">For Lifestyle/bulk items: leave blank to prompt staff quote</p>
+                  </div>
+
                   <div className="col-span-2 flex items-center gap-6">
                     <div className="flex items-center gap-3">
                       <input type="checkbox" id="preorder" checked={form.is_preorder}
