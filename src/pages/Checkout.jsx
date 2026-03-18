@@ -164,7 +164,7 @@ export default function Checkout() {
           <CheckCircle className="w-12 h-12 text-green-400 mx-auto" />
           <h1 className="font-tactical text-4xl text-white">Order Received!</h1>
           <p className="font-mono-ui text-sm text-[#666] max-w-xs">
-            Thanks {name}! We've logged your order. Please complete payment via your chosen channel.
+            Thanks{name ? ` ${name}` : ''}! Your order has been logged. We'll process it shortly.
           </p>
           <Link to="/Home" style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }} className="inline-block px-8 py-3 font-mono-ui text-xs tracking-widest uppercase mt-4">
             Back to Store
