@@ -16,7 +16,8 @@ export default function StaffHero() {
 
   useEffect(() => {
     (async () => {
-      const u = await base44.auth.me();
+      const u = await base44.auth.me().catch(() => null);
+      if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
       setUser(u);
       await load();
     })();
