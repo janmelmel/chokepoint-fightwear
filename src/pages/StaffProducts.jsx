@@ -70,13 +70,13 @@ export default function StaffProducts() {
 
   const openCreate = () => {
     setEditProduct(null);
-    setForm({ name: '', category_id: '', price: '', description: '', images: [], status: 'Draft', is_preorder: false, stock_limit: 0, sizes: [], edition: '' });
+    setForm({ name: '', category_id: '', price: '', description: '', images: [], status: 'Draft', is_preorder: false, is_featured: false, stock_limit: 0, stock_per_size: {}, sizes: [], edition: '', allow_custom_print: false, custom_print_label: '', shipping_fee_override: '' });
     setShowForm(true);
   };
 
   const openEdit = (p) => {
     setEditProduct(p);
-    setForm({ name: p.name, category_id: p.category_id || '', price: p.price, description: p.description || '', images: p.images || [], status: p.status, is_preorder: !!p.is_preorder, is_featured: !!p.is_featured, stock_limit: p.stock_limit || 0, sizes: p.sizes || [], edition: p.edition || '' });
+    setForm({ name: p.name, category_id: p.category_id || '', price: p.price, description: p.description || '', images: p.images || [], status: p.status, is_preorder: !!p.is_preorder, is_featured: !!p.is_featured, stock_limit: p.stock_limit || 0, stock_per_size: p.stock_per_size || {}, sizes: p.sizes || [], edition: p.edition || '', allow_custom_print: !!p.allow_custom_print, custom_print_label: p.custom_print_label || '', shipping_fee_override: p.shipping_fee_override ?? '' });
     setShowForm(true);
   };
 
