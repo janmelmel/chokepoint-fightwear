@@ -53,6 +53,7 @@ const AuthenticatedApp = () => {
       <Route path="/category/:slug" element={<Category />} />
       <Route path="/TrackOrder" element={<TrackOrder />} />
       <Route path="/FAQ" element={<FAQ />} />
+      <Route path="/OrderConfirmed" element={<OrderConfirmed />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
