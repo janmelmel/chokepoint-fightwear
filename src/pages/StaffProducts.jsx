@@ -132,7 +132,18 @@ export default function StaffProducts() {
     await loadData();
   };
 
-  const toggleSize = (s) => setForm((f) => ({ ...f, sizes: f.sizes.includes(s) ? f.sizes.filter((x) => x !== s) : [...f.sizes, s] }));
+  const toggleSize = (s) => setForm((f) => {
+    const newSizes = f.sizes.includes(s) ? f.sizes.filter((x) => x !== s) : [...f.sizes, s];
+    // Remove stock_per_size entry if size deselected
+    const newStockPerSize = { ...f.stock_per_size };
+    if (!newSizes.includes(s)) delete newStockPerSize[s];
+    return { ...f, sizes: newSizes, stock_per_size: newStockPerSize };
+  });
+
+  const setStockForSize = (s, val) => setForm((f) => ({
+    ...f,
+    stock_per_size: { ...f.stock_per_size, [s]: val === '' ? '' : Number(val) },
+  }));
 
   const getSizeGroups = () => {
     const cat = categories.find(c => c.id === form.category_id);
