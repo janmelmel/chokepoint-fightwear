@@ -29,10 +29,10 @@ export default function Home() {
   const loadData = async () => {
     setLoading(true);
     const [prods, cats, bans] = await Promise.all([
-      base44.entities.Product.filter({ status: 'Live', is_archived: false }),
-      base44.entities.Category.filter({ is_active: true }),
-      base44.entities.HeroBanner.filter({ is_active: true }, 'sort_order', 10),
-    ]);
+    base44.entities.Product.filter({ status: 'Live', is_archived: false }),
+    base44.entities.Category.filter({ is_active: true }),
+    base44.entities.HeroBanner.filter({ is_active: true }, 'sort_order', 10)]
+    );
     const catMap = Object.fromEntries(cats.map((c) => [c.id, c.name]));
     setProducts(prods.map((p) => ({ ...p, category_name: catMap[p.category_id] || '' })));
     setCategories(cats);
@@ -41,24 +41,24 @@ export default function Home() {
   };
 
   // Build two-level hierarchy: parents → subcategories → products
-  const parentCats = categories.filter(c => !c.parent_id);
-  const childCats = categories.filter(c => !!c.parent_id);
+  const parentCats = categories.filter((c) => !c.parent_id);
+  const childCats = categories.filter((c) => !!c.parent_id);
 
   const grouped = parentCats.reduce((acc, parent) => {
-    const subs = childCats.filter(c => c.parent_id === parent.id);
+    const subs = childCats.filter((c) => c.parent_id === parent.id);
     if (subs.length) {
       // Has subcategories — group products under each sub
       const subGroups = subs.reduce((sa, sub) => {
-        const items = products.filter(p => p.category_id === sub.id);
+        const items = products.filter((p) => p.category_id === sub.id);
         if (items.length) sa.push({ sub, items });
         return sa;
       }, []);
       // Also grab products directly under parent (no sub)
-      const directItems = products.filter(p => p.category_id === parent.id);
+      const directItems = products.filter((p) => p.category_id === parent.id);
       if (subGroups.length || directItems.length) acc.push({ cat: parent, subGroups, directItems });
     } else {
       // No subcategories — flat list
-      const items = products.filter(p => p.category_id === parent.id);
+      const items = products.filter((p) => p.category_id === parent.id);
       if (items.length) acc.push({ cat: parent, subGroups: [], directItems: items });
     }
     return acc;
@@ -74,7 +74,7 @@ export default function Home() {
       <HeroSlideshow banners={banners} />
 
       {/* FEATURED */}
-      <FeaturedProducts products={products.filter(p => p.is_featured)} onPreview={setDetailProduct} />
+      <FeaturedProducts products={products.filter((p) => p.is_featured)} onPreview={setDetailProduct} />
 
       {/* PRODUCTS */}
       <main id="gear" className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
@@ -104,8 +104,8 @@ export default function Home() {
               </div>
 
               {/* Subcategory groups */}
-              {subGroups.map(({ sub, items }) => (
-                <div key={sub.id} id={sub.slug || sub.id} className="mb-10">
+              {subGroups.map(({ sub, items }) =>
+              <div key={sub.id} id={sub.slug || sub.id} className="mb-10">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-1 h-5 bg-[#ff6b00]" />
                     <h3 className="font-tactical text-2xl text-[#ccc] uppercase">{sub.name}</h3>
@@ -113,29 +113,29 @@ export default function Home() {
                     <span className="font-mono-ui text-[10px] text-[#444]">{items.length}</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
-                    {items.map((p, i) => (
-                      <motion.div key={p.id} className="flex flex-col" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
+                    {items.map((p, i) =>
+                  <motion.div key={p.id} className="flex flex-col" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
                         <ProductCard product={p} onPreview={setDetailProduct} />
                       </motion.div>
-                    ))}
+                  )}
                   </div>
                 </div>
-              ))}
+              )}
 
               {/* Direct items under parent (no sub) */}
-              {directItems.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
-                  {directItems.map((p, i) => (
-                    <motion.div key={p.id} className="flex flex-col" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
+              {directItems.length > 0 &&
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
+                  {directItems.map((p, i) =>
+                <motion.div key={p.id} className="flex flex-col" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
                       <ProductCard product={p} onPreview={setDetailProduct} />
                     </motion.div>
-                  ))}
+                )}
                 </div>
-              )}
-            </section>
-          );
+              }
+            </section>);
+
         })
         }
 
@@ -153,13 +153,13 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="border-t border-[#1a1a1a] py-10 px-4 text-center">
-        <p className="font-mono-ui text-[10px] text-[#333] tracking-widest uppercase mt-3">
-          © 2026 Chokepoint Fightwear
+        <p className="text-gray-50 mt-3 font-mono-ui uppercase tracking-widest">© 2026 CHOKEPOINT FIGHTWEAR
+
         </p>
         <div className="mt-4">
-          <Link to={createPageUrl('Staff')} className="font-mono-ui text-[10px] text-[#222] hover:text-[#555] tracking-widest uppercase transition-colors">
-            System Access
-          </Link>
+          
+
+          
         </div>
       </footer>
 
@@ -169,7 +169,7 @@ export default function Home() {
         {detailProduct &&
         <ProductDetailModal product={detailProduct}
         onClose={() => setDetailProduct(null)}
-        onOrder={(p) => { setDetailProduct(null); setCartOpen(true); }} />
+        onOrder={(p) => {setDetailProduct(null);setCartOpen(true);}} />
         }
         {customSent &&
         <CustomRequestSuccessModal onClose={() => setCustomSent(false)} />
