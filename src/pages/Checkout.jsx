@@ -357,6 +357,7 @@ export default function Checkout() {
         </div>
       </main>
 
+
       <FooterLinks />
     </div>
   );
