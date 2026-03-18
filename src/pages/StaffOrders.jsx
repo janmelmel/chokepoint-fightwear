@@ -56,6 +56,12 @@ export default function StaffOrders() {
 
   const batchUpdate = async () => {
     if (!batchStatus || selected.size === 0) return;
+    if (batchStatus === 'Out for Delivery') {
+      setLogistics('LBC');
+      setTrackingNumber('');
+      setDeliveryModal({ isBatch: true });
+      return;
+    }
     setUpdating(true);
     await Promise.all([...selected].map((id) => base44.entities.Order.update(id, { status: batchStatus })));
     setSelected(new Set());
@@ -65,8 +71,29 @@ export default function StaffOrders() {
   };
 
   const updateSingle = async (id, status) => {
+    if (status === 'Out for Delivery') {
+      setLogistics('LBC');
+      setTrackingNumber('');
+      setDeliveryModal({ orderId: id, isBatch: false });
+      return;
+    }
     await base44.entities.Order.update(id, { status });
     setOrders((prev) => prev.map((o) => o.id === id ? { ...o, status } : o));
+  };
+
+  const confirmDelivery = async () => {
+    setUpdating(true);
+    const update = { status: 'Out for Delivery', logistics, tracking_number: trackingNumber };
+    if (deliveryModal.isBatch) {
+      await Promise.all([...selected].map((id) => base44.entities.Order.update(id, update)));
+      setSelected(new Set());
+      setBatchStatus('');
+    } else {
+      await base44.entities.Order.update(deliveryModal.orderId, update);
+    }
+    setDeliveryModal(null);
+    await loadOrders();
+    setUpdating(false);
   };
 
   const filtered = filterStatus === 'All' ? orders : orders.filter((o) => o.status === filterStatus);
