@@ -18,7 +18,6 @@ export default function StaffHero() {
   useEffect(() => {
     (async () => {
       const u = await base44.auth.me().catch(() => null);
-      if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
       setUser(u);
       await load();
     })();
@@ -97,6 +96,7 @@ export default function StaffHero() {
   };
 
   return (
+    <StaffGuard>
     <div className="min-h-screen bg-[#0a0a0a] flex">
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">
@@ -224,5 +224,6 @@ export default function StaffHero() {
         )}
       </AnimatePresence>
     </div>
+    </StaffGuard>
   );
 }

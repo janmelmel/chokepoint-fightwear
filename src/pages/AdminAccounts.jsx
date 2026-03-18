@@ -18,10 +18,8 @@ export default function AdminAccounts() {
   useEffect(() => {
     (async () => {
       const u = await base44.auth.me().catch(() => null);
-      if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
       setUser(u);
-      if (u?.role !== 'admin') return;
-      await load();
+      if (u?.role === 'admin') await load();
     })();
   }, []);
 
@@ -48,15 +46,8 @@ export default function AdminAccounts() {
     await load();
   };
 
-  if (user?.role !== 'admin') {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <p className="font-mono-ui text-[#ff0000] text-sm">Access Denied — Admin Only</p>
-      </div>
-    );
-  }
-
   return (
+    <StaffGuard adminOnly={true}>
     <div className="min-h-screen bg-[#0a0a0a] flex">
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">
@@ -162,5 +153,6 @@ export default function AdminAccounts() {
         )}
       </AnimatePresence>
     </div>
+    </StaffGuard>
   );
 }

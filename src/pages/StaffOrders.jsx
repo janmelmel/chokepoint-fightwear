@@ -26,7 +26,6 @@ export default function StaffOrders() {
   useEffect(() => {
     (async () => {
       const u = await base44.auth.me().catch(() => null);
-      if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
       setUser(u);
       await loadOrders();
     })();
@@ -68,6 +67,7 @@ export default function StaffOrders() {
   const filtered = filterStatus === 'All' ? orders : orders.filter(o => o.status === filterStatus);
 
   return (
+    <StaffGuard>
     <div className="min-h-screen bg-[#0a0a0a] flex">
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">
@@ -166,5 +166,6 @@ export default function StaffOrders() {
         </div>
       </div>
     </div>
+    </StaffGuard>
   );
 }

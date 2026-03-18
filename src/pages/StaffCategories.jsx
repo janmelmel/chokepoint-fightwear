@@ -16,7 +16,6 @@ export default function StaffCategories() {
   useEffect(() => {
     (async () => {
       const u = await base44.auth.me().catch(() => null);
-      if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
       setUser(u);
       await load();
     })();
@@ -65,6 +64,7 @@ export default function StaffCategories() {
   const childrenOf = (parentId) => cats.filter((c) => c.parent_id === parentId);
 
   return (
+    <StaffGuard>
     <div className="min-h-screen bg-[#0a0a0a] flex">
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">
@@ -189,6 +189,7 @@ export default function StaffCategories() {
           </motion.div>
         }
       </AnimatePresence>
-    </div>);
+    </div>
+    </StaffGuard>);
 
 }

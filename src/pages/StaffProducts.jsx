@@ -47,7 +47,6 @@ export default function StaffProducts() {
   useEffect(() => {
     (async () => {
       const u = await base44.auth.me().catch(() => null);
-      if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
       setUser(u);
       await loadData();
     })();
@@ -150,6 +149,7 @@ export default function StaffProducts() {
   const removeImage = (idx) => setForm((f) => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
 
   return (
+    <StaffGuard>
     <div className="min-h-screen bg-[#0a0a0a] flex">
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">
@@ -390,6 +390,7 @@ export default function StaffProducts() {
       <AnimatePresence>
         {previewProduct && <ProductPreviewModal product={previewProduct} onClose={() => setPreviewProduct(null)} />}
       </AnimatePresence>
-    </div>);
+    </div>
+    </StaffGuard>);
 
 }
