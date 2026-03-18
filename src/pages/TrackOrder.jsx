@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Search, Package, Truck, CheckCircle, Clock, XCircle, ChevronLeft } from 'lucide-react';
 import CPLogo from '@/components/cp/CPLogo';
+import FooterLinks from '@/components/cp/FooterLinks';
 
 const STATUS_CONFIG = {
   'Processing': { icon: Clock, color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/30' },
@@ -164,6 +165,8 @@ export default function TrackOrder() {
           </div>
         )}
       </main>
+
+      <FooterLinks />
     </div>
   );
 }

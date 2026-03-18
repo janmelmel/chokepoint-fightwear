@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CPLogo from '@/components/cp/CPLogo';
+import FooterLinks from '@/components/cp/FooterLinks';
 
 const FAQS = [
   {
@@ -166,6 +167,8 @@ export default function FAQ() {
           </div>
         </div>
       </main>
+
+      <FooterLinks />
     </div>
   );
 }

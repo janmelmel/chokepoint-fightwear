@@ -7,6 +7,7 @@ import ProductCard from '@/components/cp/ProductCard';
 import ProductDetailModal from '@/components/cp/ProductDetailModal';
 import CartDrawer from '@/components/cp/CartDrawer';
 import { Filter, X } from 'lucide-react';
+import FooterLinks from '@/components/cp/FooterLinks';
 
 export default function Category() {
   const { slug } = useParams();
@@ -173,10 +174,7 @@ export default function Category() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[#1a1a1a] py-10 px-4 text-center">
-        <p className="text-gray-50 mt-3 font-mono-ui uppercase tracking-widest">© 2026 CHOKEPOINT FIGHTWEAR</p>
-      </footer>
+      <FooterLinks />
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 

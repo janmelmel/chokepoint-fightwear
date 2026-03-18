@@ -7,6 +7,7 @@ import { removeFromCart, updateQuantity, clearCart } from '@/lib/cartStore';
 import { base44 } from '@/api/base44Client';
 import CPLogo from '@/components/cp/CPLogo';
 import PromoCodeInput from '@/components/cp/PromoCodeInput';
+import FooterLinks from '@/components/cp/FooterLinks';
 
 const FB_URL = 'https://www.facebook.com/profile.php?id=61571430141920';
 const IG_URL = 'https://www.instagram.com/chokepoint_fightwear/';
@@ -246,6 +247,8 @@ export default function Checkout() {
           )}
         </div>
       </main>
+
+      <FooterLinks />
     </div>
   );
 }
