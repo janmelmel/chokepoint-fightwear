@@ -20,11 +20,13 @@ function saveCart(cart) {
 
 export function addToCart(product, size, quantity = 1) {
   const cart = getCart();
+  const stockLimit = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : Infinity;
   const existingIdx = cart.findIndex(
     (i) => i.productId === product.id && i.size === size
   );
   if (existingIdx >= 0) {
-    cart[existingIdx].quantity += quantity;
+    const newQty = cart[existingIdx].quantity + quantity;
+    cart[existingIdx].quantity = Math.min(newQty, stockLimit);
   } else {
     cart.push({
       id: `${product.id}-${size}-${Date.now()}`,
@@ -33,8 +35,9 @@ export function addToCart(product, size, quantity = 1) {
       price: product.price,
       image: product.images?.[0] || null,
       size,
-      quantity,
+      quantity: Math.min(quantity, stockLimit),
       is_preorder: !!product.is_preorder,
+      stock_limit: product.stock_limit > 0 ? stockLimit : null,
     });
   }
   saveCart(cart);
@@ -46,7 +49,11 @@ export function removeFromCart(itemId) {
 
 export function updateQuantity(itemId, quantity) {
   if (quantity < 1) { removeFromCart(itemId); return; }
-  saveCart(getCart().map((i) => i.id === itemId ? { ...i, quantity } : i));
+  saveCart(getCart().map((i) => {
+    if (i.id !== itemId) return i;
+    const max = i.stock_limit != null ? i.stock_limit : Infinity;
+    return { ...i, quantity: Math.min(quantity, max) };
+  }));
 }
 
 export function clearCart() {
