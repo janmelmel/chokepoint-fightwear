@@ -22,6 +22,15 @@ export default function Checkout() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [promoCode, setPromoCode] = useState(null);
+  const [paymongoLoading, setPaymongoLoading] = useState(false);
+  const [paymongoError, setPaymongoError] = useState('');
+
+  // Handle return from PayMongo
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paymentStatus = params.get('payment');
+    if (paymentStatus === 'success') setDone(true);
+  }, []);
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
   const discount = promoCode?.type === 'percent' ? Math.round(subtotal * (promoCode.value / 100)) : 0;
