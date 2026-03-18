@@ -15,17 +15,25 @@ const LABEL_CLASS = "font-mono-ui text-[10px] text-[#555] uppercase tracking-wid
 export default function ShippingAddressForm({ value, onChange, errors }) {
   const isPhilippines = value.country === 'Philippines';
 
-  // Reset address fields when province changes
+  // Reset city/barangay when province changes
+  const prevProvince = React.useRef(value.province);
   useEffect(() => {
-    if (value.province) {
+    if (prevProvince.current !== value.province && value.province) {
+      prevProvince.current = value.province;
       onChange({ ...value, city: '', barangay: '' });
+    } else {
+      prevProvince.current = value.province;
     }
   }, [value.province]);
 
   // Reset barangay when city changes
+  const prevCity = React.useRef(value.city);
   useEffect(() => {
-    if (value.city) {
+    if (prevCity.current !== value.city && value.city) {
+      prevCity.current = value.city;
       onChange({ ...value, barangay: '' });
+    } else {
+      prevCity.current = value.city;
     }
   }, [value.city]);
 
