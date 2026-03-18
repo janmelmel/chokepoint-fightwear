@@ -96,6 +96,7 @@ export default function StaffOrders() {
     setUpdating(false);
   };
 
+  const [expandedOrder, setExpandedOrder] = useState(null);
   const filtered = filterStatus === 'All' ? orders : orders.filter((o) => o.status === filterStatus);
 
   return (
