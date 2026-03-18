@@ -116,8 +116,12 @@ export default function StaffProducts() {
       is_preorder: !!p.is_preorder,
       is_featured: false,
       stock_limit: p.stock_limit || 0,
+      stock_per_size: p.stock_per_size || {},
       sizes: p.sizes || [],
       edition: p.edition || '',
+      allow_custom_print: !!p.allow_custom_print,
+      custom_print_label: p.custom_print_label || '',
+      shipping_fee_override: p.shipping_fee_override ?? '',
     });
     setShowForm(true);
   };
