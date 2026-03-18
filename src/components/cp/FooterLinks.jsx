@@ -51,8 +51,8 @@ export default function FooterLinks() {
           {/* Contact */}
           <div>
             <h4 className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-3">Contact</h4>
-            <p className="font-mono-ui text-xs text-[#888]">chokepoint-fightwear@gmail.com</p>
-            <p className="font-mono-ui text-[10px] text-[#555] mt-2">Metro Manila, Philippines</p>
+            <p className="font-mono-ui text-xs text-[#888]">sales@chokepoint-fightwear.com</p>
+            <p className="font-mono-ui text-[10px] text-[#555] mt-2">Lapu Lapu City, CEBU Philippines</p>
           </div>
         </div>
 
@@ -65,6 +65,6 @@ export default function FooterLinks() {
           </Link>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
+
 }
