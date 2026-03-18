@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash2, Plus, Minus, ChevronLeft, CheckCircle, Mail } from 'lucide-react';
+import { Trash2, Plus, Minus, ChevronLeft, CheckCircle, Mail, CreditCard, Loader2 } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { removeFromCart, updateQuantity, clearCart } from '@/lib/cartStore';
 import { base44 } from '@/api/base44Client';
