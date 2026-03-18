@@ -91,8 +91,8 @@ export default function AdminAccounts() {
               <div className="divide-y divide-[#1a1a1a]">
                 {users.map((u) =>
                 <div key={u.id} className="flex items-center gap-4 px-4 py-4">
-                    <div className={`w-9 h-9 flex items-center justify-center flex-shrink-0 ${u.role === 'admin' ? 'bg-[#ff8c00]/10' : 'bg-[#1a1a1a]'}`}>
-                      {u.role === 'admin' ? <Shield className="w-4 h-4 text-[#ff8c00]" /> : <User className="w-4 h-4 text-[#555]" />}
+                    <div className={`w-9 h-9 flex items-center justify-center flex-shrink-0 ${u.role === 'admin' ? 'bg-[#ff8c00]/10' : u.role === 'disabled' ? 'bg-[#ff0000]/5' : 'bg-[#1a1a1a]'}`}>
+                      {u.role === 'admin' ? <Shield className="w-4 h-4 text-[#ff8c00]" /> : u.role === 'disabled' ? <Ban className="w-4 h-4 text-[#ff0000]/40" /> : <User className="w-4 h-4 text-[#555]" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-inter text-sm text-white">{u.full_name || 'No name'}</p>
@@ -125,8 +125,8 @@ export default function AdminAccounts() {
           <div className="mt-6 p-4 border border-[#ff0000]/10 bg-[#ff0000]/5">
             <p className="font-mono-ui text-[10px] text-[#ff0000] uppercase tracking-widest mb-1">Security Note</p>
             <p className="font-mono-ui text-[10px] text-[#555]">
-              Staff (role: user) cannot access Revenue Analytics or Admin-only routes.
-              Only Admins can approve products, manage accounts, and view full analytics.
+              Only Admin accounts can access the staff portal. Staff (role: user) and Disabled accounts are blocked.
+              Set a staff account to "Disabled" to suspend access without deleting it.
             </p>
           </div>
         </div>
