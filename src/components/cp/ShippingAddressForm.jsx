@@ -16,7 +16,7 @@ export default function ShippingAddressForm({ value, onChange, errors }) {
   const isPhilippines = value.country === 'Philippines';
 
   // Reset city/barangay when province changes
-  const prevProvince = React.useRef(value.province);
+  const prevProvince = useRef(value.province);
   useEffect(() => {
     if (prevProvince.current !== value.province && value.province) {
       prevProvince.current = value.province;
@@ -27,7 +27,7 @@ export default function ShippingAddressForm({ value, onChange, errors }) {
   }, [value.province]);
 
   // Reset barangay when city changes
-  const prevCity = React.useRef(value.city);
+  const prevCity = useRef(value.city);
   useEffect(() => {
     if (prevCity.current !== value.city && value.city) {
       prevCity.current = value.city;
