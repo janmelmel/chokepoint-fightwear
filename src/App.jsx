@@ -55,6 +55,7 @@ const AuthenticatedApp = () => {
       <Route path="/TrackOrder" element={<TrackOrder />} />
       <Route path="/FAQ" element={<FAQ />} />
       <Route path="/OrderConfirmed" element={<OrderConfirmed />} />
+      <Route path="/MyOrders" element={<MyOrders />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

@@ -127,11 +127,21 @@ export default function StickyHeader({ onCartClick }) {
               <UserCircle className="w-5 h-5" />
             </Link>
           ) : authUser ? (
-            <button onClick={() => base44.auth.logout(window.location.href)}
-              title={authUser.email}
-              className="text-[#555] hover:text-[#ff0000] transition-colors">
-              <UserCircle className="w-5 h-5" />
-            </button>
+            <div className="relative group">
+              <button title={authUser.email} className="text-[#888] hover:text-white transition-colors">
+                <UserCircle className="w-5 h-5" />
+              </button>
+              <div className="absolute right-0 top-full mt-1 min-w-[160px] bg-[#0d0d0d] border border-[#333] shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity">
+                <Link to="/MyOrders"
+                  className="block px-4 py-2.5 font-mono-ui text-[10px] text-[#888] hover:text-white hover:bg-[#1a1a1a] uppercase tracking-widest transition-colors">
+                  My Orders
+                </Link>
+                <button onClick={() => base44.auth.logout()}
+                  className="w-full text-left px-4 py-2.5 font-mono-ui text-[10px] text-[#555] hover:text-[#ff0000] hover:bg-[#1a1a1a] uppercase tracking-widest transition-colors border-t border-[#1a1a1a]">
+                  Logout
+                </button>
+              </div>
+            </div>
           ) : null}
         </div>
 
