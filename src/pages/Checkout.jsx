@@ -4,10 +4,10 @@ import { base44 } from '@/api/base44Client';
 import { getCart, clearCart } from '@/lib/cartStore';
 import {
   PHILIPPINES_PROVINCES, getCitiesForProvince, getBarangaysForCity,
-  getShippingZone, getShippingRate, SHIPPING_ZONES, WORLD_COUNTRIES
+  getShippingZone, getShippingRate, WORLD_COUNTRIES
 } from '@/lib/philippineAddress';
 import CPLogo from '@/components/cp/CPLogo';
-import { ArrowLeft, Loader2, MessageCircle, Mail } from 'lucide-react';
+import { ArrowLeft, Loader2, MessageCircle, Mail, AlertCircle } from 'lucide-react';
 
 const INPUT = "w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60";
 const LABEL = "font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1";
@@ -21,10 +21,8 @@ export default function Checkout() {
   });
   const [confirmed, setConfirmed] = useState(false);
   const [placing, setPlacing] = useState(false);
-  const [done, setDone] = useState(false);
-  const [orderNumbers, setOrderNumbers] = useState([]);
+  const [error, setError] = useState('');
 
-  // Cascade resets
   const prevProvince = useRef('');
   const prevCity = useRef('');
 
@@ -43,22 +41,24 @@ export default function Checkout() {
   }, [address.city]);
 
   useEffect(() => {
+    // Check for cancelled payment on return
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment') === 'cancelled') {
+      setError('Payment was cancelled. Please try again.');
+      window.history.replaceState({}, '', '/Checkout');
+    }
     const items = getCart();
-    if (items.length === 0 && !done) navigate('/Home');
+    if (items.length === 0) navigate('/Home');
     setCart(items);
   }, []);
 
   const isPhilippines = address.country === 'Philippines';
   const zone = isPhilippines && address.province ? getShippingZone(address.province) : null;
 
-  // Compute shipping fee: use per-item override if ALL items have same override, else zone rate
   const computeShipping = () => {
     if (!isPhilippines || !address.province) return null;
-    // If any item has a specific override, use the max override; otherwise zone rate
     const overrides = cart.map(i => i.shipping_fee_override).filter(v => v != null && v >= 0);
-    if (overrides.length === cart.length && overrides.length > 0) {
-      return Math.max(...overrides);
-    }
+    if (overrides.length === cart.length && overrides.length > 0) return Math.max(...overrides);
     return getShippingRate(address.province);
   };
 
@@ -70,16 +70,18 @@ export default function Checkout() {
   const barangays = isPhilippines && address.city ? getBarangaysForCity(address.city) : [];
 
   const canPlace = contact.name && contact.email && contact.phone &&
-    (isPhilippines ? (address.province && address.city && address.street) : false) &&
-    confirmed;
+    isPhilippines && address.province && address.city && address.street && confirmed;
 
   const handlePlace = async () => {
     if (!canPlace) return;
     setPlacing(true);
-    const nums = [];
+    setError('');
+
+    // 1. Create order records with status Pending
+    const createdOrders = [];
     for (const item of cart) {
-      const orderNum = `CP-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2,5).toUpperCase()}`;
-      await base44.entities.Order.create({
+      const orderNum = `CP-${Date.now().toString(36).toUpperCase().slice(-4)}-${Math.random().toString(36).slice(2,5).toUpperCase()}`;
+      const order = await base44.entities.Order.create({
         order_number: orderNum,
         product_id: item.productId,
         product_name: item.name,
@@ -89,8 +91,9 @@ export default function Checkout() {
         size: item.size,
         quantity: item.quantity,
         total_amount: item.price * item.quantity,
-        payment_method: 'Messenger',
-        status: 'Processing',
+        payment_method: 'Other',
+        payment_status: 'Pending',
+        status: 'Pending',
         is_preorder: !!item.is_preorder,
         custom_print_text: item.custom_text || '',
         shipping_province: address.province,
@@ -102,40 +105,48 @@ export default function Checkout() {
         shipping_zone: zone || '',
         shipping_fee: shippingFee || 0,
       });
-      nums.push(orderNum);
+      createdOrders.push({ id: order.id, orderNum, item });
     }
-    clearCart();
-    setOrderNumbers(nums);
-    setDone(true);
-    setPlacing(false);
-  };
 
-  if (done) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center px-4 text-center gap-6">
-        <CPLogo size={40} />
-        <div className="w-14 h-14 border border-green-500/30 bg-green-500/5 flex items-center justify-center">
-          <span className="text-green-400 text-2xl">✓</span>
-        </div>
-        <div>
-          <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest mb-2">Order Received</p>
-          <h1 className="font-tactical text-4xl text-white mb-2">Thank You!</h1>
-          <p className="font-mono-ui text-xs text-[#666] max-w-xs mx-auto">
-            Your order(s) have been placed. Our team will contact you via Messenger to confirm payment and delivery.
-          </p>
-        </div>
-        <div className="bg-[#1c1c1c] border border-[#333] px-6 py-4 text-left space-y-1 w-full max-w-xs">
-          <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-2">Order Numbers</p>
-          {orderNumbers.map(n => (
-            <p key={n} className="font-mono-ui text-xs text-[#ff8c00]">{n}</p>
-          ))}
-        </div>
-        <Link to="/Home" className="btn-glow-orange font-mono-ui text-xs uppercase tracking-widest px-8 py-3">
-          Back to Store
-        </Link>
-      </div>
-    );
-  }
+    // 2. Create PayMongo checkout session
+    const response = await base44.functions.invoke('createPaymongoPayment', {
+      amount: total,
+      customerName: contact.name,
+      customerEmail: contact.email,
+      customerPhone: contact.phone,
+      lineItems: cart.map(i => ({
+        name: i.name,
+        price: i.price,
+        size: i.size,
+        quantity: i.quantity,
+        custom_text: i.custom_text,
+        shipping_fee: shippingFee || 0,
+      })),
+      orderIds: createdOrders.map(o => o.id),
+      orderNumbers: createdOrders.map(o => o.orderNum),
+    });
+
+    const { checkout_url, session_id, error: pmError } = response.data;
+
+    if (pmError || !checkout_url) {
+      // Delete the pending orders if PayMongo fails
+      for (const o of createdOrders) {
+        await base44.entities.Order.update(o.id, { status: 'Cancelled', payment_status: 'Failed' });
+      }
+      setError(pmError || 'Payment setup failed. Please try again.');
+      setPlacing(false);
+      return;
+    }
+
+    // 3. Save session ID to orders
+    for (const o of createdOrders) {
+      await base44.entities.Order.update(o.id, { paymongo_session_id: session_id });
+    }
+
+    // 4. Clear cart and redirect to PayMongo
+    clearCart();
+    window.location.href = checkout_url;
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -147,6 +158,15 @@ export default function Checkout() {
         <CPLogo size={28} />
         <span className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest ml-1">Checkout</span>
       </div>
+
+      {error && (
+        <div className="max-w-4xl mx-auto px-4 pt-4">
+          <div className="flex items-center gap-3 border border-[#ff0000]/30 bg-[#ff0000]/5 px-4 py-3">
+            <AlertCircle className="w-4 h-4 text-[#ff0000] flex-shrink-0" />
+            <p className="font-mono-ui text-xs text-[#ff0000]">{error}</p>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-4xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left — Form */}
@@ -182,17 +202,17 @@ export default function Checkout() {
               </div>
 
               {!isPhilippines ? (
-                <div className="border border-[#ff6b00]/20 bg-[#ff6b00]/5 p-4 space-y-2">
+                <div className="border-l-2 border-[#ff6b00] bg-[#111] p-4 space-y-2">
                   <p className="font-mono-ui text-xs text-[#ff6b00] uppercase tracking-wider">International Orders</p>
                   <p className="font-mono-ui text-[10px] text-[#888] leading-relaxed">
-                    We currently ship within the Philippines only. For international orders, please contact us directly.
+                    We currently ship within the Philippines only. For international inquiries, contact us directly.
                   </p>
                   <div className="flex gap-3 mt-3">
                     <a href="https://m.me/chokepointfightwear" target="_blank" rel="noreferrer"
                       className="btn-glow-orange font-mono-ui text-[10px] uppercase tracking-widest px-4 py-2 flex items-center gap-2">
                       <MessageCircle className="w-3.5 h-3.5" /> Messenger
                     </a>
-                    <a href="mailto:chokepointfightwear@gmail.com"
+                    <a href="mailto:sales@chokepoint-fightwear.com"
                       className="btn-glow-white font-mono-ui text-[10px] uppercase tracking-widest px-4 py-2 flex items-center gap-2">
                       <Mail className="w-3.5 h-3.5" /> Email
                     </a>
@@ -238,17 +258,12 @@ export default function Checkout() {
                     <textarea value={address.notes} onChange={e => setAddress(a => ({ ...a, notes: e.target.value }))} rows={2}
                       className={`${INPUT} resize-none`} placeholder="Landmark, gate code, etc." />
                   </div>
-
-                  {/* Shipping fee preview */}
                   {address.province && (
-                    <div className="border border-[#222] bg-[#111] px-4 py-3">
-                      <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Shipping Zone</p>
-                      <p className="font-mono-ui text-xs text-white">{zone}</p>
-                      {shippingFee != null ? (
-                        <p className="font-mono-ui text-sm text-[#ff8c00] font-bold mt-1">₱{shippingFee.toLocaleString()}</p>
-                      ) : (
-                        <p className="font-mono-ui text-xs text-[#555] mt-1">TBD — staff will quote shipping</p>
-                      )}
+                    <div className="border-l-2 border-[#333] bg-[#111] px-4 py-3">
+                      <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Shipping Zone: {zone}</p>
+                      {shippingFee != null
+                        ? <p className="font-mono-ui text-sm text-[#ff8c00] font-bold">₱{shippingFee.toLocaleString()}</p>
+                        : <p className="font-mono-ui text-xs text-[#555]">TBD — staff will quote shipping</p>}
                     </div>
                   )}
                 </>
@@ -256,12 +271,11 @@ export default function Checkout() {
             </div>
           </div>
 
-          {/* Confirm */}
           {isPhilippines && (
             <div className="flex items-start gap-3">
               <input type="checkbox" id="confirm" checked={confirmed} onChange={e => setConfirmed(e.target.checked)} className="accent-[#ff8c00] mt-0.5 flex-shrink-0" />
               <label htmlFor="confirm" className="font-mono-ui text-[10px] text-[#888] leading-relaxed cursor-pointer">
-                I confirm that my shipping address and order details are correct. I understand payment will be arranged via Messenger after order placement.
+                I confirm that my shipping address and order details are correct. I will be redirected to a secure payment page to complete my purchase.
               </label>
             </div>
           )}
@@ -273,7 +287,7 @@ export default function Checkout() {
           <div className="border border-[#222] divide-y divide-[#1a1a1a]">
             {cart.map(item => (
               <div key={item.id} className="flex gap-3 p-3">
-                {item.image && <img src={item.image} className="w-14 h-14 object-cover flex-shrink-0 opacity-80" />}
+                {item.image && <img src={item.image} className="w-14 h-14 object-cover flex-shrink-0 opacity-80" alt={item.name} />}
                 <div className="flex-1 min-w-0">
                   <p className="font-mono-ui text-xs text-white truncate">{item.name}</p>
                   <p className="font-mono-ui text-[10px] text-[#555]">Size: {item.size} · Qty: {item.quantity}</p>
@@ -287,12 +301,10 @@ export default function Checkout() {
 
           <div className="border border-[#222] p-4 space-y-2">
             <div className="flex justify-between font-mono-ui text-xs text-[#888]">
-              <span>Subtotal</span>
-              <span>₱{subtotal.toLocaleString()}</span>
+              <span>Subtotal</span><span>₱{subtotal.toLocaleString()}</span>
             </div>
             <div className="flex justify-between font-mono-ui text-xs text-[#888]">
-              <span>Shipping</span>
-              <span>{shippingFee != null ? `₱${shippingFee.toLocaleString()}` : 'TBD'}</span>
+              <span>Shipping</span><span>{shippingFee != null ? `₱${shippingFee.toLocaleString()}` : 'TBD'}</span>
             </div>
             <div className="flex justify-between font-mono-ui text-sm text-white font-bold border-t border-[#222] pt-2 mt-2">
               <span>Total</span>
@@ -302,11 +314,17 @@ export default function Checkout() {
 
           <button onClick={handlePlace} disabled={!canPlace || placing || !isPhilippines}
             className="w-full btn-glow-orange font-mono-ui text-xs uppercase tracking-widest py-4 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
-            {placing ? <><Loader2 className="w-4 h-4 animate-spin" /> Placing Order...</> : 'Place Order'}
+            {placing
+              ? <><Loader2 className="w-4 h-4 animate-spin" /> Preparing Payment...</>
+              : 'Proceed to Payment'}
           </button>
-          {!canPlace && isPhilippines && (
-            <p className="font-mono-ui text-[10px] text-[#555] text-center">Fill in all required fields and confirm to continue</p>
+          {isPhilippines && !canPlace && (
+            <p className="font-mono-ui text-[10px] text-[#444] text-center">Fill in all required fields and confirm to continue</p>
           )}
+          <div className="flex items-center justify-center gap-3 pt-1">
+            <img src="https://assets.paymongo.com/assets/paymongo-logo-white.png" alt="PayMongo" className="h-4 opacity-30" onError={e => e.target.style.display='none'} />
+            <p className="font-mono-ui text-[9px] text-[#333] uppercase tracking-widest">Secured by PayMongo</p>
+          </div>
         </div>
       </div>
     </div>
