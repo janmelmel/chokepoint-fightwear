@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { getCart, clearCart } from '@/lib/cartStore';
@@ -25,8 +25,8 @@ export default function Checkout() {
   const [orderNumbers, setOrderNumbers] = useState([]);
 
   // Cascade resets
-  const prevProvince = React.useRef('');
-  const prevCity = React.useRef('');
+  const prevProvince = useRef('');
+  const prevCity = useRef('');
 
   useEffect(() => {
     if (prevProvince.current !== address.province) {
