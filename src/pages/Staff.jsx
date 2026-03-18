@@ -95,7 +95,7 @@ export default function Staff() {
             </div>
             <div className="space-y-2">
               {orders.slice(0, 8).map(o => (
-                <div key={o.id} className="card-tactical px-4 py-3 flex items-center justify-between gap-4">
+                <div key={o.id} className="bg-[#1c1c1c] border border-[#333] px-4 py-3 flex items-center justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <p className="font-mono-ui text-xs text-white truncate">{o.customer_name}</p>
                     <p className="font-mono-ui text-[10px] text-[#555] truncate">{o.product_name} · {o.size}</p>
