@@ -81,9 +81,15 @@ export default function StaffProducts() {
   };
 
   const handleSave = async () => {
-    const data = { ...form, price: Number(form.price), stock_limit: Number(form.stock_limit) };
-    if (editProduct) await base44.entities.Product.update(editProduct.id, data);else
-    await base44.entities.Product.create(data);
+    const data = {
+      ...form,
+      price: Number(form.price),
+      stock_limit: Number(form.stock_limit),
+      shipping_fee_override: form.shipping_fee_override !== '' ? Number(form.shipping_fee_override) : null,
+      stock_per_size: form.is_preorder ? {} : form.stock_per_size,
+    };
+    if (editProduct) await base44.entities.Product.update(editProduct.id, data);
+    else await base44.entities.Product.create(data);
     setShowForm(false);
     await loadData();
   };
