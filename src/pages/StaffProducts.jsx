@@ -306,11 +306,13 @@ export default function StaffProducts() {
                       {isAdmin && <option>Live</option>}
                     </select>
                   </div>
+                  {!form.is_preorder && (
                   <div>
-                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Stock Limit (0=unlimited)</label>
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Global Stock Limit (0=unlimited)</label>
                     <input type="number" value={form.stock_limit} onChange={(e) => setForm((f) => ({ ...f, stock_limit: e.target.value }))}
                   className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
                   </div>
+                  )}
                   <div className="col-span-2">
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Edition / Tag</label>
                     <input value={form.edition} onChange={(e) => setForm((f) => ({ ...f, edition: e.target.value }))}
