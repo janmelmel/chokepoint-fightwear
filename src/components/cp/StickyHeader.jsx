@@ -164,6 +164,10 @@ export default function StickyHeader({ onCartClick }) {
             <Link to="/Staff" className="text-[#ff8c00] hover:text-white">
               <UserCircle className="w-5 h-5" />
             </Link>
+          ) : authUser ? (
+            <Link to="/MyOrders" className="text-[#888] hover:text-white">
+              <UserCircle className="w-5 h-5" />
+            </Link>
           ) : null}
           <button onClick={() => setMenuOpen(!menuOpen)} className="text-[#888] hover:text-white">
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -205,7 +209,18 @@ export default function StickyHeader({ onCartClick }) {
             className="block font-mono-ui text-[11px] text-[#888] hover:text-white tracking-widest uppercase py-2 border-b border-[#1a1a1a]">
             FAQ
           </Link>
-
+          {authUser && authUser.role !== 'admin' && (
+            <Link to="/MyOrders" onClick={() => setMenuOpen(false)}
+              className="block font-mono-ui text-[11px] text-[#ff8c00] hover:text-white tracking-widest uppercase py-2 border-b border-[#1a1a1a]">
+              My Orders
+            </Link>
+          )}
+          {authUser && (
+            <button onClick={() => base44.auth.logout()}
+              className="block w-full text-left font-mono-ui text-[11px] text-[#555] hover:text-[#ff0000] tracking-widest uppercase py-2">
+              Logout
+            </button>
+          )}
         </div>
       )}
     </header>
