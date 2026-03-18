@@ -41,7 +41,9 @@ export default function StaffProducts() {
   const [form, setForm] = useState({
     name: '', category_id: '', price: '', description: '',
     images: [], status: 'Draft', is_preorder: false, is_featured: false,
-    stock_limit: 0, sizes: [], edition: ''
+    stock_limit: 0, stock_per_size: {}, sizes: [], edition: '',
+    allow_custom_print: false, custom_print_label: '',
+    shipping_fee_override: '',
   });
 
   useEffect(() => {
