@@ -21,6 +21,7 @@ import Category from './pages/Category';
 import TrackOrder from './pages/TrackOrder';
 import FAQ from './pages/FAQ';
 import OrderConfirmed from './pages/OrderConfirmed';
+import MyOrders from './pages/MyOrders';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
