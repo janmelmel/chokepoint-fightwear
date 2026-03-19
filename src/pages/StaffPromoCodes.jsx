@@ -85,15 +85,15 @@ export default function StaffPromoCodes() {
       <div className="min-h-screen bg-[#0a0a0a] flex">
         <AdminSidebar user={user} />
         <div className="flex-1 overflow-auto">
-          <div className="px-6 py-8 max-w-4xl">
-            <div className="flex items-center justify-between mb-8">
+          <div className="px-6 py-8 w-full">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
               <div>
                 <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Marketing</p>
                 <h1 className="font-tactical text-4xl text-white">Promo Codes</h1>
               </div>
-              <div className="flex gap-2">
-                <button onClick={load} className="btn-glow-white p-2.5"><RefreshCw className="w-4 h-4" /></button>
-                <button onClick={openCreate} className="btn-glow-orange px-5 py-3 font-mono-ui text-xs uppercase tracking-widest flex items-center gap-2">
+              <div className="flex gap-2 w-full sm:w-auto">
+                <button onClick={load} className="btn-glow-white p-2.5 flex-shrink-0"><RefreshCw className="w-4 h-4" /></button>
+                <button onClick={openCreate} className="btn-glow-orange flex-1 sm:flex-none px-5 py-3 font-mono-ui text-xs uppercase tracking-widest flex items-center justify-center gap-2">
                   <Plus className="w-4 h-4" /> New Code
                 </button>
               </div>
@@ -102,8 +102,8 @@ export default function StaffPromoCodes() {
             {loading ? (
               <div className="space-y-2">{[...Array(4)].map((_, i) => <div key={i} className="card-tactical h-14 animate-pulse" />)}</div>
             ) : (
-              <div className="card-tactical overflow-hidden">
-                <div className="px-4 py-3 border-b border-[#222] bg-[#0d0d0d] grid grid-cols-5 gap-4">
+              <div className="card-tactical overflow-x-auto w-full">
+                <div className="px-4 py-3 border-b border-[#222] bg-[#0d0d0d] grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 min-w-[600px]">
                   {['Code', 'Assigned To', 'Discount', 'Usage', 'Actions'].map(h => (
                     <p key={h} className="font-mono-ui text-[9px] text-[#444] uppercase tracking-widest">{h}</p>
                   ))}
@@ -114,7 +114,7 @@ export default function StaffPromoCodes() {
                     const maxed = isMaxed(c);
                     const statusOk = c.is_active && !expired && !maxed;
                     return (
-                      <div key={c.id} className="grid grid-cols-5 gap-4 items-center px-4 py-3">
+                      <div key={c.id} className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 items-center px-4 py-3 min-w-[600px]">
                         <div className="flex items-center gap-2">
                           <span className={`font-mono-ui text-sm font-bold ${statusOk ? 'text-[#ff8c00]' : 'text-[#444]'}`}>{c.code}</span>
                           <button onClick={() => copyCode(c.code)} className="text-[#444] hover:text-white transition-colors">
