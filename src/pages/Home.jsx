@@ -141,15 +141,15 @@ export default function Home() {
         })
         }
 
-        {/* CUSTOM GEAR */}
-        <section id="custom" className="border-t border-[#1a1a1a] pt-16 max-w-2xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest mb-2">Bespoke</p>
-            <h2 className="font-tactical text-4xl sm:text-5xl text-white">Custom Gear</h2>
-            <div className="w-12 h-px bg-[#333] mx-auto mt-4 mb-4" />
-            <p className="font-inter text-sm text-[#666]">Team kits, custom patches, academy sets.</p>
-          </div>
-          <CustomGearForm onSuccess={() => setCustomSent(true)} />
+        {/* CUSTOM GEAR CTA */}
+        <section id="custom" className="border-t border-[#1a1a1a] pt-16 max-w-2xl mx-auto text-center">
+          <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest mb-2">Bespoke</p>
+          <h2 className="font-tactical text-4xl sm:text-5xl text-white">Custom Gear</h2>
+          <div className="w-12 h-px bg-[#333] mx-auto mt-4 mb-4" />
+          <p className="font-mono-ui text-sm text-[#666] mb-8">Team kits, custom patches, academy sets. Tell us what you need.</p>
+          <Link to="/Custom" className="btn-glow-orange font-mono-ui text-xs uppercase tracking-widest px-8 py-4 inline-flex items-center gap-2">
+            Request Custom Gear →
+          </Link>
         </section>
       </main>
 
