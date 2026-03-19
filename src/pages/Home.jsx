@@ -166,9 +166,7 @@ export default function Home() {
         onClose={() => setDetailProduct(null)}
         onOrder={(p) => {setDetailProduct(null);setCartOpen(true);}} />
         }
-        {customSent &&
-        <CustomRequestSuccessModal onClose={() => setCustomSent(false)} />
-        }
+
       </AnimatePresence>
     </div>);
 
