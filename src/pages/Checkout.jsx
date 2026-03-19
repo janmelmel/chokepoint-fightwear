@@ -308,13 +308,45 @@ export default function Checkout() {
             ))}
           </div>
 
+          {/* Promo Code */}
+          <div>
+            <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-2">Promo Code</p>
+            <PromoCodeInput
+              subtotal={subtotal}
+              appliedPromo={appliedPromo}
+              onApply={(promo, discount) => { setAppliedPromo(promo); setPromoDiscount(discount); }}
+              onRemove={() => { setAppliedPromo(null); setPromoDiscount(0); }}
+            />
+          </div>
+
           <div className="border border-[#222] p-4 space-y-2">
             <div className="flex justify-between font-mono-ui text-xs text-[#888]">
               <span>Subtotal</span><span>₱{subtotal.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between font-mono-ui text-xs text-[#888]">
-              <span>Shipping</span><span>{shippingFee != null ? `₱${shippingFee.toLocaleString()}` : 'TBD'}</span>
-            </div>
+            {shipping != null ? (
+              <>
+                <div className="flex justify-between font-mono-ui text-xs text-[#888]">
+                  <span>Shipping ({shipping.count} item{shipping.count !== 1 ? 's' : ''})</span>
+                  <span>₱{shipping.raw.toLocaleString()}</span>
+                </div>
+                {shipping.discount > 0 && (
+                  <div className="flex justify-between font-mono-ui text-xs text-green-400">
+                    <span>Multi-item discount (10%)</span>
+                    <span>-₱{shipping.discount.toLocaleString()}</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex justify-between font-mono-ui text-xs text-[#888]">
+                <span>Shipping</span><span>TBD</span>
+              </div>
+            )}
+            {promoDiscount > 0 && (
+              <div className="flex justify-between font-mono-ui text-xs text-green-400">
+                <span>Promo ({appliedPromo?.code})</span>
+                <span>-₱{promoDiscount.toLocaleString()}</span>
+              </div>
+            )}
             <div className="flex justify-between font-mono-ui text-sm text-white font-bold border-t border-[#222] pt-2 mt-2">
               <span>Total</span>
               <span className="text-[#ff8c00]">₱{total.toLocaleString()}{shippingFee == null ? ' + shipping' : ''}</span>
