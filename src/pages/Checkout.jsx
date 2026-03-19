@@ -112,6 +112,7 @@ export default function Checkout() {
         shipping_delivery_notes: address.notes,
         shipping_zone: zone || '',
         shipping_fee: shippingFee || 0,
+        notes: appliedPromo ? `Promo: ${appliedPromo.code} (-₱${promoDiscount})` : '',
       });
       createdOrders.push({ id: order.id, orderNum, item });
     }
