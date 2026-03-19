@@ -89,6 +89,13 @@ export default function Staff() {
             )}
           </div>
 
+          {/* Charts */}
+          {isAdmin && (
+            <div className="mb-8">
+              <DashboardCharts orders={orders} products={products} />
+            </div>
+          )}
+
           {/* Low Stock Alerts */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
