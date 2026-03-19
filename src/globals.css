@@ -60,6 +60,7 @@ body {
   transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
   border-radius: 0 !important;
   text-decoration: none !important;
+  min-height: 36px;
 }
 .btn-glow-orange:hover:not(:disabled) {
   background: #ff8c00 !important;
@@ -76,19 +77,20 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #1c1c1c !important;
-  border: 1px solid #444 !important;
-  color: #d0d0d0 !important;
+  background: #2a2a2a !important;
+  border: 1px solid #555 !important;
+  color: #e0e0e0 !important;
   font-weight: 600 !important;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
   border-radius: 0 !important;
   text-decoration: none !important;
+  min-height: 36px;
 }
 .btn-glow-white:hover:not(:disabled) {
   border-color: #fff !important;
   color: #fff !important;
-  background: #2a2a2a !important;
+  background: #3a3a3a !important;
 }
 .btn-glow-white:disabled {
   opacity: 0.35;
