@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
 import { Package, TrendingUp, Clock, Truck, CheckCircle, AlertCircle } from 'lucide-react';
 import LowStockWidget from '@/components/cp/LowStockWidget';
+import DashboardCharts from '@/components/cp/DashboardCharts';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StaffGuard from '@/components/cp/StaffGuard';
@@ -18,7 +19,7 @@ export default function Staff() {
       const u = await base44.auth.me().catch(() => null);
       setUser(u);
       const [o, p] = await Promise.all([
-        base44.entities.Order.list('-created_date', 20),
+        base44.entities.Order.list('-created_date', 500),
         base44.entities.Product.filter({ is_archived: false }),
       ]);
       setOrders(o);
