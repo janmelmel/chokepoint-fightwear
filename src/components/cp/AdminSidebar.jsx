@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import CPLogo from './CPLogo';
 import {
-  LayoutDashboard, Package, Tag, ShoppingBag, Users, LogOut, ExternalLink, Paintbrush, ImageIcon
+  LayoutDashboard, Package, Tag, ShoppingBag, Users, LogOut, ExternalLink, Paintbrush, ImageIcon, Ticket
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -18,6 +18,7 @@ export default function AdminSidebar({ user, collapsed = false }) {
     { label: 'Orders', icon: ShoppingBag, to: createPageUrl('StaffOrders') },
     { label: 'Hero Banners', icon: ImageIcon, to: createPageUrl('StaffHero') },
     { label: 'Custom Requests', icon: Paintbrush, to: createPageUrl('StaffCustomRequests') },
+    { label: 'Promo Codes', icon: Ticket, to: createPageUrl('StaffPromoCodes') },
     ...(isAdmin ? [{ label: 'Accounts', icon: Users, to: createPageUrl('AdminAccounts') }] : []),
   ];
 
