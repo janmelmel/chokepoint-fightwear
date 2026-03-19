@@ -60,14 +60,19 @@ export default function Checkout() {
 
   const computeShipping = () => {
     if (!isPhilippines || !address.province) return null;
-    const overrides = cart.map(i => i.shipping_fee_override).filter(v => v != null && v >= 0);
-    if (overrides.length === cart.length && overrides.length > 0) return Math.max(...overrides);
-    return getShippingRate(address.province);
+    const baseRate = getShippingRate(address.province);
+    // Per-item shipping: use product override if set, else zone rate
+    const itemFees = cart.map(i => (i.shipping_fee_override != null && i.shipping_fee_override >= 0) ? i.shipping_fee_override : baseRate);
+    const rawTotal = itemFees.reduce((s, f) => s + f, 0);
+    const totalItems = cart.reduce((s, i) => s + i.quantity, 0);
+    const multiDiscount = totalItems >= 2 ? Math.round(rawTotal * 0.10) : 0;
+    return { raw: rawTotal, discount: multiDiscount, final: rawTotal - multiDiscount, count: totalItems };
   };
 
-  const shippingFee = computeShipping();
+  const shipping = computeShipping();
+  const shippingFee = shipping?.final ?? null;
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-  const total = subtotal + (shippingFee || 0);
+  const total = subtotal + (shippingFee || 0) - promoDiscount;
 
   const cities = isPhilippines && address.province ? getCitiesForProvince(address.province) : [];
   const barangays = isPhilippines && address.city ? getBarangaysForCity(address.city) : [];
