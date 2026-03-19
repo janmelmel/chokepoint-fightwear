@@ -138,7 +138,7 @@ export default function StaffOrders() {
                   </button>
                 </div>
                 }
-              <button onClick={() => setShowCreateOrder(true)} className="btn-glow-orange px-4 py-2 font-mono-ui text-xs uppercase tracking-widest flex items-center gap-2">
+              <button onClick={() => setShowCreateOrder(true)} className="bg-orange-500 text-gray-50 px-4 py-2 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange flex items-center gap-2">
                 <Plus className="w-4 h-4" /> Create Order
               </button>
               <button onClick={loadOrders} className="btn-glow-white p-2"><RefreshCw className="text-slate-300 lucide lucide-refresh-cw w-4 h-4" /></button>
@@ -163,7 +163,7 @@ export default function StaffOrders() {
               </div>
 
               <div className="divide-y divide-[#1a1a1a]">
-                {filtered.map((order) => (
+                {filtered.map((order) =>
                 <div key={order.id} className={`${selected.has(order.id) ? 'bg-[#ff8c00]/5' : ''}`}>
                   {/* Main row */}
                   <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#111] transition-colors">
@@ -180,19 +180,19 @@ export default function StaffOrders() {
                       <div className="hidden sm:block">
                         <p className="font-mono-ui text-xs text-[#888] truncate">{order.product_name}</p>
                         <p className="font-mono-ui text-[10px] text-[#555]">Size: {order.size} · {order.payment_method}</p>
-                        {order.custom_print_text && (
-                          <p className="font-mono-ui text-[10px] text-[#ff8c00] flex items-center gap-1">
+                        {order.custom_print_text &&
+                        <p className="font-mono-ui text-[10px] text-[#ff8c00] flex items-center gap-1">
                             <Printer className="w-3 h-3" /> {order.custom_print_text}
                           </p>
-                        )}
-                      {order.payment_status && (
+                        }
+                      {order.payment_status &&
                         <p className={`font-mono-ui text-[10px] flex items-center gap-1 ${
-                          order.payment_status === 'Paid' ? 'text-green-400' : order.payment_status === 'Failed' ? 'text-[#ff0000]' : 'text-yellow-400'
-                        }`}>
+                        order.payment_status === 'Paid' ? 'text-green-400' : order.payment_status === 'Failed' ? 'text-[#ff0000]' : 'text-yellow-400'}`
+                        }>
                           <CreditCard className="w-3 h-3" /> {order.payment_status}
                           {order.paymongo_payment_method && ` · ${order.paymongo_payment_method}`}
                         </p>
-                      )}
+                        }
                       </div>
                       <div className="hidden sm:block">
                         <p className="font-mono-ui text-xs text-[#ff8c00]">₱{Number(order.total_amount || 0).toLocaleString()}</p>
@@ -203,23 +203,23 @@ export default function StaffOrders() {
 
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {/* Expand button for shipping details */}
-                      {(order.shipping_province || order.shipping_street) && (
-                        <button onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                          className={`p-1.5 border transition-all ${expandedOrder === order.id ? 'border-[#ff8c00]/50 text-[#ff8c00]' : 'border-[#333] text-[#555] hover:text-white hover:border-[#555]'}`}
-                          title="Shipping details">
+                      {(order.shipping_province || order.shipping_street) &&
+                      <button onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                      className={`p-1.5 border transition-all ${expandedOrder === order.id ? 'border-[#ff8c00]/50 text-[#ff8c00]' : 'border-[#333] text-[#555] hover:text-white hover:border-[#555]'}`}
+                      title="Shipping details">
                           <MapPin className="w-3.5 h-3.5" />
                         </button>
-                      )}
+                      }
                       <select value={order.status} onChange={(e) => updateSingle(order.id, e.target.value)}
-                        className={`bg-[#0a0a0a] border font-mono-ui text-[10px] px-2 py-1.5 focus:outline-none transition-colors ${STAGE_COLOR[order.status] || 'border-[#333] text-[#666]'}`}>
+                      className={`bg-[#0a0a0a] border font-mono-ui text-[10px] px-2 py-1.5 focus:outline-none transition-colors ${STAGE_COLOR[order.status] || 'border-[#333] text-[#666]'}`}>
                         {STAGES.map((s) => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </div>
                   </div>
 
                   {/* Expanded Shipping Details */}
-                  {expandedOrder === order.id && (
-                    <div className="px-12 py-3 bg-[#0d0d0d] border-t border-[#1a1a1a] grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {expandedOrder === order.id &&
+                  <div className="px-12 py-3 bg-[#0d0d0d] border-t border-[#1a1a1a] grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Ship To</p>
                         <p className="font-mono-ui text-xs text-white">{order.customer_name}</p>
@@ -232,22 +232,22 @@ export default function StaffOrders() {
                           {order.shipping_province && <span>{order.shipping_province} </span>}
                           {order.shipping_postal_code && <span>{order.shipping_postal_code}</span>}
                         </div>
-                        {order.shipping_delivery_notes && (
-                          <p className="font-mono-ui text-[10px] text-[#ff8c00] mt-1">Note: {order.shipping_delivery_notes}</p>
-                        )}
+                        {order.shipping_delivery_notes &&
+                      <p className="font-mono-ui text-[10px] text-[#ff8c00] mt-1">Note: {order.shipping_delivery_notes}</p>
+                      }
                       </div>
                       <div>
                         <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-1">Shipping</p>
                         <p className="font-mono-ui text-[10px] text-[#888]">Zone: {order.shipping_zone || '—'}</p>
                         <p className="font-mono-ui text-[10px] text-[#888]">Fee: {order.shipping_fee ? `₱${order.shipping_fee}` : 'TBD'}</p>
-                        {order.tracking_number && (
-                          <p className="font-mono-ui text-[10px] text-[#ff8c00] mt-1">{order.logistics}: {order.tracking_number}</p>
-                        )}
+                        {order.tracking_number &&
+                      <p className="font-mono-ui text-[10px] text-[#ff8c00] mt-1">{order.logistics}: {order.tracking_number}</p>
+                      }
                       </div>
                     </div>
-                  )}
+                  }
                 </div>
-                ))}
+                )}
 
                 {filtered.length === 0 &&
                 <div className="text-center py-12">
@@ -261,23 +261,23 @@ export default function StaffOrders() {
       </div>
     </div>
       <AM2>
-        {showCreateOrder && (
-          <CreateOrderModal
-            onClose={() => setShowCreateOrder(false)}
-            onCreated={() => loadOrders()}
-          />
-        )}
+        {showCreateOrder &&
+        <CreateOrderModal
+          onClose={() => setShowCreateOrder(false)}
+          onCreated={() => loadOrders()} />
+
+        }
       </AM2>
 
       {/* Delivery Modal */}
       <AnimatePresence>
-        {deliveryModal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
-            onClick={() => setDeliveryModal(null)}>
+        {deliveryModal &&
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
+        onClick={() => setDeliveryModal(null)}>
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
-              onClick={e => e.stopPropagation()}
-              className="w-full max-w-sm bg-[#111] border border-[#333]">
+          onClick={(e) => e.stopPropagation()}
+          className="w-full max-w-sm bg-[#111] border border-[#333]">
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#222]">
                 <h2 className="font-tactical text-2xl text-white">Out for Delivery</h2>
                 <button onClick={() => setDeliveryModal(null)} className="text-[#555] hover:text-white"><X className="w-5 h-5" /></button>
@@ -285,32 +285,32 @@ export default function StaffOrders() {
               <div className="p-5 space-y-4">
                 <div>
                   <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Logistics</label>
-                  <select value={logistics} onChange={e => setLogistics(e.target.value)}
-                    className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60">
-                    {LOGISTICS.map(l => <option key={l}>{l}</option>)}
+                  <select value={logistics} onChange={(e) => setLogistics(e.target.value)}
+                className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60">
+                    {LOGISTICS.map((l) => <option key={l}>{l}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Tracking Number</label>
-                  <input value={trackingNumber} onChange={e => setTrackingNumber(e.target.value)}
-                    placeholder="e.g. 1234567890"
-                    className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
+                  <input value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)}
+                placeholder="e.g. 1234567890"
+                className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
                 </div>
                 <div className="flex gap-3 pt-1">
                   <button onClick={() => setDeliveryModal(null)}
-                    className="flex-1 py-3 border border-[#333] text-[#555] font-mono-ui text-xs uppercase tracking-widest hover:border-[#555] hover:text-white transition-all">
+                className="flex-1 py-3 border border-[#333] text-[#555] font-mono-ui text-xs uppercase tracking-widest hover:border-[#555] hover:text-white transition-all">
                     Cancel
                   </button>
                   <button onClick={confirmDelivery} disabled={!trackingNumber || updating}
-                    style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
-                    className="flex-1 py-3 font-mono-ui text-xs uppercase tracking-widest disabled:opacity-40">
+                style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
+                className="flex-1 py-3 font-mono-ui text-xs uppercase tracking-widest disabled:opacity-40">
                     {updating ? 'Saving...' : 'Confirm'}
                   </button>
                 </div>
               </div>
             </motion.div>
           </motion.div>
-        )}
+        }
       </AnimatePresence>
     </StaffGuard>);
 
