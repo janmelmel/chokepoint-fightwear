@@ -116,7 +116,7 @@ export default function StaffHero() {
           ) : (
             <div className="space-y-3">
               {banners.map((b, i) => (
-                <div key={b.id} className={`card-tactical flex gap-4 items-center p-3 ${!b.is_active ? 'opacity-40' : ''}`}>
+                <div key={b.id} className={`card-tactical flex gap-4 items-center p-3 w-full hover:border-[#ff6b00]/20 transition-colors ${!b.is_active ? 'opacity-40' : ''}`}>
                   <div className="w-24 h-16 flex-shrink-0 bg-[#0d0d0d] overflow-hidden border border-[#222]">
                     {b.image_url ? <img src={b.image_url} className="w-full h-full object-cover" alt="" /> : <div className="w-full h-full" />}
                   </div>

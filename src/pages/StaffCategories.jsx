@@ -85,7 +85,7 @@ export default function StaffCategories() {
               {parents.map((parent) =>
             <div key={parent.id}>
                   {/* Parent row */}
-                  <div className="card-tactical flex items-center justify-between px-4 py-4 gap-4 border-l-2 border-[#ff6b00]">
+                  <div className="card-tactical flex items-center justify-between px-4 py-4 gap-4 border-l-2 border-[#ff6b00] w-full hover:border-[#ff6b00]/60 transition-colors">
                     <div className="flex-1 min-w-0">
                       <p className="font-tactical text-xl text-white">{parent.name}</p>
                       <p className="font-mono-ui text-[10px] text-[#555]">{parent.slug || '—'}</p>
@@ -106,7 +106,7 @@ export default function StaffCategories() {
 
                   {/* Children */}
                   {childrenOf(parent.id).map((child) =>
-              <div key={child.id} className="card-tactical flex items-center justify-between px-4 py-3 gap-4 ml-6 border-l border-[#2a2a2a] mt-1">
+              <div key={child.id} className="card-tactical flex items-center justify-between px-4 py-3 gap-4 ml-6 border-l border-[#333] mt-1 w-[calc(100%-1.5rem)] hover:border-l-[#ff6b00]/40 transition-colors">
                       <div className="flex items-center gap-2 flex-1 min-w-0">
                         <ChevronRight className="w-3 h-3 text-[#444] flex-shrink-0" />
                         <div>
