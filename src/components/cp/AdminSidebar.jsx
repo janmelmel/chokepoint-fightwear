@@ -19,6 +19,7 @@ export default function AdminSidebar({ user, collapsed = false }) {
     { label: 'Hero Banners', icon: ImageIcon, to: createPageUrl('StaffHero') },
     { label: 'Custom Requests', icon: Paintbrush, to: createPageUrl('StaffCustomRequests') },
     { label: 'Promo Codes', icon: Ticket, to: createPageUrl('StaffPromoCodes') },
+    { label: 'Customers', icon: BookUser, to: createPageUrl('StaffCustomers') },
     ...(isAdmin ? [{ label: 'Accounts', icon: Users, to: createPageUrl('AdminAccounts') }] : []),
   ];
 
