@@ -260,6 +260,15 @@ export default function StaffOrders() {
         </div>
       </div>
     </div>
+      <AM2>
+        {showCreateOrder && (
+          <CreateOrderModal
+            onClose={() => setShowCreateOrder(false)}
+            onCreated={() => loadOrders()}
+          />
+        )}
+      </AM2>
+
       {/* Delivery Modal */}
       <AnimatePresence>
         {deliveryModal && (
