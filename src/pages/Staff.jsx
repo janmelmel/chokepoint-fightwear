@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
-import { ShoppingBag, Package, TrendingUp, Clock, Truck, CheckCircle, AlertCircle } from 'lucide-react';
+import { Package, TrendingUp, Clock, Truck, CheckCircle, AlertCircle } from 'lucide-react';
+import LowStockWidget from '@/components/cp/LowStockWidget';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StaffGuard from '@/components/cp/StaffGuard';
@@ -85,6 +86,14 @@ export default function Staff() {
                 value={`₱${stats.totalRevenue.toLocaleString()}`}
                 icon={TrendingUp} color="#22c55e" sub="All time" />
             )}
+          </div>
+
+          {/* Low Stock Alerts */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-tactical text-2xl text-white">Inventory Alerts</h2>
+            </div>
+            <LowStockWidget products={products} />
           </div>
 
           {/* Recent Orders */}

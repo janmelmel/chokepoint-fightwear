@@ -52,6 +52,8 @@ import Category from './pages/Category';
 import Checkout from './pages/Checkout';
 import FAQ from './pages/FAQ';
 import Home from './pages/Home';
+import MyOrders from './pages/MyOrders';
+import OrderConfirmed from './pages/OrderConfirmed';
 import Staff from './pages/Staff';
 import StaffCategories from './pages/StaffCategories';
 import StaffCustomRequests from './pages/StaffCustomRequests';
@@ -59,6 +61,9 @@ import StaffHero from './pages/StaffHero';
 import StaffOrders from './pages/StaffOrders';
 import StaffProducts from './pages/StaffProducts';
 import TrackOrder from './pages/TrackOrder';
+import Custom from './pages/Custom';
+import Pay from './pages/Pay';
+import StaffPromoCodes from './pages/StaffPromoCodes';
 
 
 export const PAGES = {
@@ -67,6 +72,8 @@ export const PAGES = {
     "Checkout": Checkout,
     "FAQ": FAQ,
     "Home": Home,
+    "MyOrders": MyOrders,
+    "OrderConfirmed": OrderConfirmed,
     "Staff": Staff,
     "StaffCategories": StaffCategories,
     "StaffCustomRequests": StaffCustomRequests,
@@ -74,6 +81,9 @@ export const PAGES = {
     "StaffOrders": StaffOrders,
     "StaffProducts": StaffProducts,
     "TrackOrder": TrackOrder,
+    "Custom": Custom,
+    "Pay": Pay,
+    "StaffPromoCodes": StaffPromoCodes,
 }
 
 export const pagesConfig = {
