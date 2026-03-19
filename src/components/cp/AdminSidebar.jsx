@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import CPLogo from './CPLogo';
 import {
-  LayoutDashboard, Package, Tag, ShoppingBag, Users, LogOut, ExternalLink, Paintbrush, ImageIcon, Ticket
+  LayoutDashboard, Package, Tag, ShoppingBag, Users, LogOut, ExternalLink, Paintbrush, ImageIcon, Ticket, BookUser
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
