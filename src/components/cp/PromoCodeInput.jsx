@@ -1,52 +1,54 @@
 import React, { useState } from 'react';
-import { Tag, Check, X, Loader2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { Check, X, Loader2 } from 'lucide-react';
 
-// For now, promo codes are client-side only
-// In production, this should validate against a database
-const PROMO_CODES = {
-  'CHOKEPOINT10': { type: 'percent', value: 10, description: '10% off' },
-  'WELCOME15': { type: 'percent', value: 15, description: '15% off first order' },
-  'FREESHIP': { type: 'fixed', value: 0, description: 'Free shipping (arranged via chat)' },
-};
+const INPUT = "flex-1 bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60";
 
-export default function PromoCodeInput({ onApply, appliedCode }) {
+export async function validatePromoCode(code, subtotal, customerEmail) {
+  const results = await base44.entities.PromoCode.filter({ code: code.toUpperCase().trim(), is_active: true });
+  if (!results.length) return { valid: false, error: 'Invalid promo code.' };
+  const promo = results[0];
+
+  if (promo.expiry_date && new Date(promo.expiry_date) < new Date()) return { valid: false, error: 'This code has expired.' };
+  if (promo.usage_limit && promo.usage_count >= promo.usage_limit) return { valid: false, error: 'Code usage limit reached.' };
+  if (promo.min_order_amount > 0 && subtotal < promo.min_order_amount) {
+    return { valid: false, error: `Minimum order of ₱${promo.min_order_amount.toLocaleString()} required.` };
+  }
+
+  const discount = promo.discount_type === 'percentage'
+    ? Math.round(subtotal * promo.discount_value / 100)
+    : promo.discount_value;
+
+  return { valid: true, promo, discount, label: promo.discount_type === 'percentage' ? `${promo.discount_value}% off` : `₱${discount} off` };
+}
+
+export default function PromoCodeInput({ subtotal, onApply, onRemove, appliedPromo }) {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleApply = async () => {
     if (!code.trim()) return;
-    
     setLoading(true);
     setError('');
-    
-    // Simulate API call
-    await new Promise(r => setTimeout(r, 500));
-    
-    const promo = PROMO_CODES[code.toUpperCase()];
-    if (promo) {
-      onApply({ code: code.toUpperCase(), ...promo });
-      setCode('');
-    } else {
-      setError('Invalid promo code');
-    }
-    
+    const result = await validatePromoCode(code, subtotal);
     setLoading(false);
+    if (!result.valid) { setError(result.error); return; }
+    onApply(result.promo, result.discount);
+    setCode('');
   };
 
-  const handleRemove = () => {
-    onApply(null);
-  };
-
-  if (appliedCode) {
+  if (appliedPromo) {
     return (
-      <div className="flex items-center justify-between p-3 bg-[#ff8c00]/10 border border-[#ff8c00]/30">
+      <div className="flex items-center justify-between border border-green-500/30 bg-green-500/5 px-3 py-2.5">
         <div className="flex items-center gap-2">
-          <Tag className="w-4 h-4 text-[#ff8c00]" />
-          <span className="font-mono-ui text-xs text-[#ff8c00] uppercase">{appliedCode.code}</span>
-          <span className="font-mono-ui text-[10px] text-[#888]">({appliedCode.description})</span>
+          <Check className="w-3.5 h-3.5 text-green-400" />
+          <span className="font-mono-ui text-xs text-green-400 uppercase tracking-wider">{appliedPromo.code}</span>
+          <span className="font-mono-ui text-[10px] text-[#555]">
+            {appliedPromo.discount_type === 'percentage' ? `${appliedPromo.discount_value}% off` : `₱${appliedPromo.discount_value} off`}
+          </span>
         </div>
-        <button onClick={handleRemove} className="text-[#555] hover:text-[#ff0000] transition-colors">
+        <button onClick={onRemove} className="text-[#555] hover:text-[#ff0000] transition-colors">
           <X className="w-4 h-4" />
         </button>
       </div>
@@ -54,32 +56,24 @@ export default function PromoCodeInput({ onApply, appliedCode }) {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div className="flex gap-2">
-        <div className="flex-1 relative">
-          <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#555]" />
-          <input
-            value={code}
-            onChange={(e) => { setCode(e.target.value); setError(''); }}
-            placeholder="Promo code"
-            className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm pl-10 pr-4 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 uppercase"
-            onKeyDown={(e) => e.key === 'Enter' && handleApply()}
-          />
-        </div>
+        <input
+          value={code}
+          onChange={e => { setCode(e.target.value.toUpperCase()); setError(''); }}
+          onKeyDown={e => e.key === 'Enter' && handleApply()}
+          className={INPUT}
+          placeholder="PROMO CODE"
+        />
         <button
           onClick={handleApply}
           disabled={loading || !code.trim()}
-          style={{ background: '#1c1c1c', border: '1px solid #444', color: '#d0d0d0' }}
-          className="px-4 py-2.5 font-mono-ui text-xs uppercase tracking-widest disabled:opacity-40"
+          className="btn-glow-white px-4 font-mono-ui text-[10px] uppercase tracking-widest disabled:opacity-40 flex items-center gap-1"
         >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Apply'}
+          {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Apply'}
         </button>
       </div>
-      {error && (
-        <p className="font-mono-ui text-[10px] text-[#ff0000] flex items-center gap-1">
-          <X className="w-3 h-3" /> {error}
-        </p>
-      )}
+      {error && <p className="font-mono-ui text-[10px] text-[#ff0000]">{error}</p>}
     </div>
   );
 }
