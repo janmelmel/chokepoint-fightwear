@@ -11,7 +11,6 @@ import CartDrawer from '@/components/cp/CartDrawer';
 import HeroSlideshow from '@/components/cp/HeroSlideshow';
 import FeaturedProducts from '@/components/cp/FeaturedProducts';
 import CPLogo from '@/components/cp/CPLogo';
-import CustomGearForm from '@/components/cp/CustomGearForm';
 import AboutSection from '@/components/cp/AboutSection';
 import FooterLinks from '@/components/cp/FooterLinks';
 
@@ -21,7 +20,7 @@ export default function Home() {
   const [banners, setBanners] = useState([]);
   const [detailProduct, setDetailProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [customSent, setCustomSent] = useState(false);
+
   const [cartOpen, setCartOpen] = useState(false);
 
   useEffect(() => {
