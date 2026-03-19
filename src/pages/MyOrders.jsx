@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import StickyHeader from '@/components/cp/StickyHeader';
 import FooterLinks from '@/components/cp/FooterLinks';
 import CartDrawer from '@/components/cp/CartDrawer';
+import ReviewModal from '@/components/cp/ReviewModal';
 import { addToCart } from '@/lib/cartStore';
-import { Package, RotateCcw, MessageCircle, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { Package, RotateCcw, MessageCircle, ChevronDown, ChevronUp, ExternalLink, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const STATUS_STYLE = {
