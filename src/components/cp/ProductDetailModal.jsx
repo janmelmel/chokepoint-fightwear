@@ -11,7 +11,18 @@ export default function ProductDetailModal({ product, onClose }) {
   const [added, setAdded] = useState(false);
   const [imgIdx, setImgIdx] = useState(0);
 
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    if (!product?.id) return;
+    base44.entities.Review.filter({ product_id: product.id }).then(setReviews);
+  }, [product?.id]);
+
   if (!product) return null;
+
+  const avgRating = reviews.length
+    ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
+    : null;
 
   const sizes = product.sizes || [];
   const images = product.images || [];
