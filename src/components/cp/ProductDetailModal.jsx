@@ -204,6 +204,29 @@ export default function ProductDetailModal({ product, onClose }) {
             )}
           </div>
         </div>
+
+        {/* Reviews Section */}
+        {reviews.length > 0 && (
+          <div className="border-t border-[#222] px-5 py-4">
+            <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-3">Customer Reviews</p>
+            <div className="space-y-3 max-h-48 overflow-y-auto scrollbar-tactical">
+              {reviews.map(r => (
+                <div key={r.id} className="border-b border-[#1a1a1a] pb-3 last:border-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <StarRating value={r.rating} readonly size={3} />
+                      <span className="font-mono-ui text-[10px] text-[#888]">{r.customer_name}</span>
+                    </div>
+                    <span className="font-mono-ui text-[9px] text-[#444]">
+                      {new Date(r.created_date).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                  </div>
+                  {r.comment && <p className="font-mono-ui text-[11px] text-[#777] leading-relaxed">{r.comment}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </motion.div>
     </motion.div>
   );
