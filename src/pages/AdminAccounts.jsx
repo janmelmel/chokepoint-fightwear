@@ -63,8 +63,8 @@ export default function AdminAccounts() {
     <div className="min-h-screen bg-[#0a0a0a] flex">
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">
-        <div className="px-6 py-8 max-w-3xl">
-          <div className="flex items-center justify-between mb-8">
+        <div className="px-6 py-8 w-full">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
               <p className="font-mono-ui text-[10px] text-[#ff0000] uppercase tracking-widest">Admin Only</p>
               <h1 className="font-tactical text-4xl text-white">Staff Accounts</h1>

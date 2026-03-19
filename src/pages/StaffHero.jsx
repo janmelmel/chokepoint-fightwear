@@ -100,7 +100,7 @@ export default function StaffHero() {
     <div className="min-h-screen bg-[#0a0a0a] flex">
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">
-        <div className="px-6 py-8 max-w-4xl">
+        <div className="px-6 py-8 w-full">
           <div className="flex items-center justify-between mb-8">
             <div>
               <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Storefront</p>
