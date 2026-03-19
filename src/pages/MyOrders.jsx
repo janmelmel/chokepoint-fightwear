@@ -30,10 +30,12 @@ const STATUS_STEPS = ['Pending', 'Processing', 'Packing', 'Out for Delivery', 'C
 export default function MyOrders() {
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [reordering, setReordering] = useState(null);
+  const [reviewOrder, setReviewOrder] = useState(null);
 
   useEffect(() => {
     (async () => {
