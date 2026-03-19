@@ -71,16 +71,19 @@ export default function CartDrawer({ open, onClose }) {
                       </p>
                       <div className="flex items-center gap-2 mt-2">
                         <button onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  className="w-6 h-6 border border-[#333] flex items-center justify-center text-[#555] hover:text-white hover:border-[#555] transition-colors">
+                  style={{ background: '#1c1c1c', border: '1px solid #555', color: '#ccc' }}
+                  className="w-7 h-7 flex items-center justify-center hover:border-white hover:text-white transition-colors">
                           <Minus className="w-3 h-3" />
                         </button>
                         <span className="font-mono-ui text-xs text-white w-4 text-center">{item.quantity}</span>
                         <button onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  className="w-6 h-6 border border-[#333] flex items-center justify-center text-[#555] hover:text-white hover:border-[#555] transition-colors">
+                  style={{ background: '#1c1c1c', border: '1px solid #555', color: '#ccc' }}
+                  className="w-7 h-7 flex items-center justify-center hover:border-white hover:text-white transition-colors">
                           <Plus className="w-3 h-3" />
                         </button>
                         <button onClick={() => removeFromCart(item.id)}
-                  className="ml-auto text-[#333] hover:text-[#ff0000] transition-colors">
+                  style={{ background: '#2a0000', border: '1px solid #ff0000', color: '#ff0000' }}
+                  className="ml-auto w-7 h-7 flex items-center justify-center hover:bg-[#ff0000] hover:text-white transition-colors">
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
