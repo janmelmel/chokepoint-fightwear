@@ -102,6 +102,20 @@ export default function ProductDetailModal({ product, onClose }) {
               <h2 className="font-tactical text-3xl text-white leading-tight">{product.name}</h2>
               {product.edition && <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest mt-1">{product.edition}</p>}
               <p className="font-mono-ui text-2xl text-[#ff6b00] font-bold mt-2">₱{Number(product.price).toLocaleString()}</p>
+              <div className="flex items-center gap-3 mt-1.5">
+                {avgRating ? (
+                  <div className="flex items-center gap-1.5">
+                    <StarRating value={Math.round(Number(avgRating))} readonly size={4} />
+                    <span className="font-mono-ui text-xs text-[#ff8c00] font-bold">{avgRating}</span>
+                    <span className="font-mono-ui text-[10px] text-[#555]">({reviews.length} review{reviews.length !== 1 ? 's' : ''})</span>
+                  </div>
+                ) : (
+                  <span className="font-mono-ui text-[10px] text-[#444]">No reviews yet</span>
+                )}
+                {product.total_ordered > 0 && (
+                  <span className="font-mono-ui text-[10px] text-[#555]">· {product.total_ordered} sold</span>
+                )}
+              </div>
             </div>
 
             {product.description && (
