@@ -45,9 +45,9 @@ export default function CartDrawer({ open, onClose }) {
             <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
                   <ShoppingBag className="w-10 h-10 text-[#222]" />
                   <p className="font-mono-ui text-sm text-[#333]">Your bag is empty</p>
-                  <button onClick={onClose} className="font-mono-ui text-xs text-[#555] hover:text-white uppercase tracking-widest transition-colors">
-                    Continue Shopping
-                  </button>
+                  <button onClick={onClose} style={{ background: '#2a2a2a', border: '1px solid #555', color: '#e0e0e0' }} className="font-mono-ui text-xs uppercase tracking-widest px-5 py-2.5 hover:border-white hover:text-white transition-colors">
+                     Continue Shopping
+                   </button>
                 </div> :
 
             cart.map((item) =>
