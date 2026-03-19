@@ -86,14 +86,14 @@ export default function StaffPromoCodes() {
         <AdminSidebar user={user} />
         <div className="flex-1 overflow-auto">
           <div className="px-6 py-8 w-full">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div className="flex items-center justify-between mb-8 gap-4">
               <div>
                 <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Marketing</p>
                 <h1 className="font-tactical text-4xl text-white">Promo Codes</h1>
               </div>
-              <div className="flex gap-2 w-full sm:w-auto">
-                <button onClick={load} className="btn-glow-white p-2.5 flex-shrink-0"><RefreshCw className="w-4 h-4" /></button>
-                <button onClick={openCreate} className="btn-glow-orange flex-1 sm:flex-none px-5 py-3 font-mono-ui text-xs uppercase tracking-widest flex items-center justify-center gap-2">
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <button onClick={load} className="btn-glow-white p-2.5"><RefreshCw className="w-4 h-4" /></button>
+                <button onClick={openCreate} className="btn-glow-orange px-5 py-3 font-mono-ui text-xs uppercase tracking-widest flex items-center gap-2">
                   <Plus className="w-4 h-4" /> New Code
                 </button>
               </div>
