@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
-import { CheckSquare, Square, RefreshCw, X, MapPin, Printer, CreditCard } from 'lucide-react';
+import { CheckSquare, Square, RefreshCw, X, MapPin, Printer, CreditCard, Plus } from 'lucide-react';
+import CreateOrderModal from '@/components/cp/CreateOrderModal';
+import { AnimatePresence as AM2 } from 'framer-motion';
 import { AnimatePresence, motion } from 'framer-motion';
 import StaffGuard from '@/components/cp/StaffGuard';
 
@@ -97,6 +99,7 @@ export default function StaffOrders() {
   };
 
   const [expandedOrder, setExpandedOrder] = useState(null);
+  const [showCreateOrder, setShowCreateOrder] = useState(false);
   const filtered = filterStatus === 'All' ? orders : orders.filter((o) => o.status === filterStatus);
 
   return (
@@ -135,6 +138,9 @@ export default function StaffOrders() {
                   </button>
                 </div>
                 }
+              <button onClick={() => setShowCreateOrder(true)} className="btn-glow-orange px-4 py-2 font-mono-ui text-xs uppercase tracking-widest flex items-center gap-2">
+                <Plus className="w-4 h-4" /> Create Order
+              </button>
               <button onClick={loadOrders} className="btn-glow-white p-2"><RefreshCw className="text-slate-300 lucide lucide-refresh-cw w-4 h-4" /></button>
             </div>
           </div>
