@@ -42,8 +42,12 @@ export default function MyOrders() {
       const u = await base44.auth.me().catch(() => null);
       if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
       setUser(u);
-      const o = await base44.entities.Order.filter({ customer_email: u.email }, '-created_date', 50);
+      const [o, r] = await Promise.all([
+        base44.entities.Order.filter({ customer_email: u.email }, '-created_date', 50),
+        base44.entities.Review.filter({ customer_email: u.email }),
+      ]);
       setOrders(o);
+      setReviews(r);
       setLoading(false);
     })();
   }, []);
