@@ -93,7 +93,7 @@ export default function StaffPromoCodes() {
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <button onClick={load} className="btn-glow-white p-2.5"><RefreshCw className="w-4 h-4" /></button>
-                <button onClick={openCreate} className="btn-glow-orange px-5 py-3 font-mono-ui text-xs uppercase tracking-widest flex items-center gap-2">
+                <button onClick={openCreate} style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }} className="px-5 py-3 font-mono-ui text-xs uppercase tracking-widest flex items-center gap-2 cursor-pointer hover:opacity-90">
                   <Plus className="w-4 h-4" /> New Code
                 </button>
               </div>
