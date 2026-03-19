@@ -74,6 +74,20 @@ export default function ProductCard({ product, onPreview }) {
         <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
         <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
         <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
+        <div className="flex items-center gap-1.5 mt-1">
+          {avgRating ? (
+            <>
+              <Star className="w-3 h-3" style={{ fill: '#ff8c00', color: '#ff8c00' }} />
+              <span className="font-mono-ui text-[10px] text-[#ff8c00] font-bold">{avgRating}</span>
+              <span className="font-mono-ui text-[10px] text-[#555]">({reviewCount})</span>
+            </>
+          ) : null}
+          {product.total_ordered > 0 && (
+            <span className={`font-mono-ui text-[10px] text-[#555] ${avgRating ? 'ml-1' : ''}`}>
+              {avgRating ? '· ' : ''}{product.total_ordered} sold
+            </span>
+          )}
+        </div>
 
         {/* Size selector */}
         <div className="h-8 mt-3">
