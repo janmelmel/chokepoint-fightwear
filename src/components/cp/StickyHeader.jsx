@@ -13,6 +13,7 @@ export default function StickyHeader({ onCartClick }) {
   const [categories, setCategories] = useState([]);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [authUser, setAuthUser] = useState(undefined); // undefined=loading, null=guest
+  const [profileOpen, setProfileOpen] = useState(false);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
