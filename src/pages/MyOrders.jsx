@@ -237,6 +237,25 @@ export default function MyOrders() {
                             )}
                           </div>
 
+                          {/* Review button for completed orders */}
+                          {order.status === 'Completed' && (() => {
+                            const alreadyReviewed = reviews.some(r => r.order_id === order.id);
+                            return alreadyReviewed ? (
+                              <div className="flex items-center gap-1.5 px-3 py-2 border border-[#ff8c00]/30 bg-[#ff8c00]/5">
+                                <Star className="w-3 h-3 text-[#ff8c00]" style={{ fill: '#ff8c00' }} />
+                                <p className="font-mono-ui text-[10px] text-[#ff8c00]">Review submitted — thank you!</p>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setReviewOrder(order)}
+                                style={{ background: '#1c1c1c', border: '1px solid #ff8c00', color: '#ff8c00', fontWeight: 700 }}
+                                className="w-full py-2.5 font-mono-ui text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#ff8c00]/10 transition-colors"
+                              >
+                                <Star className="w-3.5 h-3.5" /> Leave a Review
+                              </button>
+                            );
+                          })()}
+
                           {/* Actions */}
                           <div className="flex gap-2 pt-1">
                             <button
