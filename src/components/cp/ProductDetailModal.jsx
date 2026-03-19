@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { X, ShoppingBag, Check, ChevronLeft, ChevronRight, MessageCircle, Mail } from 'lucide-react';
+import { X, ShoppingBag, Check, ChevronLeft, ChevronRight, MessageCircle, Mail, Star } from 'lucide-react';
 import { addToCart } from '@/lib/cartStore';
+import { base44 } from '@/api/base44Client';
+import StarRating from './StarRating';
 
 export default function ProductDetailModal({ product, onClose }) {
   const [selectedSize, setSelectedSize] = useState('');
