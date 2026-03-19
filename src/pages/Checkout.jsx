@@ -118,8 +118,9 @@ export default function Checkout() {
     }
 
     // 2. Create PayMongo checkout session
+    const finalTotal = subtotal + (shippingFee || 0) - promoDiscount;
     const response = await base44.functions.invoke('createPaymongoPayment', {
-      amount: total,
+      amount: finalTotal,
       customerName: contact.name,
       customerEmail: contact.email,
       customerPhone: contact.phone,
