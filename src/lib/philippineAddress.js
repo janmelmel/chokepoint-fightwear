@@ -4,10 +4,10 @@
  */
 
 export const SHIPPING_ZONES = {
-  'Metro Manila': { label: 'Metro Manila', rate: 150 },
-  'Luzon': { label: 'Luzon', rate: 180 },
+  'Metro Manila': { label: 'Metro Manila', rate: 220 },
+  'Luzon': { label: 'Luzon', rate: 250 },
   'Visayas': { label: 'Visayas', rate: 200 },
-  'Mindanao': { label: 'Mindanao', rate: 200 },
+  'Mindanao': { label: 'Mindanao', rate: 250 },
 };
 
 // Province -> zone mapping
