@@ -7,6 +7,7 @@ import {
   getShippingZone, getShippingRate, WORLD_COUNTRIES
 } from '@/lib/philippineAddress';
 import CPLogo from '@/components/cp/CPLogo';
+import PromoCodeInput from '@/components/cp/PromoCodeInput';
 import { ArrowLeft, Loader2, MessageCircle, Mail, AlertCircle } from 'lucide-react';
 
 const INPUT = "w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60";
@@ -22,6 +23,8 @@ export default function Checkout() {
   const [confirmed, setConfirmed] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoDiscount, setPromoDiscount] = useState(0);
 
   const prevProvince = useRef('');
   const prevCity = useRef('');
