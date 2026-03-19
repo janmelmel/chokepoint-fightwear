@@ -22,6 +22,9 @@ import TrackOrder from './pages/TrackOrder';
 import FAQ from './pages/FAQ';
 import OrderConfirmed from './pages/OrderConfirmed';
 import MyOrders from './pages/MyOrders';
+import Custom from './pages/Custom';
+import Pay from './pages/Pay';
+import StaffPromoCodes from './pages/StaffPromoCodes';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -56,6 +59,9 @@ const AuthenticatedApp = () => {
       <Route path="/FAQ" element={<FAQ />} />
       <Route path="/OrderConfirmed" element={<OrderConfirmed />} />
       <Route path="/MyOrders" element={<MyOrders />} />
+      <Route path="/Custom" element={<Custom />} />
+      <Route path="/Pay" element={<Pay />} />
+      <Route path="/StaffPromoCodes" element={<StaffPromoCodes />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
