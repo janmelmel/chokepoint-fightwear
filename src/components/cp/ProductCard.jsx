@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, ShoppingBag, Check, MessageCircle } from 'lucide-react';
+import { Eye, ShoppingBag, Check, MessageCircle, Star } from 'lucide-react';
 import { addToCart } from '@/lib/cartStore';
+import { base44 } from '@/api/base44Client';
 
 export default function ProductCard({ product, onPreview }) {
   const [selectedSize, setSelectedSize] = useState('');
