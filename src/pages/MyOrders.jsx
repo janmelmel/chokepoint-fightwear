@@ -9,19 +9,19 @@ import { Package, RotateCcw, MessageCircle, ChevronDown, ChevronUp, ExternalLink
 import { motion, AnimatePresence } from 'framer-motion';
 
 const STATUS_STYLE = {
-  'Pending':          'text-yellow-400 border-yellow-400/30 bg-yellow-400/5',
-  'Processing':       'text-blue-400 border-blue-400/30 bg-blue-400/5',
-  'Packing':          'text-purple-400 border-purple-400/30 bg-purple-400/5',
-  'Out for Delivery': 'text-[#ff8c00] border-[#ff8c00]/30 bg-[#ff8c00]/5',
-  'Completed':        'text-green-400 border-green-400/30 bg-green-400/5',
-  'Cancelled':        'text-[#ff0000] border-[#ff0000]/30 bg-[#ff0000]/5',
+  'Pending':          'text-yellow-300 border-yellow-400/50 bg-yellow-400/15',
+  'Processing':       'text-blue-300 border-blue-400/50 bg-blue-400/15',
+  'Packing':          'text-purple-300 border-purple-400/50 bg-purple-400/15',
+  'Out for Delivery': 'text-orange-300 border-orange-400/50 bg-orange-400/15',
+  'Completed':        'text-green-300 border-green-400/50 bg-green-400/15',
+  'Cancelled':        'text-red-300 border-red-400/50 bg-red-400/15',
 };
 
 const PAYMENT_STYLE = {
-  'Paid':    'text-green-400',
-  'Pending': 'text-yellow-400',
-  'Failed':  'text-[#ff0000]',
-  'Refunded':'text-blue-400',
+  'Paid':     'text-black bg-green-400 px-2 py-0.5 font-bold',
+  'Pending':  'text-black bg-yellow-400 px-2 py-0.5 font-bold',
+  'Failed':   'text-white bg-red-600 px-2 py-0.5 font-bold',
+  'Refunded': 'text-white bg-blue-500 px-2 py-0.5 font-bold',
 };
 
 const STATUS_STEPS = ['Pending', 'Processing', 'Packing', 'Out for Delivery', 'Completed'];
