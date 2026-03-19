@@ -85,9 +85,9 @@ export default function StickyHeader({ onCartClick }) {
               </div>
             );
           })}
-          <a href="#custom" className="px-3 py-2 font-mono-ui text-[11px] text-[#888] hover:text-white tracking-widest uppercase transition-colors">
+          <Link to="/Custom" className="px-3 py-2 font-mono-ui text-[11px] text-[#888] hover:text-white tracking-widest uppercase transition-colors">
             Custom
-          </a>
+          </Link>
         </nav>
 
         {/* Center Logo */}
@@ -197,10 +197,10 @@ export default function StickyHeader({ onCartClick }) {
               </div>
             );
           })}
-          <a href="#custom" onClick={() => setMenuOpen(false)}
+          <Link to="/Custom" onClick={() => setMenuOpen(false)}
             className="block font-mono-ui text-[11px] text-[#888] hover:text-white tracking-widest uppercase py-2 border-b border-[#1a1a1a]">
             Custom
-          </a>
+          </Link>
           <Link to="/TrackOrder" onClick={() => setMenuOpen(false)}
             className="block font-mono-ui text-[11px] text-[#888] hover:text-white tracking-widest uppercase py-2 border-b border-[#1a1a1a]">
             Track Order
