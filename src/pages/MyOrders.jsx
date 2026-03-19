@@ -303,6 +303,19 @@ export default function MyOrders() {
 
       <FooterLinks />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+
+      <AnimatePresence>
+        {reviewOrder && (
+          <ReviewModal
+            order={reviewOrder}
+            onClose={() => setReviewOrder(null)}
+            onSubmitted={async () => {
+              const r = await base44.entities.Review.filter({ customer_email: user.email });
+              setReviews(r);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
