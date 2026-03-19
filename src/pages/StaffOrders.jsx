@@ -138,7 +138,7 @@ export default function StaffOrders() {
                   </button>
                 </div>
                 }
-              <button onClick={() => setShowCreateOrder(true)} className="bg-orange-500 text-gray-50 px-4 py-2 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange flex items-center gap-2">
+              <button onClick={() => setShowCreateOrder(true)} className="bg-[#ff8c00] text-gray-50 px-4 py-2 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange flex items-center gap-2">
                 <Plus className="w-4 h-4" /> Create Order
               </button>
               <button onClick={loadOrders} className="btn-glow-white p-2"><RefreshCw className="text-slate-300 lucide lucide-refresh-cw w-4 h-4" /></button>
