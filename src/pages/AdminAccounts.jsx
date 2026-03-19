@@ -84,7 +84,7 @@ export default function AdminAccounts() {
           {loading ?
             <div className="space-y-2">{[...Array(4)].map((_, i) => <div key={i} className="card-tactical h-16 animate-pulse" />)}</div> :
 
-            <div className="card-tactical overflow-hidden">
+            <div className="card-tactical overflow-hidden w-full">
               <div className="px-4 py-3 border-b border-[#222] bg-[#0d0d0d]">
                 <p className="font-mono-ui text-[10px] text-[#444] uppercase tracking-widest">{users.length} accounts</p>
               </div>
@@ -122,7 +122,7 @@ export default function AdminAccounts() {
             </div>
             }
 
-          <div className="mt-6 p-4 border border-[#ff0000]/10 bg-[#ff0000]/5">
+          <div className="mt-6 p-4 border border-[#ff0000]/20 bg-[#ff0000]/5 w-full">
             <p className="font-mono-ui text-[10px] text-[#ff0000] uppercase tracking-widest mb-1">Security Note</p>
             <p className="font-mono-ui text-[10px] text-[#555]">
               Only Admin accounts can access the staff portal. Staff (role: user) and Disabled accounts are blocked.
