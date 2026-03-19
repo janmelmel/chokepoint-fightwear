@@ -7,6 +7,18 @@ import { base44 } from '@/api/base44Client';
 export default function ProductCard({ product, onPreview }) {
   const [selectedSize, setSelectedSize] = useState('');
   const [added, setAdded] = useState(false);
+  const [avgRating, setAvgRating] = useState(null);
+  const [reviewCount, setReviewCount] = useState(0);
+
+  useEffect(() => {
+    if (!product?.id) return;
+    base44.entities.Review.filter({ product_id: product.id }).then(rs => {
+      if (rs.length) {
+        setAvgRating((rs.reduce((s, r) => s + r.rating, 0) / rs.length).toFixed(1));
+        setReviewCount(rs.length);
+      }
+    });
+  }, [product?.id]);
 
   const orderType = product.order_type || (product.is_preorder ? 'preorder' : 'add_to_bag');
   const isContactToOrder = orderType === 'contact_to_order';
