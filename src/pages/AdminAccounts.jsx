@@ -69,7 +69,7 @@ export default function AdminAccounts() {
               <p className="font-mono-ui text-[10px] text-[#ff0000] uppercase tracking-widest">Admin Only</p>
               <h1 className="font-tactical text-4xl text-white">Staff Accounts</h1>
             </div>
-            <button onClick={() => setShowInvite(true)} className="bg-orange-600 px-5 py-3 text-xs font-mono-ui uppercase tracking-widest rounded-xl btn-glow-orange flex items-center gap-2">
+            <button onClick={() => setShowInvite(true)} className="w-full sm:w-auto bg-orange-600 px-5 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange flex items-center justify-center gap-2">
               <UserPlus className="w-4 h-4" /> Invite Staff
             </button>
           </div>

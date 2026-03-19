@@ -101,12 +101,12 @@ export default function StaffHero() {
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">
         <div className="px-6 py-8 w-full">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
               <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Storefront</p>
               <h1 className="font-tactical text-4xl text-white">Hero Banners</h1>
             </div>
-            <button onClick={openCreate} className="px-5 py-3 text-xs font-mono-ui uppercase tracking-widest bg-[#ff8c00] text-black font-bold hover:bg-[#ffa020] flex items-center gap-2 transition-all">
+            <button onClick={openCreate} className="w-full sm:w-auto px-5 py-3 text-xs font-mono-ui uppercase tracking-widest bg-[#ff8c00] text-black font-bold hover:bg-[#ffa020] flex items-center justify-center gap-2 transition-all">
               <Plus className="w-4 h-4" /> Add Banner
             </button>
           </div>
