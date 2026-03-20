@@ -104,6 +104,7 @@ export default function Checkout() {
         status: 'Pending',
         is_preorder: !!item.is_preorder,
         custom_print_text: item.custom_text || '',
+        variant_name: item.variant_name || '',
         shipping_province: address.province,
         shipping_city: address.city,
         shipping_barangay: address.barangay,
@@ -300,7 +301,10 @@ export default function Checkout() {
                 {item.image && <img src={item.image} className="w-14 h-14 object-cover flex-shrink-0 opacity-80" alt={item.name} />}
                 <div className="flex-1 min-w-0">
                   <p className="font-mono-ui text-xs text-white truncate">{item.name}</p>
-                  <p className="font-mono-ui text-[10px] text-[#555]">Size: {item.size} · Qty: {item.quantity}</p>
+                  <p className="font-mono-ui text-[10px] text-[#555]">
+                    {item.variant_name && <span className="text-[#ff8c00]">{item.variant_name} · </span>}
+                    Size: {item.size} · Qty: {item.quantity}
+                  </p>
                   {item.custom_text && <p className="font-mono-ui text-[10px] text-[#ff8c00]">Print: {item.custom_text}</p>}
                   {item.is_preorder && <span className="font-mono-ui text-[9px] text-[#555] border border-[#333] px-1.5 py-0.5">PRE-ORDER</span>}
                 </div>
