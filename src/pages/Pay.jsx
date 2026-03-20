@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import CPLogo from '@/components/cp/CPLogo';
-import { Loader2, AlertCircle, ShoppingBag } from 'lucide-react';
+import { Loader2, AlertCircle, ShoppingBag, Lock } from 'lucide-react';
 
 export default function Pay() {
   const [order, setOrder] = useState(null);
