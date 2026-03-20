@@ -16,9 +16,13 @@ export default function Pay() {
     if (!orderNum) { setError('Invalid payment link.'); setLoading(false); return; }
 
     (async () => {
-      const orders = await base44.entities.Order.filter({ order_number: orderNum });
-      if (!orders.length) { setError('Order not found.'); setLoading(false); return; }
-      setOrder(orders[0]);
+      const res = await base44.functions.invoke('getOrderByNumber', { orderNumber: orderNum });
+      if (res.data?.error || !res.data?.order) {
+        setError(res.data?.error || 'Order not found.');
+        setLoading(false);
+        return;
+      }
+      setOrder(res.data.order);
       setLoading(false);
     })();
   }, []);
