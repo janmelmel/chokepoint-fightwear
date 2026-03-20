@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
           show_description: true,
           show_line_items: true,
           line_items: pmLineItems,
-          payment_method_types: ['card', 'gcash', 'paymaya', 'grab_pay'],
+          payment_method_types: ['qrph'],
           description: `Chokepoint Fightwear Order`,
           success_url: `${origin}/OrderConfirmed?status=success&orderIds=${encodedIds}&orderNumbers=${encodedNums}&name=${encodeURIComponent(customerName || '')}`,
           cancel_url: `${origin}/Checkout?payment=cancelled`,

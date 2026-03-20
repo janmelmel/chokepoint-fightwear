@@ -114,10 +114,11 @@ export default function OrderConfirmed() {
           </div>
         )}
 
-        {/* Email notice */}
-        <div className="w-full border-l-2 border-[#ff6b00] bg-[#111] px-5 py-4">
+        {/* Payment instructions */}
+        <div className="w-full border-l-2 border-[#ff6b00] bg-[#111] px-5 py-4 space-y-2">
+          <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest">Payment Instructions</p>
           <p className="font-mono-ui text-xs text-[#888] leading-relaxed">
-            You will receive an email confirmation shortly. For questions, contact us at{' '}
+            Please scan the QR code sent to your email to complete your payment. If you need help, contact us at{' '}
             <a href="mailto:sales@chokepoint-fightwear.com" className="text-[#ff6b00] hover:underline">
               sales@chokepoint-fightwear.com
             </a>

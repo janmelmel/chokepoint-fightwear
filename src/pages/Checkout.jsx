@@ -354,6 +354,14 @@ export default function Checkout() {
             </div>
           </div>
 
+          {/* QRPh Payment Notice */}
+          <div className="border border-[#ff6b00]/30 bg-[#ff6b00]/5 px-4 py-3 flex gap-3">
+            <span className="text-lg flex-shrink-0">📱</span>
+            <p className="font-mono-ui text-[10px] text-[#ff8c00] leading-relaxed">
+              We currently accept payment via <strong>QRPh (Scan to Pay)</strong>. Open your GCash, Maya, or any banking app and scan the QR code to complete your payment. More payment options coming soon!
+            </p>
+          </div>
+
           <button onClick={handlePlace} disabled={!canPlace || placing || !isPhilippines}
             className="w-full btn-glow-orange font-mono-ui text-xs uppercase tracking-widest py-4 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
             {placing
