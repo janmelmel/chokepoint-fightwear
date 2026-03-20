@@ -83,6 +83,16 @@ export default function StaffProducts() {
   };
 
   const handleSave = async () => {
+    // Clean variants: convert price '' to null, stock '' to null
+    const cleanVariants = (form.variants || []).map(v => ({
+      ...v,
+      price: v.price !== '' && v.price != null ? Number(v.price) : null,
+      sizes: v.sizes.map(vs => ({
+        ...vs,
+        stock: vs.stock !== '' && vs.stock != null ? Number(vs.stock) : null,
+      })),
+    }));
+
     const data = {
       ...form,
       price: Number(form.price),
@@ -90,6 +100,7 @@ export default function StaffProducts() {
       shipping_fee_override: form.shipping_fee_override !== '' ? Number(form.shipping_fee_override) : null,
       stock_per_size: form.order_type === 'contact_to_order' || form.is_preorder ? {} : form.stock_per_size,
       is_preorder: form.order_type === 'preorder',
+      variants: cleanVariants,
     };
     if (editProduct) await base44.entities.Product.update(editProduct.id, data);
     else await base44.entities.Product.create(data);
