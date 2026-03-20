@@ -94,6 +94,28 @@ export default function Pay() {
             <p className="font-mono-ui text-xs text-[#555]">{error}</p>
             <Link to="/Home" className="btn-glow-orange font-mono-ui text-xs uppercase tracking-widest px-6 py-3 inline-flex">Back to Store</Link>
           </div>
+        ) : accessDenied ? (
+          <div className="card-tactical p-8 text-center space-y-4">
+            <Lock className="w-10 h-10 text-[#ff6b00] mx-auto" />
+            <p className="font-tactical text-2xl text-white">Access Restricted</p>
+            <p className="font-mono-ui text-xs text-[#888]">
+              This payment link can only be opened by the account associated with this order.
+            </p>
+            <p className="font-mono-ui text-[10px] text-[#555]">
+              Logged in as: <span className="text-[#ff6b00]">{currentUser?.email}</span>
+            </p>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => base44.auth.logout(window.location.href)}
+                className="btn-glow-white font-mono-ui text-xs uppercase tracking-widest px-6 py-3 w-full"
+              >
+                Switch Account / Login
+              </button>
+              <Link to="/Home" className="font-mono-ui text-[10px] text-[#444] hover:text-[#888] uppercase tracking-widest">
+                Back to Store
+              </Link>
+            </div>
+          </div>
         ) : order ? (
           <div className="space-y-6">
             {order.payment_status === 'Paid' ? (
