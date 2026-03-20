@@ -79,9 +79,21 @@ export default function Pay() {
           </div>
         ) : order ? (
           <div className="space-y-6">
+            {order.payment_status === 'Paid' ? (
+              <div className="card-tactical p-8 text-center space-y-4">
+                <div className="w-12 h-12 bg-green-500/10 border border-green-500/30 flex items-center justify-center mx-auto">
+                  <ShoppingBag className="w-6 h-6 text-green-400" />
+                </div>
+                <p className="font-tactical text-2xl text-white">Already Paid</p>
+                <p className="font-mono-ui text-xs text-[#888]">Order {order.order_number} has already been paid. Thank you!</p>
+                <Link to="/MyOrders" className="btn-glow-orange font-mono-ui text-xs uppercase tracking-widest px-6 py-3 inline-flex">View My Orders</Link>
+              </div>
+            ) : (
+            <>
             <div>
               <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest mb-1">Payment Due</p>
               <h1 className="font-tactical text-4xl text-white">{order.order_number}</h1>
+              <p className="font-mono-ui text-xs text-[#888] mt-1">Hi {order.customer_name}, please complete your payment below.</p>
             </div>
 
             {/* Order Summary */}
