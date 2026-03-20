@@ -224,7 +224,9 @@ export default function StaffOrders() {
                             {order.customer_phone && <p className="font-mono-ui text-[10px] text-[#444]">{order.customer_phone}</p>}
                           </div>
                           <div className="hidden sm:block">
-                            <p className="font-mono-ui text-xs text-[#888] truncate">{order.product_name}</p>
+                            <p className="font-mono-ui text-xs text-[#888] truncate">
+                              {order.product_name}{order.variant_name ? ` — ${order.variant_name}` : ''}
+                            </p>
                             <p className="font-mono-ui text-[10px] text-[#555]">Size: {order.size} · {order.payment_method}</p>
                             {order.custom_print_text && (
                               <p className="font-mono-ui text-[10px] text-[#ff8c00] flex items-center gap-1">
