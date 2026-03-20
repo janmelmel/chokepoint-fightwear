@@ -72,11 +72,27 @@ export default function Staff() {
           </div>
 
           {/* Order Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
             <StatCard label="Processing" value={stats.processing} icon={Clock} color="#ff8c00" />
             <StatCard label="Packing" value={stats.packing} icon={Package} color="#3b82f6" />
             <StatCard label="Out for Delivery" value={stats.outForDelivery} icon={Truck} color="#ff8c00" />
             <StatCard label="Completed" value={stats.completed} icon={CheckCircle} color="#22c55e" />
+          </div>
+
+          {/* Needs Verification card */}
+          <div className="mb-6">
+            <Link to="/StaffOrders?filter=Pending_Completion">
+              <div className={`border p-5 flex items-center justify-between gap-4 transition-all hover:border-green-500/60 cursor-pointer ${stats.needsVerification > 0 ? 'bg-green-500/5 border-green-500/40' : 'bg-[#1c1c1c] border-[#333]'}`}>
+                <div>
+                  <p className={`font-mono-ui text-[10px] uppercase tracking-widest ${stats.needsVerification > 0 ? 'text-green-400' : 'text-[#555]'}`}>Needs Verification</p>
+                  <p className="font-mono-ui text-3xl font-bold text-white mt-1">{stats.needsVerification}</p>
+                  <p className="font-mono-ui text-[10px] text-[#555] mt-1">
+                    {stats.needsVerification > 0 ? 'Customer confirmed receipt — click to verify & complete' : 'No orders pending verification'}
+                  </p>
+                </div>
+                <CheckCircle className={`w-6 h-6 flex-shrink-0 ${stats.needsVerification > 0 ? 'text-green-400' : 'text-[#333]'}`} />
+              </div>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
