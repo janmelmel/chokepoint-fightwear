@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingBag, Check, ChevronLeft, ChevronRight, MessageCircle, Mail, Star } from 'lucide-react';
 import { addToCart } from '@/lib/cartStore';
 import { base44 } from '@/api/base44Client';
@@ -7,10 +7,11 @@ import StarRating from './StarRating';
 
 export default function ProductDetailModal({ product, onClose }) {
   const [selectedSize, setSelectedSize] = useState('');
+  const [selectedVariantId, setSelectedVariantId] = useState('');
   const [customText, setCustomText] = useState('');
   const [added, setAdded] = useState(false);
   const [imgIdx, setImgIdx] = useState(0);
-
+  const [noVariantWarning, setNoVariantWarning] = useState(false);
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
@@ -18,34 +19,90 @@ export default function ProductDetailModal({ product, onClose }) {
     base44.entities.Review.filter({ product_id: product.id }).then(setReviews);
   }, [product?.id]);
 
+  // Reset selections when product changes
+  useEffect(() => {
+    setSelectedSize('');
+    setSelectedVariantId('');
+    setImgIdx(0);
+    setNoVariantWarning(false);
+  }, [product?.id]);
+
   if (!product) return null;
+
+  const variants = product.variants || [];
+  const hasVariants = variants.length > 0;
+  const selectedVariant = hasVariants ? variants.find(v => v.id === selectedVariantId) : null;
+
+  // Active images: variant images if set, else product images
+  const activeImages = (selectedVariant?.images?.length > 0 ? selectedVariant.images : product.images) || [];
+
+  // Active sizes: from selected variant or product-level sizes
+  const activeSizes = hasVariants
+    ? (selectedVariant ? selectedVariant.sizes.filter(vs => vs.available !== false) : [])
+    : (product.sizes || []).map(s => ({ size: s, stock: product.stock_per_size?.[s] ?? null }));
+
+  // Active price
+  const activePrice = (selectedVariant?.price > 0) ? selectedVariant.price : product.price;
+
+  const orderType = product.order_type || (product.is_preorder ? 'preorder' : 'add_to_bag');
+  const isContactToOrder = orderType === 'contact_to_order';
+  const isPreorder = orderType === 'preorder';
+  const isSoldOut = !isContactToOrder && !hasVariants && product.stock_limit > 0 && (product.total_ordered || 0) >= product.stock_limit;
+
+  const isSizeSoldOut = (sizeObj) => {
+    if (isPreorder) return false;
+    if (typeof sizeObj === 'string') {
+      const stock = product.stock_per_size?.[sizeObj];
+      return stock != null && stock <= 0;
+    }
+    return sizeObj.stock != null && sizeObj.stock <= 0;
+  };
+
+  const getSizeStock = (sizeObj) => {
+    if (typeof sizeObj === 'string') return product.stock_per_size?.[sizeObj] ?? null;
+    return sizeObj.stock ?? null;
+  };
+
+  const getSizeLabel = (sizeObj) => typeof sizeObj === 'string' ? sizeObj : sizeObj.size;
 
   const avgRating = reviews.length
     ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
     : null;
 
-  const sizes = product.sizes || [];
-  const images = product.images || [];
-  const orderType = product.order_type || (product.is_preorder ? 'preorder' : 'add_to_bag');
-  const isContactToOrder = orderType === 'contact_to_order';
-  const isSoldOut = !isContactToOrder && product.stock_limit > 0 && (product.total_ordered || 0) >= product.stock_limit;
-
-  const isSizeSoldOut = (s) => {
-    const sizeStock = product.stock_per_size?.[s];
-    return sizeStock != null && sizeStock <= 0;
+  const handleVariantSelect = (variantId) => {
+    setSelectedVariantId(variantId);
+    setSelectedSize('');
+    setImgIdx(0);
+    setNoVariantWarning(false);
   };
 
   const handleAdd = () => {
-    const sizeToUse = selectedSize || (sizes.length === 0 ? 'One Size' : null);
+    if (hasVariants && !selectedVariantId) {
+      setNoVariantWarning(true);
+      return;
+    }
+    const sizeToUse = selectedSize || (activeSizes.length === 0 ? 'One Size' : null);
     if (!sizeToUse) return;
     if (product.allow_custom_print && !customText) return;
-    addToCart(product, sizeToUse, 1, customText);
+
+    addToCart(
+      {
+        ...product,
+        price: activePrice,
+        images: activeImages,
+        variant_name: selectedVariant?.name || '',
+      },
+      sizeToUse,
+      1,
+      customText
+    );
     setAdded(true);
     setTimeout(() => { setAdded(false); onClose(); }, 1200);
   };
 
   const canAdd = !isSoldOut &&
-    (sizes.length === 0 || (selectedSize && !isSizeSoldOut(selectedSize))) &&
+    (!hasVariants || selectedVariantId) &&
+    (activeSizes.length === 0 || (selectedSize && !isSizeSoldOut(activeSizes.find(vs => getSizeLabel(vs) === selectedSize) || selectedSize))) &&
     (!product.allow_custom_print || customText.trim());
 
   return (
@@ -67,21 +124,21 @@ export default function ProductDetailModal({ product, onClose }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
           {/* Image */}
           <div className="relative aspect-square bg-[#0d0d0d] overflow-hidden">
-            {images.length > 0 ? (
+            {activeImages.length > 0 ? (
               <>
-                <img src={images[imgIdx]} alt={product.name} className="w-full h-full object-cover" />
-                {images.length > 1 && (
+                <img src={activeImages[imgIdx] || activeImages[0]} alt={product.name} className="w-full h-full object-cover" />
+                {activeImages.length > 1 && (
                   <>
-                    <button onClick={() => setImgIdx(i => (i - 1 + images.length) % images.length)}
+                    <button onClick={() => setImgIdx(i => (i - 1 + activeImages.length) % activeImages.length)}
                       className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 bg-black/60 text-white hover:bg-black/80">
                       <ChevronLeft className="w-4 h-4" />
                     </button>
-                    <button onClick={() => setImgIdx(i => (i + 1) % images.length)}
+                    <button onClick={() => setImgIdx(i => (i + 1) % activeImages.length)}
                       className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-black/60 text-white hover:bg-black/80">
                       <ChevronRight className="w-4 h-4" />
                     </button>
                     <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-                      {images.map((_, i) => (
+                      {activeImages.map((_, i) => (
                         <button key={i} onClick={() => setImgIdx(i)}
                           className={`w-1.5 h-1.5 rounded-full transition-all ${i === imgIdx ? 'bg-[#ff6b00]' : 'bg-[#555]'}`} />
                       ))}
@@ -101,7 +158,18 @@ export default function ProductDetailModal({ product, onClose }) {
             <div>
               <h2 className="font-tactical text-3xl text-white leading-tight">{product.name}</h2>
               {product.edition && <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest mt-1">{product.edition}</p>}
-              <p className="font-mono-ui text-2xl text-[#ff6b00] font-bold mt-2">₱{Number(product.price).toLocaleString()}</p>
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={activePrice}
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 4 }}
+                  transition={{ duration: 0.15 }}
+                  className="font-mono-ui text-2xl text-[#ff6b00] font-bold mt-2"
+                >
+                  ₱{Number(activePrice).toLocaleString()}
+                </motion.p>
+              </AnimatePresence>
               <div className="flex items-center gap-3 mt-1.5">
                 {avgRating ? (
                   <div className="flex items-center gap-1.5">
@@ -122,7 +190,7 @@ export default function ProductDetailModal({ product, onClose }) {
               <p className="font-mono-ui text-xs text-[#888] leading-relaxed">{product.description}</p>
             )}
 
-            {/* Contact to Order UI */}
+            {/* Contact to Order */}
             {isContactToOrder ? (
               <>
                 <div className="border-l-2 border-[#ff6b00] bg-[#0d0d0d] px-4 py-3 space-y-1.5">
@@ -144,26 +212,56 @@ export default function ProductDetailModal({ product, onClose }) {
               </>
             ) : (
               <>
+                {/* Variant Selector */}
+                {hasVariants && (
+                  <div>
+                    <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-2">Variant</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {variants.map(v => (
+                        <button key={v.id} type="button" onClick={() => handleVariantSelect(v.id)}
+                          style={selectedVariantId === v.id
+                            ? { background: '#E87722', border: '1px solid #E87722', color: '#fff', fontWeight: 700 }
+                            : { background: '#1a1a1a', border: '1px solid #444', color: '#fff' }}
+                          className="px-3 py-1.5 font-mono-ui text-[10px] transition-all">
+                          {v.name}
+                          {v.price > 0 && v.price !== product.price && (
+                            <span className="ml-1.5 text-[9px] opacity-70">₱{Number(v.price).toLocaleString()}</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                    {noVariantWarning && (
+                      <p className="font-mono-ui text-[10px] text-[#ff0000] mt-1.5">Please select a variant</p>
+                    )}
+                  </div>
+                )}
+
                 {/* Sizes */}
-                {sizes.length > 0 && !isSoldOut && (
+                {(!hasVariants || selectedVariantId) && activeSizes.length > 0 && !isSoldOut && (
                   <div>
                     <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-2">Size</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {sizes.map(s => {
-                        const soldOut = isSizeSoldOut(s);
-                        const sizeStock = product.stock_per_size?.[s];
+                      {activeSizes.map(sizeObj => {
+                        const sLabel = getSizeLabel(sizeObj);
+                        const soldOut = isSizeSoldOut(sizeObj);
+                        const stock = getSizeStock(sizeObj);
                         return (
-                          <button key={s} disabled={soldOut} onClick={() => setSelectedSize(s)}
-                            className={`px-3 py-1.5 font-mono-ui text-[10px] border transition-all relative ${
-                              soldOut ? 'border-[#222] text-[#333] line-through cursor-not-allowed' :
-                              selectedSize === s ? 'border-[#ff6b00] bg-[#ff6b00] text-white font-bold' :
-                              'border-[#444] text-[#aaa] hover:border-[#888] hover:text-white'
-                            }`}>
-                            {s}
-                            {!soldOut && sizeStock != null && sizeStock <= 3 && (
-                              <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#ff0000] rounded-full" />
+                          <div key={sLabel} className="flex flex-col items-center gap-0.5">
+                            <button disabled={soldOut} onClick={() => setSelectedSize(sLabel)}
+                              className={`px-3 py-1.5 font-mono-ui text-[10px] border transition-all ${
+                                soldOut ? 'border-[#222] text-[#333] line-through cursor-not-allowed' :
+                                selectedSize === sLabel ? 'border-[#ff6b00] bg-[#ff6b00] text-white font-bold' :
+                                'border-[#444] text-[#aaa] hover:border-[#888] hover:text-white'
+                              }`}>
+                              {sLabel}
+                            </button>
+                            {!soldOut && stock != null && stock <= 3 && stock > 0 && (
+                              <span className="font-mono-ui text-[8px] text-[#ff8c00]">Only {stock} left!</span>
                             )}
-                          </button>
+                            {soldOut && (
+                              <span className="font-mono-ui text-[8px] text-[#555]">Sold out</span>
+                            )}
+                          </div>
                         );
                       })}
                     </div>
@@ -182,7 +280,7 @@ export default function ProductDetailModal({ product, onClose }) {
                   </div>
                 )}
 
-                {orderType === 'preorder' && !isSoldOut && (
+                {isPreorder && !isSoldOut && (
                   <span className="font-mono-ui text-[10px] text-[#ff6b00] border border-[#ff6b00]/30 px-2 py-1 self-start uppercase tracking-widest">Pre-Order</span>
                 )}
                 {isSoldOut && (
@@ -196,9 +294,10 @@ export default function ProductDetailModal({ product, onClose }) {
                   className="mt-auto py-3 font-mono-ui text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all">
                   {added ? <><Check className="w-4 h-4" /> Added!</> :
                    isSoldOut ? 'Sold Out' :
-                   sizes.length > 0 && !selectedSize ? 'Select a Size' :
+                   hasVariants && !selectedVariantId ? 'Select a Variant' :
+                   activeSizes.length > 0 && !selectedSize ? 'Select a Size' :
                    product.allow_custom_print && !customText ? 'Enter Print Text' :
-                   <><ShoppingBag className="w-4 h-4" /> {orderType === 'preorder' ? 'Pre-Order Now' : 'Add to Bag'}</>}
+                   <><ShoppingBag className="w-4 h-4" /> {isPreorder ? 'Pre-Order Now' : 'Add to Bag'}</>}
                 </button>
               </>
             )}
