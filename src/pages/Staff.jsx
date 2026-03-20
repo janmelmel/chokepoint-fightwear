@@ -34,6 +34,7 @@ export default function Staff() {
     processing: orders.filter(o => o.status === 'Processing').length,
     packing: orders.filter(o => o.status === 'Packing').length,
     outForDelivery: orders.filter(o => o.status === 'Out for Delivery').length,
+    needsVerification: orders.filter(o => o.status === 'Pending_Completion').length,
     completed: orders.filter(o => o.status === 'Completed').length,
     liveProducts: products.filter(p => p.status === 'Live').length,
     pendingReview: products.filter(p => p.status === 'Pending Review').length,

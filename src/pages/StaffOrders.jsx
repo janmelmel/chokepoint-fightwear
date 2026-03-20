@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
-import { CheckSquare, Square, RefreshCw, X, MapPin, Printer, CreditCard, Plus } from 'lucide-react';
+import { CheckSquare, Square, RefreshCw, X, MapPin, Printer, CreditCard, Plus, CheckCircle } from 'lucide-react';
 import CreateOrderModal from '@/components/cp/CreateOrderModal';
 import { AnimatePresence as AM2 } from 'framer-motion';
 import { AnimatePresence, motion } from 'framer-motion';
 import StaffGuard from '@/components/cp/StaffGuard';
 
-const STAGES = ['Processing', 'Packing', 'Out for Delivery', 'Completed', 'Cancelled'];
+const STAGES = ['Processing', 'Packing', 'Out for Delivery', 'Pending_Completion', 'Completed', 'Cancelled'];
 const LOGISTICS = ['LBC', 'J&T', 'Capex', 'DHL', 'UPS'];
 
 const STAGE_COLOR = {
   'Processing': 'text-yellow-400 border-yellow-400/30',
   'Packing': 'text-blue-400 border-blue-400/30',
   'Out for Delivery': 'text-[#ff6b00] border-[#ff6b00]/30',
+  'Pending_Completion': 'text-green-400 border-green-400/30',
   'Completed': 'text-green-400 border-green-400/30',
   'Cancelled': 'text-[#ff0000] border-[#ff0000]/30'
 };
