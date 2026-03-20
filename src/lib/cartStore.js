@@ -20,13 +20,13 @@ function saveCart(cart) {
 
 export function addToCart(product, size, quantity = 1, customText = '') {
   const cart = getCart();
-  // Per-size stock support
   const sizeStock = product.stock_per_size?.[size];
   const globalStock = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : Infinity;
   const stockLimit = sizeStock != null ? sizeStock : globalStock;
 
+  const variantName = product.variant_name || '';
   const existingIdx = cart.findIndex(
-    (i) => i.productId === product.id && i.size === size
+    (i) => i.productId === product.id && i.size === size && i.variant_name === variantName
   );
   if (existingIdx >= 0) {
     const newQty = cart[existingIdx].quantity + quantity;
@@ -34,12 +34,13 @@ export function addToCart(product, size, quantity = 1, customText = '') {
     if (customText) cart[existingIdx].custom_text = customText;
   } else {
     cart.push({
-      id: `${product.id}-${size}-${Date.now()}`,
+      id: `${product.id}-${size}-${variantName}-${Date.now()}`,
       productId: product.id,
       name: product.name,
       price: product.price,
       image: product.images?.[0] || null,
       size,
+      variant_name: variantName,
       quantity: Math.min(quantity, stockLimit),
       is_preorder: !!product.is_preorder,
       stock_limit: stockLimit !== Infinity ? stockLimit : null,
