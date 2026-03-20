@@ -10,7 +10,7 @@ import { validatePromoCode } from './PromoCodeInput';
 
 const INPUT = "w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60";
 const LABEL = "font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1";
-const APP_URL = window.location.origin;
+const APP_URL = 'https://chokepointfightwear.com';
 
 export default function CreateOrderModal({ onClose, onCreated }) {
   const [products, setProducts] = useState([]);
