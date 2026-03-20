@@ -494,6 +494,16 @@ export default function StaffProducts() {
                       </label>
                     </div>
                   </div>
+
+                  {/* Variants */}
+                  <div className="col-span-2 border-t border-[#1a1a1a] pt-4 mt-2">
+                    <VariantEditor
+                      variants={form.variants}
+                      isPreorder={form.order_type === 'preorder'}
+                      productSizes={form.sizes}
+                      onChange={(variants) => setForm(f => ({ ...f, variants }))}
+                    />
+                  </div>
                 </div>
                 <div className="flex gap-3 pt-2">
                   <button onClick={() => setShowForm(false)} className="bg-[#ff0000] text-[#ffffff] py-3 text-xs font-mono-ui uppercase tracking-widest rounded-[40px] btn-glow-white flex-1">Cancel</button>
