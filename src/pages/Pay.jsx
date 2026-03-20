@@ -9,6 +9,8 @@ export default function Pay() {
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -16,13 +18,28 @@ export default function Pay() {
     if (!orderNum) { setError('Invalid payment link.'); setLoading(false); return; }
 
     (async () => {
+      // Get current user (may be null if not logged in)
+      const u = await base44.auth.me().catch(() => null);
+      setCurrentUser(u);
+
       const res = await base44.functions.invoke('getOrderByNumber', { orderNumber: orderNum });
       if (res.data?.error || !res.data?.order) {
         setError(res.data?.error || 'Order not found.');
         setLoading(false);
         return;
       }
-      setOrder(res.data.order);
+
+      const fetchedOrder = res.data.order;
+
+      // Check if logged-in user's email matches the order email
+      if (u && u.email && fetchedOrder.customer_email &&
+          u.email.toLowerCase() !== fetchedOrder.customer_email.toLowerCase()) {
+        setAccessDenied(true);
+        setLoading(false);
+        return;
+      }
+
+      setOrder(fetchedOrder);
       setLoading(false);
     })();
   }, []);
