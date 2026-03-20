@@ -148,8 +148,8 @@ export default function Pay() {
             </button>
 
             <p className="font-mono-ui text-[9px] text-[#333] text-center uppercase tracking-widest">Secured by PayMongo · GCash · Credit Card · GrabPay</p>
-          </>
-          )}
+            </>
+            )}
           </div>
         ) : null}
       </div>
