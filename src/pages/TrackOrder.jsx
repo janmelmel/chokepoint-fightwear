@@ -150,13 +150,24 @@ export default function TrackOrder() {
                     )}
 
                     {/* Order Details */}
-                    <div className="px-5 py-4">
+                    <div className="px-5 py-4 space-y-2">
                       <p className="font-tactical text-lg text-white">{order.product_name}</p>
-                      <p className="font-mono-ui text-[10px] text-[#555] mt-1">
+                      <p className="font-mono-ui text-[10px] text-[#555]">
                         Size: {order.size} · Qty: {order.quantity || 1} · {order.payment_method}
                         {order.is_preorder && ' · Pre-order'}
                       </p>
-                      <p className="font-mono-ui text-sm text-[#ff8c00] mt-2">₱{Number(order.total_amount || 0).toLocaleString()}</p>
+                      <p className="font-mono-ui text-sm text-[#ff8c00]">₱{Number(order.total_amount || 0).toLocaleString()}</p>
+
+                      {/* Tracking Info */}
+                      {order.tracking_number && (
+                        <div className="mt-3 border border-[#ff8c00]/30 bg-[#ff8c00]/5 px-4 py-3 flex items-start gap-3">
+                          <Truck className="w-4 h-4 text-[#ff8c00] flex-shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-mono-ui text-[9px] text-[#ff8c00] uppercase tracking-widest mb-0.5">Tracking Number</p>
+                            <p className="font-mono-ui text-sm text-white font-bold">{order.logistics}: {order.tracking_number}</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
