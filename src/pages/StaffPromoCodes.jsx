@@ -165,6 +165,9 @@ export default function StaffPromoCodes() {
                         className={`transition-colors ${c.is_active ? 'text-green-400 hover:text-red-400' : 'text-[#444] hover:text-green-400'}`}>
                             {c.is_active ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
                           </button>
+                          <button onClick={() => openEdit(c)} className="p-1.5 border border-[#555]/30 text-[#555] hover:border-[#ff8c00] hover:text-[#ff8c00] transition-all" title="Edit">
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
                           <button onClick={() => remove(c.id)} className="p-1.5 border border-[#ff0000]/30 text-[#ff0000]/50 hover:border-[#ff0000] hover:text-[#ff0000] transition-all">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
