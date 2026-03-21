@@ -195,7 +195,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
       {menuOpen && (
         <div className="lg:hidden bg-[#0a0a0a] border-t border-[#333] px-4 py-3 space-y-1 max-h-[80vh] overflow-y-auto">
           <div className="pb-3 border-b border-[#1a1a1a] mb-2">
-            <NavSearchBar onResultClick={(p) => { setMenuOpen(false); handleSearchResult(p); }} placeholder="🔍 Search products..." />
+            <NavSearchBar alwaysOpen onResultClick={(p) => { setMenuOpen(false); handleSearchResult(p); }} />
           </div>
           <Link to="/Home" onClick={() => setMenuOpen(false)}
             className={`block font-mono-ui text-[11px] tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isHomePage ? 'text-[#E87722]' : 'text-white'}`}>
