@@ -137,9 +137,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
         </div>
 
         <div className="flex items-center gap-3 flex-shrink-0">
-          <div style={{ width: 280 }}>
-            <NavSearchBar onResultClick={handleSearchResult} />
-          </div>
+          <NavSearchBar onResultClick={handleSearchResult} />
           <Link to="/TrackOrder" className={navLink(isActive('/TrackOrder'))}>Track Order</Link>
           <Link to="/FAQ" className={navLink(isActive('/FAQ'))}>FAQ</Link>
           <button onClick={onCartClick} className="relative text-[#888] hover:text-white transition-colors">
