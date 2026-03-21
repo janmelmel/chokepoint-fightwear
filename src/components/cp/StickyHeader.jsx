@@ -98,9 +98,10 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
       scrolled ? 'bg-[#0a0a0a]/97 backdrop-blur-sm border-b border-[#333]' : 'bg-[#0a0a0a]/90 backdrop-blur-sm'
     }`}>
 
-      {/* ── DESKTOP (lg+) ── */}
-      <div className="hidden lg:flex items-center h-16 px-6 gap-2 w-full">
-        <nav className="flex items-center gap-0 flex-shrink-0">
+      {/* ── DESKTOP (lg+) — strict 3-column grid so logo is always centered ── */}
+      <div className="hidden lg:grid h-16 px-6 w-full" style={{ gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
+        {/* LEFT: nav links */}
+        <nav className="flex items-center gap-0">
           <Link to="/Home" className={navLink(isHomePage)}>Home</Link>
           {parents.slice(0, 3).map(cat => {
             const children = getChildren(cat.id);
@@ -132,11 +133,13 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
           <Link to="/Custom" className={navLink(isActive('/Custom'))}>Custom</Link>
         </nav>
 
-        <div className="flex-1 flex justify-center">
+        {/* CENTER: logo — always pinned to center */}
+        <div className="flex justify-center">
           <Link to="/Home"><CPLogo size={36} variant="white" /></Link>
         </div>
 
-        <div className="flex items-center gap-3 flex-shrink-0">
+        {/* RIGHT: search, track order, FAQ, cart, profile — right-aligned */}
+        <div className="flex items-center gap-3 justify-end">
           <NavSearchBar onResultClick={handleSearchResult} />
           <Link to="/TrackOrder" className={navLink(isActive('/TrackOrder'))}>Track Order</Link>
           <Link to="/FAQ" className={navLink(isActive('/FAQ'))}>FAQ</Link>
