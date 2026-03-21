@@ -65,7 +65,7 @@ export default function Category() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0a]">
-        <StickyHeader onCartClick={() => setCartOpen(true)} />
+        <StickyHeader onCartClick={() => setCartOpen(true)} onProductPreview={setDetailProduct} />
         <div className="pt-24 px-4 max-w-7xl mx-auto">
           <div className="animate-pulse space-y-4">
             <div className="h-8 w-48 bg-[#1a1a1a]" />
@@ -83,7 +83,7 @@ export default function Category() {
   if (!category) {
     return (
       <div className="min-h-screen bg-[#0a0a0a]">
-        <StickyHeader onCartClick={() => setCartOpen(true)} />
+        <StickyHeader onCartClick={() => setCartOpen(true)} onProductPreview={setDetailProduct} />
         <div className="pt-24 px-4 max-w-7xl mx-auto text-center">
           <h1 className="font-tactical text-4xl text-white mb-4">Category Not Found</h1>
           <p className="font-mono-ui text-[#666] text-sm">The category you're looking for doesn't exist.</p>
@@ -95,7 +95,7 @@ export default function Category() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      <StickyHeader onCartClick={() => setCartOpen(true)} />
+      <StickyHeader onCartClick={() => setCartOpen(true)} onProductPreview={setDetailProduct} />
 
       {/* Hero */}
       <div className="pt-20 pb-8 px-4 border-b border-[#1a1a1a]">
