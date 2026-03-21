@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
 import StaffGuard from '@/components/cp/StaffGuard';
-import { Plus, X, Copy, Check, ToggleLeft, ToggleRight, Trash2, RefreshCw } from 'lucide-react';
+import { Plus, X, Copy, Check, ToggleLeft, ToggleRight, Trash2, RefreshCw, Edit2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const INPUT = "w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60";
