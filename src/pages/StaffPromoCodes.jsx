@@ -42,22 +42,44 @@ export default function StaffPromoCodes() {
   };
 
   const openCreate = () => {
+    setEditCode(null);
     setForm({ assigned_to: '', code: '', discount_type: 'percentage', discount_value: '', min_order_amount: '', usage_limit: '', per_user_limit: 1, expiry_date: '', is_active: true, notes: '' });
     setShowForm(true);
   };
 
+  const openEdit = (c) => {
+    setEditCode(c);
+    setForm({
+      assigned_to: c.assigned_to || '',
+      code: c.code || '',
+      discount_type: c.discount_type || 'percentage',
+      discount_value: c.discount_value ?? '',
+      min_order_amount: c.min_order_amount ?? '',
+      usage_limit: c.usage_limit ?? '',
+      per_user_limit: c.per_user_limit ?? 1,
+      expiry_date: c.expiry_date || '',
+      is_active: c.is_active ?? true,
+      notes: c.notes || '',
+    });
+    setShowForm(true);
+  };
+
   const handleSave = async () => {
-    const code = (form.code.trim() || generateCode(form.assigned_to)).toUpperCase().replace(/\s/g, '');
-    await base44.entities.PromoCode.create({
+    const payload = {
       ...form,
-      code,
+      code: (form.code.trim() || generateCode(form.assigned_to)).toUpperCase().replace(/\s/g, ''),
       discount_value: Number(form.discount_value),
       min_order_amount: form.min_order_amount ? Number(form.min_order_amount) : 0,
       usage_limit: form.usage_limit ? Number(form.usage_limit) : null,
       per_user_limit: Number(form.per_user_limit) || 1,
-      usage_count: 0
-    });
+    };
+    if (editCode) {
+      await base44.entities.PromoCode.update(editCode.id, payload);
+    } else {
+      await base44.entities.PromoCode.create({ ...payload, usage_count: 0 });
+    }
     setShowForm(false);
+    setEditCode(null);
     await load();
   };
 
