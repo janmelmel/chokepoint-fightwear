@@ -70,7 +70,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      <StickyHeader onCartClick={() => setCartOpen(true)} />
+      <StickyHeader onCartClick={() => setCartOpen(true)} onProductPreview={setDetailProduct} />
 
       <HeroSlideshow banners={banners} />
 
