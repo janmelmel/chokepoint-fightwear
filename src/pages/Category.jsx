@@ -179,8 +179,8 @@ export default function Category() {
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
       <AnimatePresence>
-        {detailProduct && (
-          <ProductDetailModal
+      {detailProduct && (
+        <ProductDetailModal
             product={detailProduct}
             onClose={() => setDetailProduct(null)}
             onOrder={() => { setDetailProduct(null); setCartOpen(true); }}
