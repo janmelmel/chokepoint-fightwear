@@ -228,9 +228,9 @@ export default function StaffPromoCodes() {
                     <label htmlFor="active" className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-wider cursor-pointer">Active</label>
                   </div>
                   <div className="flex gap-3 pt-2">
-                    <button onClick={() => setShowForm(false)} className="btn-glow-white flex-1 py-3 font-mono-ui text-xs uppercase tracking-widest">Cancel</button>
-                    <button onClick={handleSave} disabled={!form.discount_value}
-                  className="btn-glow-orange flex-1 py-3 font-mono-ui text-xs uppercase tracking-widest disabled:opacity-40">
+                    <button onClick={() => setShowForm(false)} className="bg-red-600 text-gray-50 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-white flex-1">Cancel</button>
+                    <button onClick={handleSave} disabled={!form.discount_value} className="bg-green-500 text-gray-50 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange flex-1 disabled:opacity-40">
+                    
                       Create Code
                     </button>
                   </div>
