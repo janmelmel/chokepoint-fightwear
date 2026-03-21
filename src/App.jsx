@@ -26,6 +26,7 @@ import Custom from './pages/Custom';
 import Pay from './pages/Pay';
 import StaffPromoCodes from './pages/StaffPromoCodes';
 import StaffCustomers from './pages/StaffCustomers';
+import Search from './pages/Search';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
