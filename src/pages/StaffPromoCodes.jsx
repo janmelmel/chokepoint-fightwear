@@ -19,6 +19,7 @@ export default function StaffPromoCodes() {
   const [codes, setCodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editCode, setEditCode] = useState(null);
   const [copied, setCopied] = useState(null);
   const [form, setForm] = useState({
     assigned_to: '', code: '', discount_type: 'percentage', discount_value: '',
