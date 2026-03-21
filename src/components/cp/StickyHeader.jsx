@@ -79,8 +79,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
   const isActive = (path) => location.pathname === path;
 
   const isCategoryActive = (cat) => {
-    const catPath = `/category/${cat.slug || cat.id}`;
-    if (location.pathname === catPath) return true;
+    if (location.pathname === `/category/${cat.slug || cat.id}`) return true;
     return getChildren(cat.id).some(c => location.pathname === `/category/${c.slug || c.id}`);
   };
 
@@ -101,7 +100,6 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
 
       {/* ── DESKTOP (lg+) ── */}
       <div className="hidden lg:flex items-center h-16 px-6 gap-2 w-full">
-        {/* Left Nav */}
         <nav className="flex items-center gap-0 flex-shrink-0">
           <Link to="/Home" className={navLink(isHomePage)}>Home</Link>
           {parents.slice(0, 3).map(cat => {
@@ -134,12 +132,10 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
           <Link to="/Custom" className={navLink(isActive('/Custom'))}>Custom</Link>
         </nav>
 
-        {/* Center Logo */}
         <div className="flex-1 flex justify-center">
           <Link to="/Home"><CPLogo size={36} variant="white" /></Link>
         </div>
 
-        {/* Right: Search + Utility */}
         <div className="flex items-center gap-3 flex-shrink-0">
           <div style={{ width: 280 }}>
             <NavSearchBar onResultClick={handleSearchResult} />
@@ -162,7 +158,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
       <div className="hidden md:flex lg:hidden items-center h-16 px-4 gap-3 w-full">
         <Link to="/Home"><CPLogo size={32} variant="white" /></Link>
         <div className="flex-1">
-          <NavSearchBar onResultClick={(p) => { handleSearchResult(p); }} placeholder="🔍 Search..." />
+          <NavSearchBar onResultClick={handleSearchResult} placeholder="🔍 Search..." />
         </div>
         <button onClick={onCartClick} className="relative text-[#888] hover:text-white">
           <ShoppingBag className="w-5 h-5" />
