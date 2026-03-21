@@ -256,8 +256,7 @@ export default function StaffPromoCodes() {
                   <div className="flex gap-3 pt-2">
                     <button onClick={() => setShowForm(false)} className="bg-red-600 text-gray-50 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-white flex-1">Cancel</button>
                     <button onClick={handleSave} disabled={!form.discount_value} className="bg-green-500 text-gray-50 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange flex-1 disabled:opacity-40">
-                    
-                      Create Code
+                      {editCode ? 'Save Changes' : 'Create Code'}
                     </button>
                   </div>
                 </div>
