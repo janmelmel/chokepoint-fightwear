@@ -146,44 +146,49 @@ export default function NavSearchBar({ onResultClick, alwaysOpen = false }) {
   // Icon-first collapsible variant (desktop nav)
   return (
     <div ref={containerRef} className="relative flex items-center justify-end">
+      {/* Expanded input — slides open to the left, X is inside the input */}
       <div style={{
         width: expanded ? 220 : 0,
         overflow: 'hidden',
-        transition: 'width 0.3s ease',
-        marginRight: expanded ? 6 : 0,
+        transition: 'width 0.25s ease',
       }}>
-        <div className="flex items-center gap-2 h-[34px] px-2.5 bg-[#1a1a1a] border border-[#E87722]" style={{ borderRadius: 4, width: 220 }}>
+        <div className="flex items-center gap-1.5 h-[34px] px-2.5 bg-[#1a1a1a] border border-[#E87722]" style={{ borderRadius: 4, width: 220 }}>
+          <Search className="w-3.5 h-3.5 text-[#666] flex-shrink-0" />
           <input
             ref={inputRef}
             value={query}
-            onChange={e => { setQuery(e.target.value); }}
+            onChange={e => { setQuery(e.target.value); loadProducts(); }}
             onFocus={loadProducts}
             onKeyDown={handleKeyDown}
             placeholder="Search products..."
             className="flex-1 bg-transparent text-white font-mono-ui placeholder-[#555] focus:outline-none"
             style={{ fontSize: 13, minWidth: 0 }}
           />
-          {query && (
-            <button onClick={() => setQuery('')} className="text-[#555] hover:text-white flex-shrink-0">
-              <X className="w-3 h-3" />
-            </button>
-          )}
+          <button
+            onClick={collapse}
+            className="text-[#555] hover:text-white flex-shrink-0 transition-colors"
+            title="Close search"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
 
-      {/* Icon button — toggles expand/collapse */}
-      <button
-        onClick={expanded ? collapse : open}
-        className="text-[#888] hover:text-white transition-colors flex-shrink-0"
-        title="Search"
-      >
-        {expanded ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
-      </button>
+      {/* Search icon — only visible when collapsed */}
+      {!expanded && (
+        <button
+          onClick={open}
+          className="text-[#888] hover:text-white transition-colors flex-shrink-0 ml-1"
+          title="Search"
+        >
+          <Search className="w-5 h-5" />
+        </button>
+      )}
 
       {/* Dropdown */}
       {expanded && query && (
         <div className="absolute top-full right-0 mt-1 bg-[#111] border border-[#333] shadow-2xl z-[200] overflow-hidden"
-          style={{ width: 220, borderRadius: '0 0 6px 6px' }}>
+          style={{ width: 260, borderRadius: '0 0 6px 6px' }}>
           {shown.length === 0 ? (
             <p className="px-4 py-3 font-mono-ui text-[10px] text-[#555]">No results for "{query}"</p>
           ) : (
