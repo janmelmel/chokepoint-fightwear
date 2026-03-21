@@ -155,9 +155,8 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
       {/* ── TABLET (md 768–1023px) ── */}
       <div className="hidden md:flex lg:hidden items-center h-16 px-4 gap-3 w-full">
         <Link to="/Home"><CPLogo size={32} variant="white" /></Link>
-        <div className="flex-1">
-          <NavSearchBar onResultClick={handleSearchResult} placeholder="🔍 Search..." />
-        </div>
+        <div className="flex-1" />
+        <NavSearchBar onResultClick={handleSearchResult} />
         <button onClick={onCartClick} className="relative text-[#888] hover:text-white">
           <ShoppingBag className="w-5 h-5" />
           {cartCount > 0 && (
