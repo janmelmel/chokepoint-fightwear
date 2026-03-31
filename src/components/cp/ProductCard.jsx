@@ -1,21 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Eye, ShoppingBag, MessageCircle, Star } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import React from 'react';
+import { Eye, ShoppingBag, MessageCircle } from 'lucide-react';
 
 export default function ProductCard({ product, onPreview }) {
-  const [avgRating, setAvgRating] = useState(null);
-  const [reviewCount, setReviewCount] = useState(0);
-  // Note: size selection happens inside the ProductDetailModal
-
-  useEffect(() => {
-    if (!product?.id) return;
-    base44.entities.Review.filter({ product_id: product.id }).then(rs => {
-      if (rs.length) {
-        setAvgRating((rs.reduce((s, r) => s + r.rating, 0) / rs.length).toFixed(1));
-        setReviewCount(rs.length);
-      }
-    });
-  }, [product?.id]);
+  const avgRating = product.avg_rating || null;
+  const reviewCount = product.review_count || 0;
 
   const orderType = product.order_type || (product.is_preorder ? 'preorder' : 'add_to_bag');
   const isContactToOrder = orderType === 'contact_to_order';
@@ -70,20 +58,11 @@ export default function ProductCard({ product, onPreview }) {
         <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
         <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
         <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
-        <div className="flex items-center gap-1.5 mt-1">
-          {avgRating ? (
-            <>
-              <Star className="w-3 h-3" style={{ fill: '#ff8c00', color: '#ff8c00' }} />
-              <span className="font-mono-ui text-[10px] text-[#ff8c00] font-bold">{avgRating}</span>
-              <span className="font-mono-ui text-[10px] text-[#555]">({reviewCount})</span>
-            </>
-          ) : null}
-          {product.total_ordered > 0 && (
-            <span className={`font-mono-ui text-[10px] text-[#555] ${avgRating ? 'ml-1' : ''}`}>
-              {avgRating ? '· ' : ''}{product.total_ordered} sold
-            </span>
-          )}
-        </div>
+        {product.total_ordered > 0 && (
+          <span className="font-mono-ui text-[10px] text-[#555] mt-1 block">
+            {product.total_ordered} sold
+          </span>
+        )}
 
         {/* CTA — always opens modal so customer must select size/variant first */}
         {isContactToOrder ? (
