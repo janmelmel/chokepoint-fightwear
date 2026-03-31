@@ -30,18 +30,18 @@ export default function Home() {
   const loadData = async () => {
     setLoading(true);
     const [prods, cats, bans, adjustLogs] = await Promise.all([
-      base44.entities.Product.filter({ status: 'Live', is_archived: false }),
-      base44.entities.Category.filter({ is_active: true }),
-      base44.entities.HeroBanner.filter({ is_active: true }, 'sort_order', 10),
-      base44.entities.StockAdjustLog.list('-created_date', 500),
-    ]);
+    base44.entities.Product.filter({ status: 'Live', is_archived: false }),
+    base44.entities.Category.filter({ is_active: true }),
+    base44.entities.HeroBanner.filter({ is_active: true }, 'sort_order', 10),
+    base44.entities.StockAdjustLog.list('-created_date', 500)]
+    );
     const catMap = Object.fromEntries(cats.map((c) => [c.id, c.name]));
     const outsideReasons = [
-      'Outside order (Facebook/Messenger)',
-      'Outside order (Instagram)',
-      'Outside order (Walk-in)',
-      'Outside order (Event/Tournament)',
-    ];
+    'Outside order (Facebook/Messenger)',
+    'Outside order (Instagram)',
+    'Outside order (Walk-in)',
+    'Outside order (Event/Tournament)'];
+
     // Build map: productId -> outside sold count
     const outsideSoldMap = {};
     for (const log of adjustLogs) {
@@ -52,7 +52,7 @@ export default function Home() {
     setProducts(prods.map((p) => ({
       ...p,
       category_name: catMap[p.category_id] || '',
-      sold_count: (p.total_ordered || 0) + (outsideSoldMap[p.id] || 0),
+      sold_count: (p.total_ordered || 0) + (outsideSoldMap[p.id] || 0)
     })));
     setCategories(cats);
     setBanners(bans);
@@ -164,8 +164,8 @@ export default function Home() {
           <h2 className="font-tactical text-4xl sm:text-5xl text-white">Custom Gear</h2>
           <div className="w-12 h-px bg-[#333] mx-auto mt-4 mb-4" />
           <p className="font-mono-ui text-sm text-[#666] mb-8">Team kits, custom patches, academy sets. Tell us what you need.</p>
-          <Link to="/Custom" className="btn-glow-orange font-mono-ui text-xs uppercase tracking-widest px-8 py-4 inline-flex items-center gap-2">
-            Request Custom Gear →
+          <Link to="/Custom" className="bg-[#ffffff] px-8 py-4 text-xs font-mono-ui uppercase tracking-widest rounded-[10px] btn-glow-orange inline-flex items-center gap-2">REQUEST CUSTOM GEAR →
+
           </Link>
         </section>
       </main>
