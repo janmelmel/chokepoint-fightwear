@@ -1,9 +1,11 @@
 /**
  * Cart store using localStorage.
- * Cart item shape: { id, productId, name, price, image, size, quantity, is_preorder, custom_text, shipping_fee_override }
+ * Cart item shape: { id, productId, name, price, image, size, variant_name, quantity,
+ *                    is_preorder, custom_text, shipping_fee_override, added_at }
  */
 
 const STORAGE_KEY = 'cp_cart';
+const CART_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export function getCart() {
   try {
@@ -18,21 +20,39 @@ function saveCart(cart) {
   window.dispatchEvent(new Event('cp_cart_updated'));
 }
 
+/**
+ * Remove expired non-preorder items and return how many were removed.
+ */
+export function purgeExpiredItems() {
+  const cart = getCart();
+  const now = Date.now();
+  const fresh = cart.filter(i => i.is_preorder || !i.added_at || (now - i.added_at) < CART_EXPIRY_MS);
+  if (fresh.length !== cart.length) {
+    saveCart(fresh);
+    return cart.length - fresh.length;
+  }
+  return 0;
+}
+
 export function addToCart(product, size, quantity = 1, customText = '') {
   const cart = getCart();
-  const sizeStock = product.stock_per_size?.[size];
-  const globalStock = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : Infinity;
-  const stockLimit = sizeStock != null ? sizeStock : globalStock;
 
+  // Determine per-size stock for this specific size
   const variantName = product.variant_name || '';
+  const sizeStock = product.stock_per_size?.[size] ?? null;
+  const globalStock = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : null;
+  const stockLimit = sizeStock != null ? sizeStock : (globalStock != null ? globalStock : null);
+
   const existingIdx = cart.findIndex(
     (i) => i.productId === product.id && i.size === size && i.variant_name === variantName
   );
+
   if (existingIdx >= 0) {
     const newQty = cart[existingIdx].quantity + quantity;
-    cart[existingIdx].quantity = Math.min(newQty, stockLimit);
+    cart[existingIdx].quantity = stockLimit != null ? Math.min(newQty, stockLimit) : newQty;
     if (customText) cart[existingIdx].custom_text = customText;
   } else {
+    const cappedQty = stockLimit != null ? Math.min(quantity, stockLimit) : quantity;
     cart.push({
       id: `${product.id}-${size}-${variantName}-${Date.now()}`,
       productId: product.id,
@@ -41,13 +61,14 @@ export function addToCart(product, size, quantity = 1, customText = '') {
       image: product.images?.[0] || null,
       size,
       variant_name: variantName,
-      quantity: Math.min(quantity, stockLimit),
+      quantity: cappedQty,
       is_preorder: !!product.is_preorder,
-      stock_limit: stockLimit !== Infinity ? stockLimit : null,
+      stock_limit: stockLimit,
       custom_text: customText || '',
       shipping_fee_override: product.shipping_fee_override ?? null,
       allow_custom_print: !!product.allow_custom_print,
       custom_print_label: product.custom_print_label || '',
+      added_at: Date.now(),
     });
   }
   saveCart(cart);

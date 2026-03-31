@@ -29,13 +29,31 @@ export default function Home() {
 
   const loadData = async () => {
     setLoading(true);
-    const [prods, cats, bans] = await Promise.all([
-    base44.entities.Product.filter({ status: 'Live', is_archived: false }),
-    base44.entities.Category.filter({ is_active: true }),
-    base44.entities.HeroBanner.filter({ is_active: true }, 'sort_order', 10)]
-    );
+    const [prods, cats, bans, adjustLogs] = await Promise.all([
+      base44.entities.Product.filter({ status: 'Live', is_archived: false }),
+      base44.entities.Category.filter({ is_active: true }),
+      base44.entities.HeroBanner.filter({ is_active: true }, 'sort_order', 10),
+      base44.entities.StockAdjustLog.list('-created_date', 500),
+    ]);
     const catMap = Object.fromEntries(cats.map((c) => [c.id, c.name]));
-    setProducts(prods.map((p) => ({ ...p, category_name: catMap[p.category_id] || '' })));
+    const outsideReasons = [
+      'Outside order (Facebook/Messenger)',
+      'Outside order (Instagram)',
+      'Outside order (Walk-in)',
+      'Outside order (Event/Tournament)',
+    ];
+    // Build map: productId -> outside sold count
+    const outsideSoldMap = {};
+    for (const log of adjustLogs) {
+      if (outsideReasons.includes(log.reason)) {
+        outsideSoldMap[log.product_id] = (outsideSoldMap[log.product_id] || 0) + Math.abs(log.change_amount || 0);
+      }
+    }
+    setProducts(prods.map((p) => ({
+      ...p,
+      category_name: catMap[p.category_id] || '',
+      sold_count: (p.total_ordered || 0) + (outsideSoldMap[p.id] || 0),
+    })));
     setCategories(cats);
     setBanners(bans);
     setLoading(false);

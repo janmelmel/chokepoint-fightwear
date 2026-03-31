@@ -58,9 +58,9 @@ export default function ProductCard({ product, onPreview }) {
         <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
         <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
         <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
-        {product.total_ordered > 0 && (
+        {(product.sold_count || product.total_ordered || 0) > 0 && (
           <span className="font-mono-ui text-[10px] text-[#555] mt-1 block">
-            {product.total_ordered} sold
+            {(product.sold_count || product.total_ordered || 0)} sold
           </span>
         )}
 

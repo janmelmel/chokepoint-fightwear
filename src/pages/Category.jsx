@@ -26,31 +26,43 @@ export default function Category() {
 
   const loadData = async () => {
     setLoading(true);
-    const [cats, prods] = await Promise.all([
+    const [cats, prods, adjustLogs] = await Promise.all([
       base44.entities.Category.filter({ is_active: true }),
-      base44.entities.Product.filter({ status: 'Live', is_archived: false })
+      base44.entities.Product.filter({ status: 'Live', is_archived: false }),
+      base44.entities.StockAdjustLog.list('-created_date', 500),
     ]);
     
     setAllCategories(cats);
     
+    const outsideReasons = [
+      'Outside order (Facebook/Messenger)',
+      'Outside order (Instagram)',
+      'Outside order (Walk-in)',
+      'Outside order (Event/Tournament)',
+    ];
+    const outsideSoldMap = {};
+    for (const log of adjustLogs) {
+      if (outsideReasons.includes(log.reason)) {
+        outsideSoldMap[log.product_id] = (outsideSoldMap[log.product_id] || 0) + Math.abs(log.change_amount || 0);
+      }
+    }
+
     // Find the category by slug or id
     const cat = cats.find(c => c.slug === slug || c.id === slug);
     setCategory(cat);
     
     if (cat) {
-      // Get subcategories
       const subs = cats.filter(c => c.parent_id === cat.id);
       setSubCategories(subs);
-      
-      // Get all category IDs to include (this category + all subcategories)
       const catIds = [cat.id, ...subs.map(s => s.id)];
-      
-      // Filter products
       const catMap = Object.fromEntries(cats.map(c => [c.id, c.name]));
       const filteredProds = prods
         .filter(p => catIds.includes(p.category_id))
-        .map(p => ({ ...p, category_name: catMap[p.category_id] || '' }));
-      
+        .map(p => ({
+          ...p,
+          category_name: catMap[p.category_id] || '',
+          sold_count: (p.total_ordered || 0) + (outsideSoldMap[p.id] || 0),
+        }));
       setProducts(filteredProds);
     }
     
