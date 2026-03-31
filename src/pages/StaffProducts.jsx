@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
 import ProductPreviewModal from '@/components/cp/ProductPreviewModal';
-import { Plus, Eye, Archive, Edit2, CheckCircle, Clock, X, Trash2, ImagePlus, XCircle, Copy, Star } from 'lucide-react';
+import { Plus, Eye, Archive, Edit2, CheckCircle, Clock, X, Trash2, ImagePlus, XCircle, Copy, Star, Package } from 'lucide-react';
 import StaffGuard from '@/components/cp/StaffGuard';
 import VariantEditor from '@/components/cp/VariantEditor';
+import StockManageModal from '@/components/cp/StockManageModal';
 
 const GI_SIZE_GROUPS = [
   { label: 'Adult & Unisex (A-Sizes)', sizes: ['A00','A0','A1','A2','A3','A4','A5','A6','A0L','A1L','A2L','A3L','A4L','A0H','A1H','A2H','A3H','A4H','A1S','A2S','A3S'] },
@@ -39,6 +40,7 @@ export default function StaffProducts() {
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [previewProduct, setPreviewProduct] = useState(null);
+  const [stockProduct, setStockProduct] = useState(null);
   const [form, setForm] = useState({
     name: '', category_id: '', price: '', description: '',
     images: [], status: 'Draft', order_type: 'add_to_bag', inquiry_note: '',
@@ -241,6 +243,9 @@ export default function StaffProducts() {
                       </button>
                       <button onClick={() => openEdit(p)} className="btn-glow-white p-2 flex-shrink-0" title="Edit">
                         <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button onClick={() => setStockProduct(p)} className="btn-glow-white p-2 flex-shrink-0" title="Manage Stock">
+                        <Package className="w-3.5 h-3.5" />
                       </button>
                       <button onClick={() => duplicateProduct(p)} className="btn-glow-white p-2 flex-shrink-0" title="Duplicate">
                         <Copy className="w-3.5 h-3.5" />
@@ -519,6 +524,17 @@ export default function StaffProducts() {
 
       <AnimatePresence>
         {previewProduct && <ProductPreviewModal product={previewProduct} onClose={() => setPreviewProduct(null)} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {stockProduct && (
+          <StockManageModal
+            product={stockProduct}
+            user={user}
+            onClose={() => setStockProduct(null)}
+            onSaved={loadData}
+          />
+        )}
       </AnimatePresence>
     </div>
     </StaffGuard>);

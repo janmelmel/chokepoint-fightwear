@@ -1,0 +1,47 @@
+{
+  "name": "StockAdjustLog",
+  "type": "object",
+  "properties": {
+    "product_id": {
+      "type": "string"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "variant_name": {
+      "type": "string"
+    },
+    "size": {
+      "type": "string"
+    },
+    "prev_stock": {
+      "type": "number"
+    },
+    "new_stock": {
+      "type": "number"
+    },
+    "change_amount": {
+      "type": "number"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "custom_reason": {
+      "type": "string"
+    },
+    "staff_name": {
+      "type": "string"
+    },
+    "staff_email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "product_id",
+    "product_name",
+    "size",
+    "prev_stock",
+    "new_stock",
+    "reason"
+  ]
+}

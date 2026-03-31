@@ -27,6 +27,7 @@ import Pay from './pages/Pay';
 import StaffPromoCodes from './pages/StaffPromoCodes';
 import StaffCustomers from './pages/StaffCustomers';
 import Search from './pages/Search';
+import StaffStockLog from './pages/StaffStockLog';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -66,6 +67,7 @@ const AuthenticatedApp = () => {
       <Route path="/StaffPromoCodes" element={<StaffPromoCodes />} />
       <Route path="/StaffCustomers" element={<StaffCustomers />} />
       <Route path="/Search" element={<Search />} />
+      <Route path="/StaffStockLog" element={<StaffStockLog />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
