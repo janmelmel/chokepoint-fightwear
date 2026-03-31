@@ -4,10 +4,46 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    const { amount, customerName, customerEmail, customerPhone, lineItems, orderIds, orderNumbers } = await req.json();
+    const { amount, customerName, customerEmail, customerPhone, lineItems, orderIds, orderNumbers, cartItems } = await req.json();
 
     if (!amount || !lineItems?.length) {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // FINAL STOCK CHECK — last line of defense before creating payment session
+    if (cartItems && cartItems.length > 0) {
+      const productIds = [...new Set(cartItems.map(i => i.productId))];
+      const products = await Promise.all(
+        productIds.map(id =>
+          base44.asServiceRole.entities.Product.filter({ id }).then(r => r[0]).catch(() => null)
+        )
+      );
+      const productMap = Object.fromEntries(products.filter(Boolean).map(p => [p.id, p]));
+
+      for (const item of cartItems) {
+        if (item.is_preorder) continue;
+        const p = productMap[item.productId];
+        if (!p) continue;
+
+        let available = null;
+        if (p.variants?.length && item.variant_name) {
+          const v = p.variants.find(v => v.name === item.variant_name);
+          if (v) {
+            const vs = (v.sizes || []).find(s => s.size === item.size);
+            available = vs?.stock ?? null;
+          }
+        } else {
+          available = p.stock_per_size?.[item.size] ?? null;
+        }
+
+        if (available !== null && item.quantity > available) {
+          const label = item.variant_name ? `${item.variant_name} — Size ${item.size}` : `Size ${item.size}`;
+          return Response.json({
+            error: `Sorry, ${p.name} (${label}) only has ${available} unit(s) available. Your order has not been processed. Please return to your cart and update your quantities.`,
+            stock_error: true,
+          }, { status: 409 });
+        }
+      }
     }
 
     const secretKey = Deno.env.get('PAYMONGO_SECRET_KEY');

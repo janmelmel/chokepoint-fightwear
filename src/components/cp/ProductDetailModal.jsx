@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { X, ShoppingBag, MessageCircle, Star, ChevronLeft, ChevronRight, Plus, Minus } from 'lucide-react';
+import { X, ShoppingBag, MessageCircle, Star, ChevronLeft, ChevronRight, Plus, Minus, AlertTriangle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { addToCart } from '@/lib/cartStore';
 
@@ -20,6 +20,9 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
   const [reviews, setReviews] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [soldCount, setSoldCount] = useState(product.total_ordered || 0);
+  const [liveStock, setLiveStock] = useState(null); // fetched from DB on size select
+  const [stockLoading, setStockLoading] = useState(false);
+  const [addError, setAddError] = useState('');
 
   const hasVariants = product.variants && product.variants.length > 0;
   const isPreorder = product.order_type === 'preorder' || !!product.is_preorder;
@@ -37,7 +40,8 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
 
   const availableSizes = getAvailableSizes();
 
-  const getSizeStock = (size) => {
+  // Get stock from local product data (for OOS display on size buttons)
+  const getSizeStockLocal = (size) => {
     if (!size) return null;
     if (hasVariants && activeVariant) {
       const vs = (activeVariant.sizes || []).find((s) => s.size === size);
@@ -47,20 +51,15 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
   };
 
   const isSizeOutOfStock = (size) => {
-    const stock = getSizeStock(size);
+    const stock = getSizeStockLocal(size);
     return stock !== null && stock <= 0;
   };
 
-  // Max quantity for the currently selected size
-  const currentStock = getSizeStock(selectedSize);
-  const maxQty = isPreorder
-    ? 10
-    : currentStock !== null
-      ? Math.min(currentStock, 10)
-      : 10;
+  // Use live stock when available, otherwise fall back to local product data
+  const currentStock = isPreorder ? null : (liveStock !== null ? liveStock : getSizeStockLocal(selectedSize));
+  const maxQty = isPreorder ? 10 : currentStock !== null ? Math.max(0, currentStock) : 10;
 
   useEffect(() => {
-    // Load reviews + sold count from outside orders
     Promise.all([
       base44.entities.Review.filter({ product_id: product.id }),
       base44.entities.StockAdjustLog.filter({ product_id: product.id }),
@@ -77,6 +76,8 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
     setImageIdx(0);
     setAdded(false);
     setQuantity(1);
+    setLiveStock(null);
+    setAddError('');
   }, [product.id]);
 
   // Reset size + quantity when variant changes
@@ -84,22 +85,94 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
     setSelectedSize('');
     setImageIdx(0);
     setQuantity(1);
+    setLiveStock(null);
+    setAddError('');
   }, [selectedVariant]);
 
-  // Clamp quantity when size changes (stock may differ)
-  useEffect(() => {
-    if (currentStock !== null && quantity > currentStock) {
-      setQuantity(Math.max(1, currentStock));
+  // When size is selected: fetch LIVE stock from DB and cap quantity
+  const handleSizeSelect = async (size) => {
+    setSelectedSize(size);
+    setAddError('');
+    setQuantity(1);
+    setLiveStock(null);
+
+    if (isPreorder) return;
+
+    setStockLoading(true);
+    try {
+      // Fetch fresh product from DB
+      const fresh = await base44.entities.Product.filter({ id: product.id }).then(r => r[0]);
+      let stock = null;
+      if (fresh) {
+        if (hasVariants && activeVariant) {
+          const v = (fresh.variants || []).find(v => v.name === activeVariant.name);
+          if (v) {
+            const vs = (v.sizes || []).find(s => s.size === size);
+            stock = vs?.stock ?? null;
+          }
+        } else {
+          stock = fresh.stock_per_size?.[size] ?? null;
+        }
+      }
+      setLiveStock(stock);
+      // Clamp quantity immediately
+      if (stock !== null && stock <= 0) {
+        setQuantity(0);
+      } else if (stock !== null) {
+        setQuantity(1);
+      }
+    } catch {
+      // If fetch fails, fall back to local data
+    } finally {
+      setStockLoading(false);
     }
-  }, [selectedSize]);
+  };
 
   const avgRating = reviews.length
     ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
     : null;
 
-  const handleAddToBag = () => {
+  const handleAddToBag = async () => {
     if (availableSizes.length > 0 && !selectedSize) return;
     if (hasVariants && !selectedVariant) return;
+    setAddError('');
+
+    if (!isPreorder) {
+      // Re-validate stock one more time before adding
+      setStockLoading(true);
+      try {
+        const fresh = await base44.entities.Product.filter({ id: product.id }).then(r => r[0]);
+        let stock = null;
+        if (fresh) {
+          if (hasVariants && activeVariant) {
+            const v = (fresh.variants || []).find(v => v.name === activeVariant.name);
+            if (v) {
+              const vs = (v.sizes || []).find(s => s.size === selectedSize || s.size === 'One Size');
+              stock = vs?.stock ?? null;
+            }
+          } else {
+            const size = availableSizes.length > 0 ? selectedSize : 'One Size';
+            stock = fresh.stock_per_size?.[size] ?? null;
+          }
+        }
+        setLiveStock(stock);
+
+        if (stock !== null && quantity > stock) {
+          if (stock <= 0) {
+            setAddError(`Sorry, this item in Size ${selectedSize} is now sold out.`);
+          } else {
+            setAddError(`Sorry, only ${stock} unit(s) of this item are available in Size ${selectedSize}. Please reduce your quantity.`);
+            setQuantity(stock);
+          }
+          setStockLoading(false);
+          return;
+        }
+      } catch {
+        // allow through if check fails
+      } finally {
+        setStockLoading(false);
+      }
+    }
 
     const cartProduct = {
       ...product,
@@ -120,11 +193,15 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
   const prevImage = () => setImageIdx((i) => (i - 1 + displayImages.length) % displayImages.length);
   const nextImage = () => setImageIdx((i) => (i + 1) % displayImages.length);
 
-  const canAdd = !added
+  const isSizeCurrentlyOOS = selectedSize && !isPreorder && currentStock !== null && currentStock <= 0;
+
+  const canAdd = !added && !stockLoading && !isSizeCurrentlyOOS
     && !(availableSizes.length > 0 && !selectedSize)
     && !(hasVariants && !selectedVariant);
 
   const btnLabel = added ? 'Added!'
+    : stockLoading ? 'Checking stock...'
+    : isSizeCurrentlyOOS ? 'Out of Stock'
     : hasVariants && !selectedVariant ? 'Select a Variant'
     : availableSizes.length > 0 && !selectedSize ? 'Select a Size'
     : isPreorder ? 'Pre-Order Now'
@@ -251,7 +328,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
                   return (
                     <button key={s} type="button"
                       disabled={oos}
-                      onClick={() => setSelectedSize(s)}
+                      onClick={() => handleSizeSelect(s)}
                       className={`px-3 py-2 font-mono-ui text-xs border transition-all ${
                         oos
                           ? 'border-[#222] text-[#333] cursor-not-allowed line-through'
@@ -271,34 +348,49 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
           {product.order_type !== 'contact_to_order' && (
             <div>
               <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-2">Quantity</p>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
                 <button
                   onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  disabled={quantity <= 1}
+                  disabled={quantity <= 1 || isSizeCurrentlyOOS}
                   style={{ background: '#1c1c1c', border: '1px solid #555' }}
                   className="w-8 h-8 flex items-center justify-center text-[#ccc] hover:border-[#ff8c00] hover:text-[#ff8c00] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                   <Minus className="w-3.5 h-3.5" />
                 </button>
-                <span className="font-mono-ui text-sm text-white w-6 text-center">{quantity}</span>
+                <span className="font-mono-ui text-sm text-white w-6 text-center">
+                  {isSizeCurrentlyOOS ? '0' : quantity}
+                </span>
                 <button
                   onClick={() => setQuantity(q => Math.min(q + 1, maxQty))}
-                  disabled={!isPreorder && currentStock !== null && quantity >= maxQty}
-                  style={{
-                    background: '#1c1c1c',
-                    border: '1px solid #555',
-                  }}
+                  disabled={isSizeCurrentlyOOS || (!isPreorder && currentStock !== null && quantity >= maxQty)}
+                  style={{ background: '#1c1c1c', border: '1px solid #555' }}
                   className="w-8 h-8 flex items-center justify-center text-[#ccc] hover:border-[#ff8c00] hover:text-[#ff8c00] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                   <Plus className="w-3.5 h-3.5" />
                 </button>
-                {/* Stock hint */}
-                {isPreorder ? (
-                  <span className="font-mono-ui text-[10px] text-[#555]">Pre-order — unlimited availability</span>
-                ) : selectedSize && currentStock !== null && currentStock <= 10 ? (
-                  <span className="font-mono-ui text-[12px]" style={{ color: '#E87722' }}>
-                    Only {currentStock} available
+                {stockLoading && (
+                  <span className="font-mono-ui text-[10px] text-[#555]">Checking stock...</span>
+                )}
+                {!stockLoading && isPreorder && (
+                  <span className="font-mono-ui text-[10px] text-[#555]">Pre-order — unlimited</span>
+                )}
+                {!stockLoading && !isPreorder && selectedSize && currentStock !== null && currentStock > 0 && currentStock <= 10 && (
+                  <span className="font-mono-ui text-[11px] font-bold" style={{ color: '#E87722' }}>
+                    ⚠️ Only {currentStock} left in stock
                   </span>
-                ) : null}
+                )}
+                {!stockLoading && isSizeCurrentlyOOS && (
+                  <span className="font-mono-ui text-[11px] font-bold text-[#ff0000]">
+                    ❌ Out of stock
+                  </span>
+                )}
               </div>
+
+              {/* Add error message */}
+              {addError && (
+                <div className="mt-3 flex items-start gap-2 border border-[#c0392b]/40 bg-[#c0392b]/10 px-3 py-2.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#ff4444] flex-shrink-0 mt-0.5" />
+                  <p className="font-mono-ui text-[11px] text-[#ff4444] leading-relaxed">❌ {addError}</p>
+                </div>
+              )}
             </div>
           )}
 

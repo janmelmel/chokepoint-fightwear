@@ -25,6 +25,8 @@ export default function Checkout() {
   const [error, setError] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [promoDiscount, setPromoDiscount] = useState(0);
+  const [stockViolations, setStockViolations] = useState([]); // [{productName, size, requested, available}]
+  const [stockChecking, setStockChecking] = useState(false);
 
   const prevProvince = useRef('');
   const prevCity = useRef('');
@@ -43,6 +45,27 @@ export default function Checkout() {
     }
   }, [address.city]);
 
+  const validateStock = async (items) => {
+    if (!items || items.length === 0) return;
+    setStockChecking(true);
+    try {
+      const res = await base44.functions.invoke('validateCartStock', {
+        items: items.map(i => ({
+          productId: i.productId,
+          size: i.size,
+          variant_name: i.variant_name || '',
+          quantity: i.quantity,
+          is_preorder: !!i.is_preorder,
+        })),
+      });
+      setStockViolations(res.data?.violations || []);
+    } catch {
+      // fail silently — don't block checkout if validation itself errors
+    } finally {
+      setStockChecking(false);
+    }
+  };
+
   useEffect(() => {
     // Check for cancelled payment on return
     const params = new URLSearchParams(window.location.search);
@@ -53,6 +76,7 @@ export default function Checkout() {
     const items = getCart();
     if (items.length === 0) navigate('/Home');
     setCart(items);
+    validateStock(items);
   }, []);
 
   const isPhilippines = address.country === 'Philippines';
@@ -77,13 +101,22 @@ export default function Checkout() {
   const cities = isPhilippines && address.province ? getCitiesForProvince(address.province) : [];
   const barangays = isPhilippines && address.city ? getBarangaysForCity(address.city) : [];
 
+  const hasStockViolations = stockViolations.length > 0;
   const canPlace = contact.name && contact.email && contact.phone &&
-    isPhilippines && address.province && address.city && address.street && confirmed;
+    isPhilippines && address.province && address.city && address.street && confirmed && !hasStockViolations && !stockChecking;
 
   const handlePlace = async () => {
     if (!canPlace) return;
     setPlacing(true);
     setError('');
+
+    // Final client-side stock recheck before creating orders
+    await validateStock(cart);
+    if (stockViolations.length > 0) {
+      setError('One or more items in your order exceed available stock. Please update your cart before proceeding.');
+      setPlacing(false);
+      return;
+    }
 
     // 1. Create order records with status Pending
     const createdOrders = [];
@@ -135,6 +168,13 @@ export default function Checkout() {
       })),
       orderIds: createdOrders.map(o => o.id),
       orderNumbers: createdOrders.map(o => o.orderNum),
+      cartItems: cart.map(i => ({
+        productId: i.productId,
+        size: i.size,
+        variant_name: i.variant_name || '',
+        quantity: i.quantity,
+        is_preorder: !!i.is_preorder,
+      })),
     });
 
     const { checkout_url, session_id, error: pmError } = response.data;
@@ -294,24 +334,53 @@ export default function Checkout() {
 
         {/* Right — Order Summary */}
         <div className="space-y-4">
-          <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest">Order Summary</p>
-          <div className="border border-[#222] divide-y divide-[#1a1a1a]">
-            {cart.map(item => (
-              <div key={item.id} className="flex gap-3 p-3">
-                {item.image && <img src={item.image} className="w-14 h-14 object-cover flex-shrink-0 opacity-80" alt={item.name} />}
-                <div className="flex-1 min-w-0">
-                  <p className="font-mono-ui text-xs text-white truncate">{item.name}</p>
-                  <p className="font-mono-ui text-[10px] text-[#555]">
-                    {item.variant_name && <span className="text-[#ff8c00]">{item.variant_name} · </span>}
-                    Size: {item.size} · Qty: {item.quantity}
-                  </p>
-                  {item.custom_text && <p className="font-mono-ui text-[10px] text-[#ff8c00]">Print: {item.custom_text}</p>}
-                  {item.is_preorder && <span className="font-mono-ui text-[9px] text-[#555] border border-[#333] px-1.5 py-0.5">PRE-ORDER</span>}
-                </div>
-                <p className="font-mono-ui text-xs text-[#ff8c00] flex-shrink-0">₱{(item.price * item.quantity).toLocaleString()}</p>
-              </div>
+        <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest">Order Summary</p>
+
+        {/* Stock violation banner */}
+        {hasStockViolations && (
+          <div className="border border-[#c0392b]/50 bg-[#c0392b]/10 px-4 py-3 space-y-1">
+            <p className="font-mono-ui text-[11px] text-[#ff4444] font-bold">❌ One or more items in your order exceed available stock. Please update your cart before proceeding.</p>
+            {stockViolations.map((v, i) => (
+              <p key={i} className="font-mono-ui text-[10px] text-[#ff6666]">
+                • {v.productName}{v.variant_name ? ` (${v.variant_name})` : ''} — Size {v.size}: you have {v.requested}, only {v.available} available
+              </p>
             ))}
           </div>
+        )}
+
+        {stockChecking && (
+          <div className="border border-[#333] bg-[#1a1a1a] px-4 py-3">
+            <p className="font-mono-ui text-[10px] text-[#555] animate-pulse">Validating stock availability...</p>
+          </div>
+        )}
+
+        <div className="border border-[#222] divide-y divide-[#1a1a1a]">
+          {cart.map(item => {
+            const violation = stockViolations.find(v =>
+              v.productId === item.productId && v.size === item.size && (v.variant_name || '') === (item.variant_name || '')
+            );
+            return (
+            <div key={item.id} className={`flex gap-3 p-3 ${violation ? 'bg-[#c0392b]/10 border-l-2 border-[#c0392b]' : ''}`}>
+              {item.image && <img src={item.image} className="w-14 h-14 object-cover flex-shrink-0 opacity-80" alt={item.name} />}
+              <div className="flex-1 min-w-0">
+                <p className="font-mono-ui text-xs text-white truncate">{item.name}</p>
+                <p className="font-mono-ui text-[10px] text-[#555]">
+                  {item.variant_name && <span className="text-[#ff8c00]">{item.variant_name} · </span>}
+                  Size: {item.size} · Qty: {item.quantity}
+                </p>
+                {item.custom_text && <p className="font-mono-ui text-[10px] text-[#ff8c00]">Print: {item.custom_text}</p>}
+                {item.is_preorder && <span className="font-mono-ui text-[9px] text-[#555] border border-[#333] px-1.5 py-0.5">PRE-ORDER</span>}
+                {violation && (
+                  <p className="font-mono-ui text-[10px] text-[#ff4444] mt-1">
+                    ❌ Only {violation.available} available — go back to cart to fix
+                  </p>
+                )}
+              </div>
+              <p className="font-mono-ui text-xs text-[#ff8c00] flex-shrink-0">₱{(item.price * item.quantity).toLocaleString()}</p>
+            </div>
+            );
+          })}
+        </div>
 
           {/* Promo Code */}
           <div>
@@ -366,13 +435,26 @@ export default function Checkout() {
             </p>
           </div>
 
-          <button onClick={handlePlace} disabled={!canPlace || placing || !isPhilippines}
-            className="w-full btn-glow-orange font-mono-ui text-xs uppercase tracking-widest py-4 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button
+            onClick={handlePlace}
+            disabled={!canPlace || placing || !isPhilippines}
+            style={
+              hasStockViolations || stockChecking
+                ? { background: '#444', border: '1px solid #444', color: '#888', cursor: 'not-allowed' }
+                : undefined
+            }
+            className={`w-full font-mono-ui text-xs uppercase tracking-widest py-4 flex items-center justify-center gap-2 disabled:cursor-not-allowed ${
+              hasStockViolations || stockChecking ? '' : 'btn-glow-orange disabled:opacity-40'
+            }`}>
             {placing
               ? <><Loader2 className="w-4 h-4 animate-spin" /> Preparing Payment...</>
+              : stockChecking
+              ? <><Loader2 className="w-4 h-4 animate-spin" /> Validating Stock...</>
+              : hasStockViolations
+              ? '❌ Fix Stock Issues to Continue'
               : 'Proceed to Payment'}
           </button>
-          {isPhilippines && !canPlace && (
+          {isPhilippines && !canPlace && !hasStockViolations && !stockChecking && (
             <p className="font-mono-ui text-[10px] text-[#444] text-center">Fill in all required fields and confirm to continue</p>
           )}
           <div className="flex items-center justify-center gap-3 pt-1">
