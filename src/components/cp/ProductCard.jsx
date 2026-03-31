@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Eye, ShoppingBag, Check, MessageCircle, Star } from 'lucide-react';
-import { addToCart } from '@/lib/cartStore';
+import { Eye, ShoppingBag, MessageCircle, Star } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 export default function ProductCard({ product, onPreview }) {
-  const [selectedSize, setSelectedSize] = useState('');
-  const [added, setAdded] = useState(false);
   const [avgRating, setAvgRating] = useState(null);
   const [reviewCount, setReviewCount] = useState(0);
+  // Note: size selection happens inside the ProductDetailModal
 
   useEffect(() => {
     if (!product?.id) return;
@@ -25,7 +22,6 @@ export default function ProductCard({ product, onPreview }) {
   const isSoldOut = !isContactToOrder && product.stock_limit > 0 && product.total_ordered >= product.stock_limit;
   const stockLeft = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : null;
   const isLowStock = !isContactToOrder && stockLeft !== null && stockLeft <= 5 && stockLeft > 0;
-  const sizes = product.sizes?.length ? product.sizes : [];
 
   return (
     <div className="card-tactical group overflow-hidden flex flex-col h-full">
@@ -89,25 +85,7 @@ export default function ProductCard({ product, onPreview }) {
           )}
         </div>
 
-        {/* Size selector */}
-        <div className="h-8 mt-3">
-          {!isContactToOrder && sizes.length > 0 && !isSoldOut && (
-            <div className="flex gap-1.5 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-              {sizes.map(s => (
-                <button key={s} onClick={() => setSelectedSize(s)}
-                  className={`flex-shrink-0 px-2.5 py-1 font-mono-ui text-[10px] border transition-all ${
-                    selectedSize === s
-                      ? 'border-[#ff6b00] bg-[#ff6b00] text-white font-bold'
-                      : 'border-[#444] text-[#aaa] hover:border-[#888] hover:text-white'
-                  }`}>
-                  {s}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* CTA */}
+        {/* CTA — always opens modal so customer must select size/variant first */}
         {isContactToOrder ? (
           <button onClick={() => onPreview && onPreview(product)}
             className="mt-auto py-3 font-mono-ui text-xs uppercase tracking-[0.2em] w-full flex items-center justify-center gap-2 border border-[#ff6b00]/50 text-[#ff6b00] hover:bg-[#ff6b00]/10 transition-all">
@@ -118,27 +96,15 @@ export default function ProductCard({ product, onPreview }) {
             style={
               isSoldOut
                 ? { background: '#1a1a1a', border: '1px solid #222', color: '#444', cursor: 'not-allowed' }
-                : sizes.length > 0 && !selectedSize
-                ? { background: '#333', border: '1px solid #444', color: '#666', cursor: 'not-allowed' }
                 : { background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700, cursor: 'pointer' }
             }
-            onClick={() => {
-              if (isSoldOut) return;
-              const sizeToUse = selectedSize || (sizes.length === 0 ? 'One Size' : null);
-              if (!sizeToUse) return;
-              addToCart(product, sizeToUse);
-              setAdded(true);
-              setTimeout(() => setAdded(false), 1800);
-            }}
-            disabled={isSoldOut || (sizes.length > 0 && !selectedSize)}
+            onClick={() => { if (!isSoldOut) onPreview && onPreview(product); }}
+            disabled={isSoldOut}
             className="mt-auto py-3 font-mono-ui text-xs uppercase tracking-[0.2em] w-full flex items-center justify-center gap-2">
-            {isSoldOut ? 'Sold Out' : added ? (
-              <><Check className="w-3.5 h-3.5" /> Added!</>
-            ) : sizes.length > 0 && !selectedSize ? (
-              'Select Size'
-            ) : (
-              <><ShoppingBag className="w-3.5 h-3.5" /> {orderType === 'preorder' ? 'Pre-Order' : 'Add to Bag'}</>
-            )}
+            {isSoldOut
+              ? 'Sold Out'
+              : <><ShoppingBag className="w-3.5 h-3.5" /> {orderType === 'preorder' ? 'Pre-Order Now' : 'Add to Bag'}</>
+            }
           </button>
         )}
       </div>
