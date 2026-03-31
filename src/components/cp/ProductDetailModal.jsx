@@ -250,11 +250,11 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
           <a
             href="https://m.me/chokepointfightwear"
             target="_blank"
-            rel="noopener noreferrer"
-            className="w-full btn-glow-orange font-mono-ui text-xs uppercase tracking-widest py-4 flex items-center justify-center gap-2">
-            
-              <MessageCircle className="w-4 h-4" /> Contact to Order
-            </a> :
+            rel="noopener noreferrer" className="bg-[hsl(var(--background))] py-4 text-xs font-mono-ui uppercase tracking-widest w-full btn-glow-orange flex items-center justify-center gap-2">CONTACT TO ORDER
+
+
+
+          </a> :
 
           <button
             onClick={handleAddToBag}
