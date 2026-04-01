@@ -1,14 +1,15 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 // Maps Trello list names to customer-facing statuses
+// List names are matched via exact or partial include (case-insensitive)
 const TRELLO_STATUS_MAP = [
   { steps: ['Pending Orders', 'Digitize Mockup'], status: 'Order Confirmed', step: 1 },
-  { steps: ['For Client Approval / Initial Checking'], status: 'Pending Customer Approval', step: 2 },
-  { steps: ['Layout Sewing Pattern', 'Ready for Digital Files Quality Control', 'Digital Files Quality Control'], status: 'Digitizing Order', step: 3 },
-  { steps: ['Ready to Print', 'Printing & Cutting', 'Heatpress & Cutting', 'Pre-sewing Quality Control', 'Sewing'], status: 'In Production', step: 4 },
-  { steps: ['Finished Product Quality Control'], status: 'Quality Control', step: 5 },
+  { steps: ['For Client Approval / Sample Print for Color Checking'], status: 'Pending Customer Approval', step: 2 },
+  { steps: ['Layout Sewing Pattern', 'Ready for QC Digital Files', 'QC Digital Files'], status: 'Digitizing Order', step: 3 },
+  { steps: ['Ready to Print', 'Print & Cut', 'Heatpress & Cut', 'QC Heatpressed Patterns', 'Sew'], status: 'In Production', step: 4 },
+  { steps: ['QC Finished Product'], status: 'Quality Control', step: 5 },
   { steps: ['Packaging'], status: 'Packing', step: 6 },
-  { steps: ['Ready for Delivery'], status: 'Ready for Delivery', step: 7 },
+  { steps: ['Ready for Pickup / Shipment / Delivery', 'Completed'], status: 'Ready for Delivery', step: 7 },
 ];
 
 Deno.serve(async (req) => {
