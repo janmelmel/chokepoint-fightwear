@@ -1,0 +1,90 @@
+{
+  "name": "OrderStatusHistory",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string",
+      "description": "Reference to the Order entity"
+    },
+    "order_number": {
+      "type": "string"
+    },
+    "trello_card_id": {
+      "type": "string"
+    },
+    "trello_list": {
+      "type": "string",
+      "description": "The Trello list name the card moved to"
+    },
+    "status": {
+      "type": "string",
+      "description": "Customer-facing status label"
+    },
+    "step": {
+      "type": "number",
+      "description": "Step number (1-7)"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "progress",
+        "revert",
+        "complete"
+      ],
+      "default": "progress",
+      "description": "Whether this was a forward move, revert, or completion"
+    },
+    "changed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the status change occurred"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "order_id",
+    "status",
+    "step"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "data.order_id": "{{user.id}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -13,7 +13,8 @@ const TRELLO_STATUS_MAP = [
 
 Deno.serve(async (req) => {
   try {
-    const { trello_card_id } = await req.json();
+    const base44 = createClientFromRequest(req);
+    const { trello_card_id, order_id } = await req.json();
 
     if (!trello_card_id) {
       return Response.json({ error: 'Missing trello_card_id' }, { status: 400 });
@@ -54,10 +55,43 @@ Deno.serve(async (req) => {
       }
     }
 
+    const currentStep = mapped?.step || 1;
+    const currentStatus = mapped?.status || 'In Progress';
+
+    // If order_id provided, check history and log if status changed
+    if (order_id) {
+      try {
+        const existing = await base44.asServiceRole.entities.OrderStatusHistory.filter(
+          { order_id },
+          '-changed_at',
+          1
+        );
+
+        const lastStep = existing?.[0]?.step;
+
+        // Only log if it's a new status
+        if (!existing.length || existing[0].trello_list !== listName) {
+          const isRevert = existing.length > 0 && currentStep < lastStep;
+          await base44.asServiceRole.entities.OrderStatusHistory.create({
+            order_id,
+            trello_card_id,
+            trello_list: listName,
+            status: currentStatus,
+            step: currentStep,
+            event_type: isRevert ? 'revert' : (currentStep === 7 ? 'complete' : 'progress'),
+            changed_at: new Date().toISOString(),
+          });
+        }
+      } catch (histErr) {
+        // Don't fail the main request if history logging fails
+        console.error('History log error:', histErr.message);
+      }
+    }
+
     return Response.json({
       trello_list: listName,
-      status: mapped?.status || 'In Progress',
-      step: mapped?.step || 1,
+      status: currentStatus,
+      step: currentStep,
       card_url: card.shortUrl,
       total_steps: 7,
     });
