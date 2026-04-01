@@ -194,7 +194,19 @@ export default function Checkout() {
       await base44.entities.Order.update(o.id, { paymongo_session_id: session_id });
     }
 
-    // 4. Clear cart and redirect to PayMongo
+    // 4. Create Trello cards for each order (fire-and-forget, don't block payment)
+    const shippingAddress = `${address.street}, ${address.barangay ? address.barangay + ', ' : ''}${address.city}, ${address.province} ${address.postal_code}`.trim();
+    for (const o of createdOrders) {
+      base44.functions.invoke('createTrelloCard', {
+        orderId: o.id,
+        orderNumber: o.orderNum,
+        customerName: contact.name,
+        items: [{ name: o.item.name, variant_name: o.item.variant_name || '', size: o.item.size, quantity: o.item.quantity }],
+        shippingAddress,
+      }).catch(() => {}); // fire and forget
+    }
+
+    // 5. Clear cart and redirect to PayMongo
     clearCart();
     window.location.href = checkout_url;
   };

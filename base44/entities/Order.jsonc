@@ -1,0 +1,172 @@
+{
+  "name": "Order",
+  "type": "object",
+  "properties": {
+    "order_number": {
+      "type": "string"
+    },
+    "product_id": {
+      "type": "string"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "customer_phone": {
+      "type": "string"
+    },
+    "size": {
+      "type": "string"
+    },
+    "quantity": {
+      "type": "number",
+      "default": 1
+    },
+    "total_amount": {
+      "type": "number"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "GCash",
+        "Maya",
+        "Card",
+        "GrabPay",
+        "Messenger",
+        "Other"
+      ]
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Paid",
+        "Refunded",
+        "Failed"
+      ],
+      "default": "Pending"
+    },
+    "paymongo_session_id": {
+      "type": "string"
+    },
+    "paymongo_payment_method": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Processing",
+        "Packing",
+        "Out for Delivery",
+        "Pending_Completion",
+        "Completed",
+        "Cancelled"
+      ],
+      "default": "Pending"
+    },
+    "logistics": {
+      "type": "string",
+      "enum": [
+        "LBC",
+        "J&T",
+        "Capex",
+        "DHL",
+        "UPS"
+      ]
+    },
+    "tracking_number": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "completion_note": {
+      "type": "string"
+    },
+    "is_preorder": {
+      "type": "boolean",
+      "default": false
+    },
+    "custom_print_text": {
+      "type": "string"
+    },
+    "shipping_province": {
+      "type": "string"
+    },
+    "shipping_city": {
+      "type": "string"
+    },
+    "shipping_barangay": {
+      "type": "string"
+    },
+    "shipping_street": {
+      "type": "string"
+    },
+    "shipping_postal_code": {
+      "type": "string"
+    },
+    "shipping_delivery_notes": {
+      "type": "string"
+    },
+    "shipping_zone": {
+      "type": "string"
+    },
+    "shipping_fee": {
+      "type": "number"
+    },
+    "trello_card_id": {
+      "type": "string",
+      "description": "Trello card ID linked to this order for production tracking"
+    }
+  },
+  "required": [
+    "product_name",
+    "customer_name",
+    "status"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "data.customer_email": "{{user.email}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
