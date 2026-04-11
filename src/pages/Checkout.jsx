@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { getCart, clearCart } from '@/lib/cartStore';
+import { getDHLShippingFee, getProductWeight } from '@/lib/dhlRates';
 import {
   PHILIPPINES_PROVINCES, getCitiesForProvince, getBarangaysForCity,
   getShippingZone, getShippingRate, WORLD_COUNTRIES
@@ -26,6 +27,7 @@ export default function Checkout() {
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [stockViolations, setStockViolations] = useState([]); // [{productName, size, requested, available}]
+  const [dhlRate, setDhlRate] = useState(null); // { fee, zone, chargeableKg, roundedKg }
   const [stockChecking, setStockChecking] = useState(false);
 
   const prevProvince = useRef('');
@@ -80,6 +82,16 @@ export default function Checkout() {
   }, []);
 
   const isPhilippines = address.country === 'Philippines';
+
+  // Compute DHL rate when international country changes
+  useEffect(() => {
+    if (!isPhilippines && address.country && cart.length > 0) {
+      const result = getDHLShippingFee(cart, address.country);
+      setDhlRate(result);
+    } else {
+      setDhlRate(null);
+    }
+  }, [address.country, cart.length, isPhilippines]);
   const zone = isPhilippines && address.province ? getShippingZone(address.province) : null;
 
   const computeShipping = () => {
@@ -260,26 +272,70 @@ export default function Checkout() {
               <div>
                 <label className={LABEL}>Country *</label>
                 <select value={address.country} onChange={e => setAddress(a => ({ ...a, country: e.target.value, province: '', city: '', barangay: '' }))} className={INPUT}>
-                  {WORLD_COUNTRIES.map(c => <option key={c}>{c}</option>)}
+                  <option value="Philippines">Philippines</option>
+                  {WORLD_COUNTRIES.filter(c => c !== 'Philippines').map(c => <option key={c}>{c}</option>)}
                 </select>
               </div>
 
               {!isPhilippines ? (
-                <div className="border-l-2 border-[#ff6b00] bg-[#111] p-4 space-y-2">
-                  <p className="font-mono-ui text-xs text-[#ff6b00] uppercase tracking-wider">International Orders</p>
-                  <p className="font-mono-ui text-[10px] text-[#888] leading-relaxed">
-                    We currently ship within the Philippines only. For international inquiries, contact us directly.
-                  </p>
-                  <div className="flex gap-3 mt-3">
-                    <a href="https://m.me/chokepointfightwear" target="_blank" rel="noreferrer"
-                      className="btn-glow-orange font-mono-ui text-[10px] uppercase tracking-widest px-4 py-2 flex items-center gap-2">
-                      <MessageCircle className="w-3.5 h-3.5" /> Messenger
+                <div className="border-l-4 border-[#E87722] bg-[#111] p-5 space-y-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">🌏</span>
+                    <div>
+                      <p className="font-tactical text-xl text-white">International Orders</p>
+                      <p className="font-mono-ui text-xs text-[#888] mt-1 leading-relaxed">
+                        We're not yet processing international orders through our website. Contact us directly and we'll assist you with product availability, shipping rates, and payment options.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* DHL Rate Preview */}
+                  {dhlRate && (
+                    <div className="bg-[#0a0a0a] border border-[#ff8c00]/20 px-4 py-3 space-y-2">
+                      <p className="font-mono-ui text-[9px] text-[#ff8c00] uppercase tracking-widest">Estimated DHL Express Shipping to {address.country}</p>
+                      <p className="font-tactical text-2xl text-white">₱{dhlRate.fee.toLocaleString()}</p>
+                      <p className="font-mono-ui text-[10px] text-[#555]">Zone {dhlRate.zone} · {dhlRate.chargeableKg} kg chargeable weight</p>
+                      <div className="border-t border-[#1a1a1a] pt-2 space-y-1">
+                        {cart.map((item, i) => (
+                          <div key={i} className="flex justify-between font-mono-ui text-[10px] text-[#666]">
+                            <span>{item.name} × {item.quantity}</span>
+                            <span>{(getProductWeight(item) * item.quantity).toFixed(2)} kg</span>
+                          </div>
+                        ))}
+                        <div className="flex justify-between font-mono-ui text-xs text-[#888] border-t border-[#1a1a1a] pt-2 mt-1">
+                          <span>Items subtotal</span><span>₱{subtotal.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between font-mono-ui text-xs text-[#888]">
+                          <span>DHL Express Shipping (Zone {dhlRate.zone} · {dhlRate.roundedKg} kg)</span>
+                          <span>₱{dhlRate.fee.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between font-mono-ui text-sm text-[#ff8c00] font-bold border-t border-[#1a1a1a] pt-2">
+                          <span>Estimated Total</span><span>₱{(subtotal + dhlRate.fee).toLocaleString()}</span>
+                        </div>
+                      </div>
+                      <p className="font-mono-ui text-[9px] text-[#444] italic">*Final shipping may vary based on actual package weight upon dispatch.</p>
+                    </div>
+                  )}
+
+                  <p className="font-mono-ui text-[10px] text-[#888] uppercase tracking-widest">Contact us to place your order:</p>
+                  <div className="flex flex-col gap-2">
+                    <a href="https://www.facebook.com/profile.php?id=61571430141920" target="_blank" rel="noreferrer"
+                      style={{ background: '#1877F2', border: '1px solid #1877F2', color: '#fff', fontWeight: 700 }}
+                      className="font-mono-ui text-[10px] uppercase tracking-widest px-4 py-3 flex items-center gap-2">
+                      <MessageCircle className="w-3.5 h-3.5" /> Message us on Facebook
+                    </a>
+                    <a href="https://www.instagram.com/chokepoint_fightwear/" target="_blank" rel="noreferrer"
+                      style={{ background: 'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)', border: 'none', color: '#fff', fontWeight: 700 }}
+                      className="font-mono-ui text-[10px] uppercase tracking-widest px-4 py-3 flex items-center gap-2">
+                      <span className="text-base">📷</span> DM us on Instagram
                     </a>
                     <a href="mailto:sales@chokepoint-fightwear.com"
-                      className="btn-glow-white font-mono-ui text-[10px] uppercase tracking-widest px-4 py-2 flex items-center gap-2">
-                      <Mail className="w-3.5 h-3.5" /> Email
+                      style={{ background: '#E87722', border: '1px solid #E87722', color: '#fff', fontWeight: 700 }}
+                      className="font-mono-ui text-[10px] uppercase tracking-widest px-4 py-3 flex items-center gap-2">
+                      <Mail className="w-3.5 h-3.5" /> Email us — sales@chokepoint-fightwear.com
                     </a>
                   </div>
+                  <p className="font-mono-ui text-[10px] text-[#555] leading-relaxed">We ship via <span className="text-white">DHL Express</span> worldwide.</p>
                 </div>
               ) : (
                 <>
