@@ -55,7 +55,7 @@ export default function OrderConfirmed() {
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center px-4 text-center gap-6">
         <CPLogo size={40} />
         <p className="font-mono-ui text-xs text-[#ff0000]">Invalid order confirmation link.</p>
-        <Link to="/Home" className="bg-[hsl(var(--chart-4))] px-8 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange">BACK TO STORE</Link>
+        <Link to="/Home" className="bg-[hsl(var(--sidebar-border))] text-[hsl(var(--chart-2))] px-8 py-3 text-xs font-mono-ui uppercase tracking-widest btn-glow-orange">BACK TO STORE</Link>
       </div>);
 
   }
