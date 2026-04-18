@@ -125,49 +125,9 @@ export default function Checkout() {
     setPlacing(true);
     setError('');
 
-    // Final client-side stock recheck before creating orders
-    const violations = await validateStock(cart);
-    if (violations.length > 0) {
-      setError('One or more items in your order exceed available stock. Please update your cart before proceeding.');
-      setPlacing(false);
-      return;
-    }
-
-    // 1. Create order records with status Pending
-    const createdOrders = [];
-    for (const item of cart) {
-      const orderNum = `CP-${Date.now().toString(36).toUpperCase().slice(-4)}-${Math.random().toString(36).slice(2,5).toUpperCase()}`;
-      const order = await base44.entities.Order.create({
-        order_number: orderNum,
-        product_id: item.productId,
-        product_name: item.name,
-        customer_name: contact.name,
-        customer_email: contact.email,
-        customer_phone: contact.phone,
-        size: item.size,
-        quantity: item.quantity,
-        total_amount: item.price * item.quantity,
-        payment_method: 'Other',
-        payment_status: 'Pending',
-        status: 'Pending',
-        is_preorder: !!item.is_preorder,
-        custom_print_text: item.custom_text || '',
-        variant_name: item.variant_name || '',
-        shipping_province: address.province,
-        shipping_city: address.city,
-        shipping_barangay: address.barangay,
-        shipping_street: address.street,
-        shipping_postal_code: address.postal_code,
-        shipping_delivery_notes: address.notes,
-        shipping_zone: zone || '',
-        shipping_fee: shippingFee || 0,
-        notes: appliedPromo ? `Promo: ${appliedPromo.code} (-₱${promoDiscount})` : '',
-      });
-      createdOrders.push({ id: order.id, orderNum, item });
-    }
-
-    // 2. Create PayMongo checkout session
     const finalTotal = subtotal + (shippingFee || 0) - promoDiscount;
+
+    // Single backend call: stock check + order creation + PayMongo session — all server-side
     const response = await base44.functions.invoke('createPaymongoPayment', {
       amount: finalTotal,
       customerName: contact.name,
@@ -181,47 +141,48 @@ export default function Checkout() {
         custom_text: i.custom_text,
         shipping_fee: shippingFee || 0,
       })),
-      orderIds: createdOrders.map(o => o.id),
-      orderNumbers: createdOrders.map(o => o.orderNum),
       cartItems: cart.map(i => ({
         productId: i.productId,
+        name: i.name,
+        price: i.price,
         size: i.size,
-        variant_name: i.variant_name || '',
         quantity: i.quantity,
+        custom_text: i.custom_text || '',
+        variant_name: i.variant_name || '',
         is_preorder: !!i.is_preorder,
       })),
+      contact,
+      address,
+      zone: zone || '',
+      shippingFee: shippingFee || 0,
+      appliedPromoCode: appliedPromo?.code || null,
+      promoDiscount: promoDiscount || 0,
     });
 
-    const { checkout_url, session_id, error: pmError } = response.data;
+    const { checkout_url, error: pmError, orderIds, orderNumbers } = response.data;
 
     if (pmError || !checkout_url) {
-      // Delete the pending orders if PayMongo fails
-      for (const o of createdOrders) {
-        await base44.entities.Order.update(o.id, { status: 'Cancelled', payment_status: 'Failed' });
-      }
       setError(pmError || 'Payment setup failed. Please try again.');
       setPlacing(false);
       return;
     }
 
-    // 3. Save session ID to orders
-    for (const o of createdOrders) {
-      await base44.entities.Order.update(o.id, { paymongo_session_id: session_id });
-    }
-
-    // 4. Create Trello cards for each order (fire-and-forget, don't block payment)
+    // Fire-and-forget Trello cards
     const shippingAddress = `${address.street}, ${address.barangay ? address.barangay + ', ' : ''}${address.city}, ${address.province} ${address.postal_code}`.trim();
-    for (const o of createdOrders) {
-      base44.functions.invoke('createTrelloCard', {
-        orderId: o.id,
-        orderNumber: o.orderNum,
-        customerName: contact.name,
-        items: [{ name: o.item.name, variant_name: o.item.variant_name || '', size: o.item.size, quantity: o.item.quantity }],
-        shippingAddress,
-      }).catch(() => {}); // fire and forget
+    if (orderIds && orderNumbers) {
+      orderIds.forEach((orderId, idx) => {
+        const item = cart[idx];
+        if (!item) return;
+        base44.functions.invoke('createTrelloCard', {
+          orderId,
+          orderNumber: orderNumbers[idx],
+          customerName: contact.name,
+          items: [{ name: item.name, variant_name: item.variant_name || '', size: item.size, quantity: item.quantity }],
+          shippingAddress,
+        }).catch(() => {});
+      });
     }
 
-    // 5. Clear cart and redirect to PayMongo
     clearCart();
     window.location.href = checkout_url;
   };
