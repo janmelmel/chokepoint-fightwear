@@ -1,4 +1,4 @@
-import { createClient } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 /**
  * Validates cart items against current DB stock.
@@ -6,11 +6,11 @@ import { createClient } from 'npm:@base44/sdk@0.8.25';
  * Input: { items: [ { productId, size, variant_name, quantity, is_preorder } ] }
  * Output: { valid: boolean, violations: [ { productId, size, variant_name, requested, available } ] }
  */
-
-const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
-
 Deno.serve(async (req) => {
   try {
+    // Use createClientFromRequest for asServiceRole access, but do NOT call auth.me()
+    // because this function is public and supports guest users
+    const base44 = createClientFromRequest(req);
     const { items } = await req.json();
 
     if (!items || !Array.isArray(items) || items.length === 0) {
@@ -65,6 +65,6 @@ Deno.serve(async (req) => {
     return Response.json({ valid: violations.length === 0, violations });
   } catch (error) {
     console.error('validateCartStock error:', error.message);
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ valid: true, violations: [] }); // fail open — don't block checkout
   }
 });

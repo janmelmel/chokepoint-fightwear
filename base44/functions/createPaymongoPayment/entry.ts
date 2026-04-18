@@ -1,9 +1,9 @@
-import { createClient } from 'npm:@base44/sdk@0.8.25';
-
-const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
+    // Use createClientFromRequest for asServiceRole — do NOT call auth.me() (supports guest users)
+    const base44 = createClientFromRequest(req);
     const { amount, customerName, customerEmail, customerPhone, lineItems, orderIds, orderNumbers, cartItems } = await req.json();
 
     if (!amount || !lineItems?.length) {
