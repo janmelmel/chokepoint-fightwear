@@ -86,7 +86,7 @@ export default function OrderConfirmed() {
           <p className="font-mono-ui text-[11px] text-yellow-400 uppercase tracking-widest mb-2">Payment Verification Pending</p>
           <p className="font-mono-ui text-sm text-white mb-2">Your payment is being verified.</p>
           <p className="font-mono-ui text-xs text-[#888] leading-relaxed max-w-sm">
-            You will receive a confirmation email shortly. If you have questions, contact us with your order number:
+            Order confirmation is on its way to your email. Track your order anytime at chokepointfightwear.com
           </p>
           <div className="mt-4 space-y-1">
             {orderNumbers.map(n => (
