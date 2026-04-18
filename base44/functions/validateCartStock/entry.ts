@@ -1,13 +1,16 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
+import { createClient } from 'npm:@base44/sdk@0.8.25';
 
 /**
  * Validates cart items against current DB stock.
+ * Public function — no user auth required (guest checkout supported).
  * Input: { items: [ { productId, size, variant_name, quantity, is_preorder } ] }
  * Output: { valid: boolean, violations: [ { productId, size, variant_name, requested, available } ] }
  */
+
+const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
+
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req);
     const { items } = await req.json();
 
     if (!items || !Array.isArray(items) || items.length === 0) {
