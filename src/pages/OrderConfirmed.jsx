@@ -186,17 +186,6 @@ export default function OrderConfirmed() {
           </div>
         )}
 
-        {/* Payment instructions */}
-        <div className="w-full border-l-2 border-[#ff6b00] bg-[#111] px-5 py-4 space-y-2">
-          <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest">Payment Instructions</p>
-          <p className="font-mono-ui text-xs text-[#888] leading-relaxed">
-            Please scan the QR code sent to your email to complete your payment. If you need help, contact us at{' '}
-            <a href="mailto:sales@chokepoint-fightwear.com" className="text-[#ff6b00] hover:underline">
-              sales@chokepoint-fightwear.com
-            </a>
-          </p>
-        </div>
-
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 w-full">
           <Link to="/TrackOrder" className="flex-1 btn-glow-white font-mono-ui text-xs uppercase tracking-widest py-3 text-center">
