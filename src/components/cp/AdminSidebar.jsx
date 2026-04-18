@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-export default function AdminSidebar({ user, collapsed = false }) {
+export default function AdminSidebar({ user, collapsed = false, processingCount = 0 }) {
   const loc = useLocation();
   const isAdmin = user?.role === 'admin';
 
@@ -15,7 +15,7 @@ export default function AdminSidebar({ user, collapsed = false }) {
     { label: 'Dashboard', icon: LayoutDashboard, to: createPageUrl('Staff') },
     { label: 'Products', icon: Package, to: createPageUrl('StaffProducts') },
     { label: 'Categories', icon: Tag, to: createPageUrl('StaffCategories') },
-    { label: 'Orders', icon: ShoppingBag, to: createPageUrl('StaffOrders') },
+    { label: 'Orders', icon: ShoppingBag, to: createPageUrl('StaffOrders'), badge: processingCount > 0 ? processingCount : null },
     { label: 'Hero Banners', icon: ImageIcon, to: createPageUrl('StaffHero') },
     { label: 'Custom Requests', icon: Paintbrush, to: createPageUrl('StaffCustomRequests') },
     { label: 'Promo Codes', icon: Ticket, to: createPageUrl('StaffPromoCodes') },
@@ -45,7 +45,12 @@ export default function AdminSidebar({ user, collapsed = false }) {
                   : 'text-[#888] hover:text-white hover:bg-[#222]'
               }`}>
               <l.icon className="w-4 h-4 flex-shrink-0" />
-              {l.label}
+              <span className="flex-1">{l.label}</span>
+              {l.badge && (
+                <span className="font-mono-ui text-[9px] px-1.5 py-0.5 bg-[#E87722] text-white rounded-none">
+                  {l.badge}
+                </span>
+              )}
             </Link>
           );
         })}
