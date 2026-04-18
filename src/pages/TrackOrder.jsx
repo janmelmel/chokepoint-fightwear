@@ -15,6 +15,7 @@ function OrderCard({ order }) {
 
   const isCancelled = order.status === 'Cancelled';
   const isCompleted = order.status === 'Completed';
+  const isCustomOrder = !!order.is_preorder || !!order.custom_print_text;
 
   useEffect(() => {
     if (!isCancelled) loadStatus();
@@ -66,24 +67,26 @@ function OrderCard({ order }) {
         </div>
       </div>
 
-      {/* EDC */}
-      {!isCancelled && (
+      {/* EDC — only for custom/pre-orders */}
+      {!isCancelled && isCustomOrder && (
         <div className="px-5 pt-4">
           <OrderEDC order={order} isCompleted={isCompleted} isCancelled={isCancelled} />
         </div>
       )}
 
-      {/* Timeline */}
-      <div className="px-5 py-5">
-        <p className="font-mono-ui text-[9px] text-[#444] uppercase tracking-widest mb-4">Production Trail</p>
-        <OrderTimeline
-          history={history}
-          currentStep={currentStep}
-          isCancelled={isCancelled}
-          isCompleted={isCompleted}
-          loadingTrello={loading}
-        />
-      </div>
+      {/* Timeline — only for custom/pre-orders */}
+      {isCustomOrder && (
+        <div className="px-5 py-5">
+          <p className="font-mono-ui text-[9px] text-[#444] uppercase tracking-widest mb-4">Production Trail</p>
+          <OrderTimeline
+            history={history}
+            currentStep={currentStep}
+            isCancelled={isCancelled}
+            isCompleted={isCompleted}
+            loadingTrello={loading}
+          />
+        </div>
+      )}
 
       {/* Tracking Number */}
       {order.tracking_number && (
