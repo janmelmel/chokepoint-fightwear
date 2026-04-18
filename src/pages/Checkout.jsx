@@ -48,7 +48,7 @@ export default function Checkout() {
   }, [address.city]);
 
   const validateStock = async (items) => {
-    if (!items || items.length === 0) return;
+    if (!items || items.length === 0) return [];
     setStockChecking(true);
     try {
       const res = await base44.functions.invoke('validateCartStock', {
@@ -60,9 +60,12 @@ export default function Checkout() {
           is_preorder: !!i.is_preorder,
         })),
       });
-      setStockViolations(res.data?.violations || []);
+      const violations = res.data?.violations || [];
+      setStockViolations(violations);
+      return violations;
     } catch {
       // fail silently — don't block checkout if validation itself errors
+      return [];
     } finally {
       setStockChecking(false);
     }
@@ -123,8 +126,8 @@ export default function Checkout() {
     setError('');
 
     // Final client-side stock recheck before creating orders
-    await validateStock(cart);
-    if (stockViolations.length > 0) {
+    const violations = await validateStock(cart);
+    if (violations.length > 0) {
       setError('One or more items in your order exceed available stock. Please update your cart before proceeding.');
       setPlacing(false);
       return;
