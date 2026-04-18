@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -9,23 +9,31 @@ Deno.serve(async (req) => {
     const sessionData = body?.data?.attributes?.data;
 
     console.log('PayMongo webhook event:', eventType);
+    console.log('Session data:', JSON.stringify(sessionData?.attributes || {}).slice(0, 500));
 
-    if (eventType === 'checkout_session.payment.paid') {
+    // Handle both possible event type formats
+    if (
+      eventType === 'checkout_session.payment.paid' ||
+      eventType === 'payment.paid'
+    ) {
       const sessionId = sessionData?.id;
-      const paymentMethod = sessionData?.attributes?.payment_method_used || 'Card';
-      const paymentMethodLabel = paymentMethod === 'gcash' ? 'GCash'
-        : paymentMethod === 'paymaya' ? 'Maya'
-        : paymentMethod === 'grab_pay' ? 'GrabPay'
-        : 'Card';
+      const rawMethod = sessionData?.attributes?.payment_method_used || '';
+      const paymentMethodLabel = rawMethod === 'gcash' ? 'GCash'
+        : rawMethod === 'paymaya' ? 'Maya'
+        : rawMethod === 'grab_pay' ? 'GrabPay'
+        : rawMethod === 'qrph' ? 'QRPh'
+        : rawMethod === 'card' ? 'Card'
+        : rawMethod || 'QRPh';
 
       if (sessionId) {
-        // Find orders with this session ID and update them
         const orders = await base44.asServiceRole.entities.Order.filter({ paymongo_session_id: sessionId });
+        console.log(`Found ${orders.length} orders for session ${sessionId}`);
         for (const order of orders) {
           await base44.asServiceRole.entities.Order.update(order.id, {
             payment_status: 'Paid',
             payment_method: paymentMethodLabel,
-            status: 'Processing',
+            paymongo_payment_method: paymentMethodLabel,
+            status: order.status === 'Pending' ? 'Processing' : order.status,
           });
         }
         console.log(`Updated ${orders.length} orders to Paid/Processing for session ${sessionId}`);

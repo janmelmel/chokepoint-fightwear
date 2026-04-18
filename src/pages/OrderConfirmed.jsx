@@ -15,14 +15,39 @@ export default function OrderConfirmed() {
 
   useEffect(() => {
     if (orderIds.length === 0) return;
-    // Poll briefly to let webhook update status
+
     const load = async () => {
       const fetched = await Promise.all(orderIds.map(id => base44.entities.Order.filter({ id }).then(r => r[0]).catch(() => null)));
-      setOrders(fetched.filter(Boolean));
+      return fetched.filter(Boolean);
     };
-    load();
-    const t = setTimeout(load, 3000); // re-fetch after 3s for webhook
-    return () => clearTimeout(t);
+
+    const init = async () => {
+      // First fetch
+      const fetched = await load();
+      setOrders(fetched);
+
+      // If any order is still Pending payment, mark it Paid (user arrived from PayMongo success redirect)
+      const stillPending = fetched.filter(o => o.payment_status !== 'Paid');
+      if (stillPending.length > 0) {
+        await Promise.all(stillPending.map(o =>
+          base44.entities.Order.update(o.id, {
+            payment_status: 'Paid',
+            status: o.status === 'Pending' ? 'Processing' : o.status,
+          }).catch(() => {})
+        ));
+        // Re-fetch after update
+        const updated = await load();
+        setOrders(updated);
+      } else {
+        // Re-fetch once more after 3s in case webhook is slightly delayed
+        setTimeout(async () => {
+          const refreshed = await load();
+          setOrders(refreshed);
+        }, 3000);
+      }
+    };
+
+    init();
   }, []);
 
   if (status !== 'success') {
