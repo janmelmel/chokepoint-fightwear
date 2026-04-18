@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import CPLogo from '@/components/cp/CPLogo';
-import { CheckCircle, MapPin, Package, Clock } from 'lucide-react';
+import { CheckCircle, MapPin, Package, Clock, Loader2 } from 'lucide-react';
 
 export default function OrderConfirmed() {
   const params = new URLSearchParams(window.location.search);
@@ -12,6 +12,8 @@ export default function OrderConfirmed() {
   const orderIds = (() => { try { return JSON.parse(decodeURIComponent(params.get('orderIds') || '[]')); } catch { return []; } })();
 
   const [orders, setOrders] = useState([]);
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+  const [paymentTimeout, setPaymentTimeout] = useState(false);
 
   useEffect(() => {
     if (orderIds.length === 0) return;
@@ -21,33 +23,31 @@ export default function OrderConfirmed() {
       return fetched.filter(Boolean);
     };
 
-    const init = async () => {
-      // First fetch
+    let attempts = 0;
+    const MAX_ATTEMPTS = 40; // 40 × 3s = 2 minutes
+    let intervalId;
+
+    const poll = async () => {
+      attempts++;
       const fetched = await load();
       setOrders(fetched);
 
-      // If any order is still Pending payment, mark it Paid (user arrived from PayMongo success redirect)
-      const stillPending = fetched.filter(o => o.payment_status !== 'Paid');
-      if (stillPending.length > 0) {
-        await Promise.all(stillPending.map(o =>
-          base44.entities.Order.update(o.id, {
-            payment_status: 'Paid',
-            status: o.status === 'Pending' ? 'Processing' : o.status,
-          }).catch(() => {})
-        ));
-        // Re-fetch after update
-        const updated = await load();
-        setOrders(updated);
-      } else {
-        // Re-fetch once more after 3s in case webhook is slightly delayed
-        setTimeout(async () => {
-          const refreshed = await load();
-          setOrders(refreshed);
-        }, 3000);
+      const allPaid = fetched.length > 0 && fetched.every(o => o.payment_status === 'Paid');
+      if (allPaid) {
+        setPaymentConfirmed(true);
+        clearInterval(intervalId);
+        return;
+      }
+
+      if (attempts >= MAX_ATTEMPTS) {
+        clearInterval(intervalId);
+        setPaymentTimeout(true);
       }
     };
 
-    init();
+    poll(); // immediate first check
+    intervalId = setInterval(poll, 3000);
+    return () => clearInterval(intervalId);
   }, []);
 
   if (status !== 'success') {
@@ -56,6 +56,53 @@ export default function OrderConfirmed() {
         <CPLogo size={40} />
         <p className="font-mono-ui text-xs text-[#ff0000]">Invalid order confirmation link.</p>
         <Link to="/Home" className="btn-glow-orange font-mono-ui text-xs uppercase tracking-widest px-8 py-3">Back to Store</Link>
+      </div>
+    );
+  }
+
+  // Waiting for webhook to confirm payment
+  if (!paymentConfirmed && !paymentTimeout) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center px-4 text-center gap-6">
+        <CPLogo size={32} />
+        <Loader2 className="w-8 h-8 text-[#ff6b00] animate-spin" />
+        <div>
+          <p className="font-mono-ui text-[11px] text-[#ff6b00] uppercase tracking-widest mb-2">Confirming your payment...</p>
+          <p className="font-mono-ui text-xs text-[#555]">Please wait while we verify your payment. Do not close this page.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Timed out — webhook never arrived
+  if (paymentTimeout && !paymentConfirmed) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center px-4 text-center gap-6">
+        <CPLogo size={32} />
+        <div className="w-16 h-16 border border-yellow-500/30 bg-yellow-500/5 flex items-center justify-center">
+          <Clock className="w-8 h-8 text-yellow-400" />
+        </div>
+        <div>
+          <p className="font-mono-ui text-[11px] text-yellow-400 uppercase tracking-widest mb-2">Payment Verification Pending</p>
+          <p className="font-mono-ui text-sm text-white mb-2">Your payment is being verified.</p>
+          <p className="font-mono-ui text-xs text-[#888] leading-relaxed max-w-sm">
+            You will receive a confirmation email shortly. If you have questions, contact us with your order number:
+          </p>
+          <div className="mt-4 space-y-1">
+            {orderNumbers.map(n => (
+              <p key={n} className="font-mono-ui text-sm text-[#ff8c00] font-bold">{n}</p>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <a href="mailto:sales@chokepoint-fightwear.com"
+            className="btn-glow-white font-mono-ui text-xs uppercase tracking-widest px-8 py-3">
+            Contact Support
+          </a>
+          <Link to="/Home" className="btn-glow-orange font-mono-ui text-xs uppercase tracking-widest px-8 py-3">
+            Back to Store
+          </Link>
+        </div>
       </div>
     );
   }

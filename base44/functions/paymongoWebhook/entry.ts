@@ -8,8 +8,10 @@ Deno.serve(async (req) => {
     const eventType = body?.data?.attributes?.type;
     const sessionData = body?.data?.attributes?.data;
 
-    console.log('PayMongo webhook event:', eventType);
-    console.log('Session data:', JSON.stringify(sessionData?.attributes || {}).slice(0, 500));
+    console.log('[Webhook] Received event type:', eventType);
+    console.log('[Webhook] Session ID:', sessionData?.id);
+    console.log('[Webhook] Payment method used:', sessionData?.attributes?.payment_method_used);
+    console.log('[Webhook] Full body keys:', Object.keys(body?.data?.attributes || {}));
 
     // Handle both possible event type formats
     if (
@@ -27,16 +29,16 @@ Deno.serve(async (req) => {
 
       if (sessionId) {
         const orders = await base44.asServiceRole.entities.Order.filter({ paymongo_session_id: sessionId });
-        console.log(`Found ${orders.length} orders for session ${sessionId}`);
+        console.log(`[Webhook] Found ${orders.length} order(s) for session ${sessionId}`);
         for (const order of orders) {
-          await base44.asServiceRole.entities.Order.update(order.id, {
+          const result = await base44.asServiceRole.entities.Order.update(order.id, {
             payment_status: 'Paid',
             payment_method: paymentMethodLabel,
             paymongo_payment_method: paymentMethodLabel,
             status: order.status === 'Pending' ? 'Processing' : order.status,
           });
+          console.log(`[Webhook] Updated order ${order.id} (${order.order_number}) → Paid/${paymentMethodLabel}`);
         }
-        console.log(`Updated ${orders.length} orders to Paid/Processing for session ${sessionId}`);
       }
     }
 
