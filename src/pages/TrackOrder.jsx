@@ -6,6 +6,7 @@ import CPLogo from '@/components/cp/CPLogo';
 import FooterLinks from '@/components/cp/FooterLinks';
 import OrderTimeline from '@/components/cp/OrderTimeline';
 import OrderEDC from '@/components/cp/OrderEDC';
+import PreOrderTimelineVertical from '@/components/cp/PreOrderTimelineVertical';
 
 function OrderCard({ order }) {
   const [trelloStatus, setTrelloStatus] = useState(null);
@@ -66,6 +67,13 @@ function OrderCard({ order }) {
           <p className="font-mono-ui text-sm text-[#ff8c00] font-bold mt-0.5">₱{Number(order.total_amount || 0).toLocaleString()}</p>
         </div>
       </div>
+
+      {/* Pre-Order Timeline — only for pre-orders */}
+      {!isCancelled && order.is_preorder && (
+        <div className="px-5 pt-4">
+          <PreOrderTimelineVertical order={order} orderDate={order.created_date} showDates={true} />
+        </div>
+      )}
 
       {/* EDC — only for custom/pre-orders */}
       {!isCancelled && isCustomOrder && (

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { X, ShoppingBag, MessageCircle, Star, ChevronLeft, ChevronRight, Plus, Minus, AlertTriangle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { addToCart } from '@/lib/cartStore';
+import PreOrderTimelineBox from '@/components/cp/PreOrderTimelineBox';
 
 const OUTSIDE_ORDER_REASONS = [
   'Outside order (Facebook/Messenger)',
@@ -406,6 +407,11 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
                 placeholder="e.g. DELA CRUZ"
                 className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 uppercase" />
             </div>
+          )}
+
+          {/* Pre-Order Timeline — shown below size selector, above CTA */}
+          {isPreorder && (
+            <PreOrderTimelineBox orderDate={new Date()} />
           )}
 
           {/* Inquiry Note */}

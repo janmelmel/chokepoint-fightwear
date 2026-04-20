@@ -9,6 +9,7 @@ import {
 } from '@/lib/philippineAddress';
 import CPLogo from '@/components/cp/CPLogo';
 import PromoCodeInput from '@/components/cp/PromoCodeInput';
+import PreOrderTimelineBox from '@/components/cp/PreOrderTimelineBox';
 import { ArrowLeft, Loader2, MessageCircle, Mail, AlertCircle } from 'lucide-react';
 
 const INPUT = "w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60";
@@ -401,7 +402,12 @@ export default function Checkout() {
                   Size: {item.size} · Qty: {item.quantity}
                 </p>
                 {item.custom_text && <p className="font-mono-ui text-[10px] text-[#ff8c00]">Print: {item.custom_text}</p>}
-                {item.is_preorder && <span className="font-mono-ui text-[9px] text-[#555] border border-[#333] px-1.5 py-0.5">PRE-ORDER</span>}
+                {item.is_preorder && <span className="font-mono-ui text-[9px] text-[#ff8c00] border border-[#ff8c00]/40 px-1.5 py-0.5 bg-[#ff8c00]/5">PRE-ORDER</span>}
+                {item.is_preorder && !violation && (
+                  <div className="mt-2">
+                    <PreOrderTimelineBox orderDate={new Date()} />
+                  </div>
+                )}
                 {violation && (
                   <p className="font-mono-ui text-[10px] text-[#ff4444] mt-1">
                     ❌ Only {violation.available} available — go back to cart to fix

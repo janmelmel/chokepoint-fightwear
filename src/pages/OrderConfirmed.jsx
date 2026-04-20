@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import CPLogo from '@/components/cp/CPLogo';
 import { CheckCircle, MapPin, Package, Clock } from 'lucide-react';
+import PreOrderTimelineVertical from '@/components/cp/PreOrderTimelineVertical';
 
 export default function OrderConfirmed() {
   const params = new URLSearchParams(window.location.search);
@@ -101,11 +102,10 @@ export default function OrderConfirmed() {
                           {order.custom_print_text && ` · Print: ${order.custom_print_text}`}
                         </p>
                         {order.is_preorder &&
-                      <div className="flex items-center gap-1.5 mt-2">
-                            <Clock className="w-3 h-3 text-[#ff6b00]" />
-                            <p className="font-mono-ui text-[10px] text-[#ff6b00]">Est. production: 7–10 working days</p>
-                          </div>
-                      }
+                      <div className="mt-3">
+                        <PreOrderTimelineVertical order={order} orderDate={order?.created_date || new Date()} showDates={true} />
+                      </div>
+                    }
                       </>
                     }
                   </div>
@@ -139,16 +139,7 @@ export default function OrderConfirmed() {
           </div>
         }
 
-        {/* Payment instructions */}
-        <div className="w-full border-l-2 border-[#ff6b00] bg-[#111] px-5 py-4 space-y-2">
-          <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest">Payment Instructions</p>
-          <p className="font-mono-ui text-xs text-[#888] leading-relaxed">
-            Please scan the QR code sent to your email to complete your payment. If you need help, contact us at{' '}
-            <a href="mailto:sales@chokepoint-fightwear.com" className="text-[#ff6b00] hover:underline">
-              sales@chokepoint-fightwear.com
-            </a>
-          </p>
-        </div>
+
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 w-full">

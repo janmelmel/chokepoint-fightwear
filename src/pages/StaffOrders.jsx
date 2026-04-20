@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
-import { CheckSquare, Square, RefreshCw, X, MapPin, Printer, Plus, CheckCircle, AlertTriangle, Clock, Trash2 } from 'lucide-react';
+import { CheckSquare, Square, RefreshCw, X, MapPin, Printer, Plus, CheckCircle, AlertTriangle, Clock, Trash2, AlertOctagon } from 'lucide-react';
+import { getPreOrderTimeline } from '@/lib/preorderTimeline';
 import CreateOrderModal from '@/components/cp/CreateOrderModal';
 import { AnimatePresence as AM2 } from 'framer-motion';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -283,7 +284,11 @@ export default function StaffOrders() {
                   const trackEdit = editTracking[order.id];
 
                   return (
-                    <div key={order.id} className={`${selected.has(order.id) ? 'bg-[#ff8c00]/5' : ''} ${ROW_BORDER[order.status] || ''}`}>
+                    <div key={order.id} className={`${selected.has(order.id) ? 'bg-[#ff8c00]/5' : ''} ${
+                      order.is_preorder && (order.status === 'Processing' || order.status === 'Packing') && (() => { const tl = getPreOrderTimeline(order.created_date); return new Date() > tl.productionMax; })()
+                        ? 'border-l-2 border-l-red-500/60'
+                        : ROW_BORDER[order.status] || ''
+                    }`}>
                       <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#111] transition-colors">
                         <button onClick={() => toggleSelect(order.id)} className="text-[#555] hover:text-[#ff8c00] flex-shrink-0">
                           {selected.has(order.id) ? <CheckSquare className="w-4 h-4 text-[#ff8c00]" /> : <Square className="w-4 h-4" />}
@@ -306,6 +311,26 @@ export default function StaffOrders() {
                                 <Printer className="w-3 h-3" /> {order.custom_print_text}
                               </p>
                             )}
+                            {order.is_preorder && (() => {
+                              const tl = getPreOrderTimeline(order.created_date);
+                              const isOverdue = (order.status === 'Processing' || order.status === 'Packing') && new Date() > tl.productionMax;
+                              return (
+                                <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                  {isOverdue ? (
+                                    <span className="font-mono-ui text-[9px] px-1.5 py-0.5 bg-red-500/20 text-red-400 border border-red-500/30 flex items-center gap-1">
+                                      ⚠️ OVERDUE
+                                    </span>
+                                  ) : (
+                                    <span className="font-mono-ui text-[9px] px-1.5 py-0.5 bg-[#E87722]/15 text-[#E87722] border border-[#E87722]/30">
+                                      PRE-ORDER
+                                    </span>
+                                  )}
+                                  <span className="font-mono-ui text-[9px] text-[#555]">
+                                    Due by {tl.productionMax.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                  </span>
+                                </div>
+                              );
+                            })()}
                             <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                               <span className="font-mono-ui text-[9px] px-1.5 py-0.5 bg-green-500/20 text-green-400 border border-green-500/30">
                                 ✅ PAID
