@@ -136,6 +136,68 @@ export default function Services() {
         </div>
       </section>
 
+      {/* WHY CHOKEPOINT */}
+      <section className="py-16 px-4" style={{ borderTop: `1px solid ${C.border}`, background: C.surface }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] mb-2" style={{ color: C.silver }}>Why Us</p>
+            <h2 className="font-tactical text-4xl sm:text-5xl text-white">The Chokepoint Advantage</h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ background: C.border }}>
+            {ADVANTAGES.map((adv, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i * 0.08} variants={fadeUp}
+                className="p-6 flex gap-4" style={{ background: C.surface }}>
+                <adv.icon className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: C.red }} />
+                <div>
+                  <h3 className="font-tactical text-xl text-white mb-1">{adv.title}</h3>
+                  <p className="font-mono-ui text-[10px] leading-relaxed" style={{ color: C.muted }}>{adv.body}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* 20 years badge */}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+            className="mt-6 px-8 py-6 flex flex-col sm:flex-row items-center gap-6"
+            style={{ border: `1px solid ${C.red}30`, background: `${C.red}08` }}>
+            <p className="font-tactical text-7xl leading-none flex-shrink-0" style={{ color: C.red }}>20+</p>
+            <div>
+              <p className="font-mono-ui text-xs uppercase tracking-widest mb-1" style={{ color: C.silver }}>Years of Manufacturing Expertise</p>
+              <p className="font-mono-ui text-[10px] leading-relaxed" style={{ color: C.muted }}>
+                Every piece we produce is backed by a manufacturer with over two decades of experience supplying fight sports equipment across Southeast Asia. You're not ordering from a startup — you're ordering from proven craft.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="py-16 px-4" style={{ borderTop: `1px solid ${C.border}` }}>
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] mb-2" style={{ color: C.silver }}>The Process</p>
+            <h2 className="font-tactical text-4xl sm:text-5xl text-white">From Idea to Your Doorstep</h2>
+          </div>
+
+          <div style={{ borderTop: `1px solid ${C.border}` }}>
+            {PROCESS_STEPS.map((step, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i * 0.08} variants={fadeUp}
+                className="flex gap-5 items-start py-4" style={{ borderBottom: `1px solid ${C.border}` }}>
+                <div className="flex-shrink-0 w-9 h-9 flex items-center justify-center"
+                  style={{ border: `1px solid ${C.red}50`, background: `${C.red}10` }}>
+                  <span className="font-mono-ui text-[9px]" style={{ color: C.red }}>{step.step}</span>
+                </div>
+                <div className="flex-1 pt-1">
+                  <span className="font-tactical text-xl text-white">{step.label}</span>
+                  <span className="font-mono-ui text-[10px] ml-3" style={{ color: C.muted }}>{step.desc}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* SERVICES */}
       <section id="services" className="py-16 px-4">
         <div className="max-w-5xl mx-auto">
@@ -201,68 +263,6 @@ export default function Services() {
                     </div>
                   </div>
                 )}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* WHY CHOKEPOINT */}
-      <section className="py-16 px-4" style={{ borderTop: `1px solid ${C.border}`, background: C.surface }}>
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] mb-2" style={{ color: C.silver }}>Why Us</p>
-            <h2 className="font-tactical text-4xl sm:text-5xl text-white">The Chokepoint Advantage</h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ background: C.border }}>
-            {ADVANTAGES.map((adv, i) => (
-              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i * 0.08} variants={fadeUp}
-                className="p-6 flex gap-4" style={{ background: C.surface }}>
-                <adv.icon className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: C.red }} />
-                <div>
-                  <h3 className="font-tactical text-xl text-white mb-1">{adv.title}</h3>
-                  <p className="font-mono-ui text-[10px] leading-relaxed" style={{ color: C.muted }}>{adv.body}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* 20 years badge */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-            className="mt-6 px-8 py-6 flex flex-col sm:flex-row items-center gap-6"
-            style={{ border: `1px solid ${C.red}30`, background: `${C.red}08` }}>
-            <p className="font-tactical text-7xl leading-none flex-shrink-0" style={{ color: C.red }}>20+</p>
-            <div>
-              <p className="font-mono-ui text-xs uppercase tracking-widest mb-1" style={{ color: C.silver }}>Years of Manufacturing Expertise</p>
-              <p className="font-mono-ui text-[10px] leading-relaxed" style={{ color: C.muted }}>
-                Every piece we produce is backed by a manufacturer with over two decades of experience supplying fight sports equipment across Southeast Asia. You're not ordering from a startup — you're ordering from proven craft.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section className="py-16 px-4" style={{ borderTop: `1px solid ${C.border}` }}>
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] mb-2" style={{ color: C.silver }}>The Process</p>
-            <h2 className="font-tactical text-4xl sm:text-5xl text-white">From Idea to Your Doorstep</h2>
-          </div>
-
-          <div style={{ borderTop: `1px solid ${C.border}` }}>
-            {PROCESS_STEPS.map((step, i) => (
-              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i * 0.08} variants={fadeUp}
-                className="flex gap-5 items-start py-4" style={{ borderBottom: `1px solid ${C.border}` }}>
-                <div className="flex-shrink-0 w-9 h-9 flex items-center justify-center"
-                  style={{ border: `1px solid ${C.red}50`, background: `${C.red}10` }}>
-                  <span className="font-mono-ui text-[9px]" style={{ color: C.red }}>{step.step}</span>
-                </div>
-                <div className="flex-1 pt-1">
-                  <span className="font-tactical text-xl text-white">{step.label}</span>
-                  <span className="font-mono-ui text-[10px] ml-3" style={{ color: C.muted }}>{step.desc}</span>
-                </div>
               </motion.div>
             ))}
           </div>
