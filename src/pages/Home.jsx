@@ -25,19 +25,19 @@ export default function Home() {
 
   const loadData = async () => {
     const [prods, cats, bans, adjustLogs] = await Promise.all([
-      base44.entities.Product.filter({ status: 'Live', is_archived: false }),
-      base44.entities.Category.filter({ is_active: true }),
-      base44.entities.HeroBanner.filter({ is_active: true }, 'sort_order', 10),
-      base44.entities.StockAdjustLog.list('-created_date', 500),
-    ]);
+    base44.entities.Product.filter({ status: 'Live', is_archived: false }),
+    base44.entities.Category.filter({ is_active: true }),
+    base44.entities.HeroBanner.filter({ is_active: true }, 'sort_order', 10),
+    base44.entities.StockAdjustLog.list('-created_date', 500)]
+    );
 
     const catMap = Object.fromEntries(cats.map((c) => [c.id, c.name]));
     const outsideReasons = [
-      'Outside order (Facebook/Messenger)',
-      'Outside order (Instagram)',
-      'Outside order (Walk-in)',
-      'Outside order (Event/Tournament)',
-    ];
+    'Outside order (Facebook/Messenger)',
+    'Outside order (Instagram)',
+    'Outside order (Walk-in)',
+    'Outside order (Event/Tournament)'];
+
     const outsideSoldMap = {};
     for (const log of adjustLogs) {
       if (outsideReasons.includes(log.reason)) {
@@ -47,7 +47,7 @@ export default function Home() {
     setProducts(prods.map((p) => ({
       ...p,
       category_name: catMap[p.category_id] || '',
-      sold_count: (p.total_ordered || 0) + (outsideSoldMap[p.id] || 0),
+      sold_count: (p.total_ordered || 0) + (outsideSoldMap[p.id] || 0)
     })));
     setBanners(bans);
   };
@@ -88,9 +88,9 @@ export default function Home() {
       {/* CUSTOM GEAR CTA */}
       <section className="py-20 px-4 border-t border-[#1a1a1a] relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] blur-[140px] pointer-events-none opacity-20"
-          style={{ background: 'radial-gradient(circle, #2563eb, transparent)' }} />
+        style={{ background: 'radial-gradient(circle, #2563eb, transparent)' }} />
         <div className="max-w-2xl mx-auto text-center relative z-10">
-          <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-widest mb-2">Bespoke</p>
+          <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-widest mb-2 hidden">Bespoke</p>
           <h2 className="font-tactical text-4xl sm:text-6xl text-white leading-none mb-4">CUSTOM GEAR</h2>
           <div className="w-12 h-px bg-[#333] mx-auto mb-6" />
           <p className="font-mono-ui text-sm text-[#666] mb-8">
@@ -113,14 +113,14 @@ export default function Home() {
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
       <AnimatePresence>
-        {detailProduct && (
-          <ProductDetailModal
-            product={detailProduct}
-            onClose={() => setDetailProduct(null)}
-            onOrder={() => { setDetailProduct(null); setCartOpen(true); }}
-          />
-        )}
+        {detailProduct &&
+        <ProductDetailModal
+          product={detailProduct}
+          onClose={() => setDetailProduct(null)}
+          onOrder={() => {setDetailProduct(null);setCartOpen(true);}} />
+
+        }
       </AnimatePresence>
-    </div>
-  );
+    </div>);
+
 }
