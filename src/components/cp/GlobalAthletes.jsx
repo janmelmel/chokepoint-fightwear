@@ -6,25 +6,22 @@ const REGIONS = [
   {
     region: 'Southeast Asia',
     icon: Globe,
-    stats: '1000+ Athletes',
-    athletes: 'BJJ competitors, MMA fighters, submission grapplers',
-    story: 'From Bangkok gyms to Manila competitions, Chokepoint gear is the standard in Southeast Asian fight sports. Built for the climate, tested on the mats.',
+    location: 'Thailand, Philippines, Indonesia, Vietnam',
+    story: 'From Bangkok gyms to Manila competitions, grapplers and fighters across Southeast Asia choose Chokepoint for gear built for tropical climates and intense training.',
     image: 'https://images.unsplash.com/photo-1546483875-ad9014c88eba?w=600&q=80',
   },
   {
     region: 'North America',
     icon: Award,
-    stats: '500+ Teams',
-    athletes: 'College wrestling, UFC training camps, BJJ academies',
-    story: 'From university wrestling rooms to UFC Octagon preparation, American athletes trust Chokepoint for durability under pressure.',
+    location: 'USA, Canada, Mexico',
+    story: 'College wrestlers, MMA fighters, and BJJ competitors trust Chokepoint from training camps to competition day.',
     image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80',
   },
   {
     region: 'Europe',
     icon: Users,
-    stats: '300+ Clubs',
-    athletes: 'IBJJF competitors, European tournament teams',
-    story: 'European fight communities depend on Chokepoint for consistency across borders. One brand, one standard, everywhere.',
+    location: 'UK, Germany, France, Portugal, Poland',
+    story: 'European fight communities rely on Chokepoint for consistent, tournament-tested gear across the continent.',
     image: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=600&q=80',
   },
 ];
@@ -73,8 +70,7 @@ export default function GlobalAthletes() {
                   <h3 className="font-tactical text-2xl text-white">{region.region}</h3>
                 </div>
 
-                <p className="font-mono-ui text-[10px] text-[#4f8ef7] uppercase tracking-widest mb-1">{region.stats}</p>
-                <p className="font-mono-ui text-xs text-[#999] mb-4">{region.athletes}</p>
+                <p className="font-mono-ui text-[10px] text-[#4f8ef7] uppercase tracking-widest mb-3">{region.location}</p>
 
                 <p className="font-mono-ui text-xs text-[#666] leading-relaxed border-l border-[#4f8ef7]/30 pl-3">
                   {region.story}
@@ -84,12 +80,12 @@ export default function GlobalAthletes() {
           ))}
         </div>
 
-        {/* Bottom stat */}
+        {/* Bottom message */}
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           transition={{ delay: 0.4 }}
           className="mt-12 py-8 px-6 border border-[#4f8ef7]/20 bg-[#4f8ef7]/5 text-center">
-          <p className="font-tactical text-5xl text-[#6ea8ff] leading-none mb-2">2000+</p>
-          <p className="font-mono-ui text-xs text-[#666] uppercase tracking-widest">Athletes competing in Chokepoint every month</p>
+          <p className="font-tactical text-3xl text-white leading-none mb-2">Wherever fighters train,</p>
+          <p className="font-mono-ui text-xs text-[#666] uppercase tracking-widest">Chokepoint is there</p>
         </motion.div>
       </div>
     </section>
