@@ -3,24 +3,22 @@ import ReactDOM from 'react-dom/client'
 import App from '@/App.jsx'
 import '@/index.css'
 
-// Must be set BEFORE the HubSpot script loads
-window.hsConversationsSettings = {
-  loadImmediately: true,
+// Facebook Messenger Chat Plugin
+window.fbAsyncInit = function() {
+  // eslint-disable-next-line no-undef
+  FB.init({
+    xfbml: true,
+    version: 'v19.0'
+  });
 };
 
-window.hsConversationsOnReady = [
-  function() {
-    window.HubSpotConversations.widget.load();
-  }
-];
-
-const hsScript = document.createElement('script');
-hsScript.id = 'hs-script-loader';
-hsScript.type = 'text/javascript';
-hsScript.async = true;
-hsScript.defer = true;
-hsScript.src = '//js.hs-scripts.com/443128022.js';
-document.head.appendChild(hsScript);
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <App />
