@@ -9,6 +9,7 @@ import HeroSlideshow from '@/components/cp/HeroSlideshow';
 import FeaturedProducts from '@/components/cp/FeaturedProducts';
 import BrandHighlights from '@/components/cp/BrandHighlights';
 import AthleteRoster from '@/components/cp/AthleteRoster';
+import GlobalAthletes from '@/components/cp/GlobalAthletes';
 import CustomerReviews from '@/components/cp/CustomerReviews';
 import FooterLinks from '@/components/cp/FooterLinks';
 
@@ -75,7 +76,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ATHLETES */}
+      {/* GLOBAL ATHLETES */}
+      <GlobalAthletes />
+
+      {/* TEAM ATHLETES */}
       <AthleteRoster />
 
       {/* CUSTOMER REVIEWS */}
