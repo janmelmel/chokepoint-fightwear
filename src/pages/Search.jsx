@@ -103,7 +103,7 @@ export default function Search() {
             <p className="font-mono-ui text-[10px] text-[#444] mt-2">Try "rashguard", "kimono", or "no-gi"</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 items-stretch">
             {enriched.map((p, i) => (
               <motion.div key={p.id} className="flex flex-col"
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
