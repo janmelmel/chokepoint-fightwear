@@ -19,10 +19,7 @@ export default function StaffAthletes() {
   const [showCropModal, setShowCropModal] = useState(false);
   const [cropX, setCropX] = useState(0);
   const [cropY, setCropY] = useState(0);
-  const [cropWidth, setCropWidth] = useState(100);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [dragType, setDragType] = useState(null);
+  const [cropSize, setCropSize] = useState(200);
   const cropContainerRef = useRef(null);
 
   useEffect(() => {
@@ -62,9 +59,9 @@ export default function StaffAthletes() {
       is_active: athlete.is_active !== false,
       imageFit,
     });
-    setCropX(imageFit.cropX || 0);
-    setCropY(imageFit.cropY || 0);
-    setCropWidth(imageFit.cropWidth || 100);
+    setCropX(0);
+    setCropY(0);
+    setCropSize(200);
     setEditingId(athlete.id);
     setShowForm(true);
   };
@@ -78,92 +75,12 @@ export default function StaffAthletes() {
       setForm(f => ({ ...f, image: file_url, imageFit: { cropX: 0, cropY: 0, cropWidth: 100 } }));
       setCropX(0);
       setCropY(0);
-      setCropWidth(100);
+      setCropSize(200);
       setShowCropModal(true);
     } finally {
       setUploadingImg(false);
     }
   };
-
-  const saveCrop = () => {
-    setForm(f => ({
-      ...f,
-      imageFit: { cropX, cropY, cropWidth },
-    }));
-    setShowCropModal(false);
-  };
-
-  const handleCropBoxMouseDown = (e, type) => {
-    e.preventDefault();
-    setIsDragging(true);
-    setDragType(type);
-    setDragStart({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleCropMouseMove = useCallback((e) => {
-    if (!isDragging || !dragType) return;
-    e.preventDefault();
-
-    const container = cropContainerRef.current;
-    if (!container) return;
-
-    const rect = container.getBoundingClientRect();
-    const deltaX = (e.clientX - dragStart.x) / rect.width * 100;
-    const deltaY = (e.clientY - dragStart.y) / rect.height * 100;
-    const MIN_SIZE = 10;
-
-    if (dragType === 'move') {
-      let newX = cropX + deltaX;
-      let newY = cropY + deltaY;
-      newX = Math.max(0, Math.min(100 - cropWidth, newX));
-      newY = Math.max(0, Math.min(100 - cropWidth, newY));
-      setCropX(newX);
-      setCropY(newY);
-    } else {
-      let newWidth = cropWidth;
-      let newX = cropX;
-      let newY = cropY;
-
-      if (dragType === 'nw') {
-        newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
-        newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
-        newY = Math.min(cropY + (cropWidth - newWidth), 100 - newWidth);
-      } else if (dragType === 'ne') {
-        newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
-        newY = Math.min(cropY + (newWidth - cropWidth), 100 - newWidth);
-      } else if (dragType === 'sw') {
-        newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
-        newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
-      } else if (dragType === 'se') {
-        newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
-      }
-
-      newWidth = Math.min(newWidth, 100 - newX);
-      newY = Math.max(0, Math.min(newY, 100 - newWidth));
-      newX = Math.max(0, Math.min(newX, 100 - newWidth));
-
-      setCropWidth(newWidth);
-      setCropX(newX);
-      setCropY(newY);
-    }
-
-    setDragStart({ x: e.clientX, y: e.clientY });
-  }, [isDragging, dragType, dragStart, cropX, cropY, cropWidth]);
-
-  const handleCropMouseUp = useCallback(() => {
-    setIsDragging(false);
-    setDragType(null);
-  }, []);
-
-  useEffect(() => {
-    if (!isDragging) return;
-    document.addEventListener('mousemove', handleCropMouseMove);
-    document.addEventListener('mouseup', handleCropMouseUp);
-    return () => {
-      document.removeEventListener('mousemove', handleCropMouseMove);
-      document.removeEventListener('mouseup', handleCropMouseUp);
-    };
-  }, [isDragging, handleCropMouseMove, handleCropMouseUp]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -450,87 +367,191 @@ export default function StaffAthletes() {
               <button onClick={() => setShowCropModal(false)} className="text-[#555] hover:text-white"><X className="w-5 h-5" /></button>
             </div>
             <div className="p-5 space-y-4">
-              {/* Fixed crop box overlay */}
+              {/* Crop container */}
               <div
                 ref={cropContainerRef}
-                className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222] select-none"
-                style={{ userSelect: 'none', overflow: 'visible' }}
+                className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222]"
+                style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  touchAction: 'none',
+                  userSelect: 'none',
+                }}
               >
-                {/* Full background image */}
+                {/* Full image */}
                 <img
                   src={form.image}
-                  className="w-full h-full object-cover"
-                  alt="crop background"
+                  alt="crop"
                   draggable="false"
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
 
-                {/* Darkened areas outside crop */}
+                {/* Top overlay */}
                 <div
                   style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: '100%',
-                    height: '100%',
+                    right: 0,
+                    height: `${cropY}px`,
+                    background: 'rgba(0,0,0,0.6)',
                     pointerEvents: 'none',
-                    boxShadow: `inset 0 0 0 9999px rgba(0,0,0,0.6), inset ${cropX}% ${cropY}% 0 -${100 - cropWidth}% rgba(0,0,0,0)`,
                   }}
                 />
 
-                {/* Crop box with grid and handles */}
+                {/* Bottom overlay */}
                 <div
                   style={{
                     position: 'absolute',
-                    left: `${cropX}%`,
-                    top: `${cropY}%`,
-                    width: `${cropWidth}%`,
-                    height: `${cropWidth}%`,
-                    border: '2px solid rgba(255,255,255,0.5)',
-                    pointerEvents: 'auto',
-                    touchAction: 'none',
+                    top: `${cropY + cropSize}px`,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0,0,0,0.6)',
+                    pointerEvents: 'none',
                   }}
-                  onMouseDown={(e) => handleCropBoxMouseDown(e, 'move')}
-                  className="cursor-move"
+                />
+
+                {/* Left overlay */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: `${cropY}px`,
+                    left: 0,
+                    width: `${cropX}px`,
+                    height: `${cropSize}px`,
+                    background: 'rgba(0,0,0,0.6)',
+                    pointerEvents: 'none',
+                  }}
+                />
+
+                {/* Right overlay */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: `${cropY}px`,
+                    left: `${cropX + cropSize}px`,
+                    right: 0,
+                    height: `${cropSize}px`,
+                    background: 'rgba(0,0,0,0.6)',
+                    pointerEvents: 'none',
+                  }}
+                />
+
+                {/* Crop box */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: `${cropX}px`,
+                    top: `${cropY}px`,
+                    width: `${cropSize}px`,
+                    height: `${cropSize}px`,
+                    border: '2px solid white',
+                    cursor: 'move',
+                  }}
+                  onPointerDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const container = cropContainerRef.current;
+                    if (!container) return;
+                    const startX = e.clientX - cropX;
+                    const startY = e.clientY - cropY;
+                    
+                    const handleMove = (e) => {
+                      const newX = e.clientX - startX;
+                      const newY = e.clientY - startY;
+                      const maxX = container.offsetWidth - cropSize;
+                      const maxY = container.offsetHeight - cropSize;
+                      setCropX(Math.max(0, Math.min(newX, maxX)));
+                      setCropY(Math.max(0, Math.min(newY, maxY)));
+                    };
+                    const handleUp = () => {
+                      document.removeEventListener('pointermove', handleMove);
+                      document.removeEventListener('pointerup', handleUp);
+                    };
+                    document.addEventListener('pointermove', handleMove);
+                    document.addEventListener('pointerup', handleUp);
+                  }}
                 >
-                  {/* Rule of thirds grid */}
+                  {/* Grid lines */}
                   <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                     <div style={{ position: 'absolute', left: '33.333%', top: 0, width: '1px', height: '100%', background: 'rgba(255,255,255,0.3)' }} />
                     <div style={{ position: 'absolute', left: '66.666%', top: 0, width: '1px', height: '100%', background: 'rgba(255,255,255,0.3)' }} />
                     <div style={{ position: 'absolute', top: '33.333%', left: 0, width: '100%', height: '1px', background: 'rgba(255,255,255,0.3)' }} />
                     <div style={{ position: 'absolute', top: '66.666%', left: 0, width: '100%', height: '1px', background: 'rgba(255,255,255,0.3)' }} />
                   </div>
-
-                  {/* Corner handles — 20×20px hit area, 6×6px visible indicator */}
-                  {[
-                    { corner: 'nw', top: '-10px', left: '-10px', cursor: 'nwse-resize' },
-                    { corner: 'ne', top: '-10px', right: '-10px', cursor: 'nesw-resize' },
-                    { corner: 'sw', bottom: '-10px', left: '-10px', cursor: 'nesw-resize' },
-                    { corner: 'se', bottom: '-10px', right: '-10px', cursor: 'nwse-resize' },
-                  ].map(h => (
-                    <div
-                      key={h.corner}
-                      onMouseDown={(e) => handleCropBoxMouseDown(e, h.corner)}
-                      style={{
-                        position: 'absolute',
-                        width: '20px',
-                        height: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        ...h,
-                        cursor: h.cursor,
-                      }}
-                    >
-                      {/* Visible white square indicator */}
-                      <div style={{
-                        width: '6px',
-                        height: '6px',
-                        background: 'white',
-                        border: '1px solid rgba(0,0,0,0.5)',
-                      }} />
-                    </div>
-                  ))}
                 </div>
+
+                {/* Corner handles */}
+                {[
+                  { corner: 'se', style: { top: `${cropY + cropSize - 10}px`, left: `${cropX + cropSize - 10}px` }, cursor: 'se-resize' },
+                  { corner: 'sw', style: { top: `${cropY + cropSize - 10}px`, left: `${cropX - 10}px` }, cursor: 'sw-resize' },
+                  { corner: 'ne', style: { top: `${cropY - 10}px`, left: `${cropX + cropSize - 10}px` }, cursor: 'ne-resize' },
+                  { corner: 'nw', style: { top: `${cropY - 10}px`, left: `${cropX - 10}px` }, cursor: 'nw-resize' },
+                ].map(h => (
+                  <div
+                    key={h.corner}
+                    style={{
+                      position: 'absolute',
+                      width: '20px',
+                      height: '20px',
+                      ...h.style,
+                      cursor: h.cursor,
+                      zIndex: 10,
+                    }}
+                    onPointerDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const container = cropContainerRef.current;
+                      if (!container) return;
+                      const maxSize = Math.min(container.offsetWidth, container.offsetHeight);
+                      const startX = e.clientX;
+                      const startY = e.clientY;
+                      
+                      const handleMove = (e) => {
+                        const dx = e.clientX - startX;
+                        const dy = e.clientY - startY;
+                        let newSize = cropSize;
+                        let newX = cropX;
+                        let newY = cropY;
+                        
+                        if (h.corner === 'se') {
+                          newSize = Math.max(50, Math.min(cropSize + dx, maxSize - cropX, cropSize + dy, maxSize - cropY));
+                        } else if (h.corner === 'sw') {
+                          const dSize = Math.max(50, cropSize - dx);
+                          newX = cropX + (cropSize - dSize);
+                          newSize = Math.max(50, Math.min(dSize, maxSize - newX, cropSize + dy, maxSize - cropY));
+                          newX = cropX + (cropSize - newSize);
+                        } else if (h.corner === 'ne') {
+                          const dSize = Math.max(50, cropSize + dx);
+                          newSize = Math.max(50, Math.min(dSize, maxSize - cropX, cropSize - dy, maxSize - cropY));
+                          newY = cropY + (cropSize - newSize);
+                        } else if (h.corner === 'nw') {
+                          const dSize = Math.max(50, Math.min(cropSize - dx, cropSize - dy));
+                          newX = cropX + (cropSize - dSize);
+                          newY = cropY + (cropSize - dSize);
+                          newSize = dSize;
+                        }
+                        
+                        setCropSize(newSize);
+                        setCropX(Math.max(0, newX));
+                        setCropY(Math.max(0, newY));
+                      };
+                      
+                      const handleUp = () => {
+                        document.removeEventListener('pointermove', handleMove);
+                        document.removeEventListener('pointerup', handleUp);
+                      };
+                      
+                      document.addEventListener('pointermove', handleMove);
+                      document.addEventListener('pointerup', handleUp);
+                    }}
+                  >
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: '8px', height: '8px', background: 'white', border: '1px solid rgba(0,0,0,0.5)' }} />
+                    </div>
+                  </div>
+                ))}
               </div>
 
               {/* Instructions */}
@@ -541,7 +562,16 @@ export default function StaffAthletes() {
 
               <div className="flex gap-3">
                 <button onClick={() => setShowCropModal(false)} style={{ background: '#1a1a1a', border: '1px solid #555', color: '#ccc' }} className="flex-1 py-2.5 font-mono-ui text-xs uppercase tracking-widest hover:border-white hover:text-white transition-colors">Cancel</button>
-                <button onClick={saveCrop} style={{ background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff', fontWeight: 700 }} className="flex-1 py-2.5 font-mono-ui text-xs uppercase tracking-widest">Save</button>
+                <button onClick={() => {
+                  const container = cropContainerRef.current;
+                  if (container) {
+                    const newCropX = (cropX / container.offsetWidth) * 100;
+                    const newCropY = (cropY / container.offsetHeight) * 100;
+                    const newCropWidth = (cropSize / container.offsetWidth) * 100;
+                    setForm(f => ({ ...f, imageFit: { cropX: newCropX, cropY: newCropY, cropWidth: newCropWidth } }));
+                    setShowCropModal(false);
+                  }
+                }} style={{ background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff', fontWeight: 700 }} className="flex-1 py-2.5 font-mono-ui text-xs uppercase tracking-widest">Save</button>
               </div>
             </div>
           </div>
