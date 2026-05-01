@@ -59,7 +59,19 @@ export default function AthleteRoster() {
           className="grid grid-cols-1 md:grid-cols-2 gap-px bg-[#1a1a1a]">
           {/* Image */}
           <div className="relative overflow-hidden aspect-square">
-            <img src={athlete.image} alt={athlete.name} className="w-full h-full object-cover object-top opacity-80" />
+            <img
+              src={athlete.image}
+              alt={athlete.name}
+              style={{
+                width: `${100 * (athlete.imageFit?.scale || 1)}%`,
+                height: `${100 * (athlete.imageFit?.scale || 1)}%`,
+                left: `${(athlete.imageFit?.offsetX || 50) - 50 * (athlete.imageFit?.scale || 1)}%`,
+                top: `${(athlete.imageFit?.offsetY || 50) - 50 * (athlete.imageFit?.scale || 1)}%`,
+                position: 'absolute',
+                objectFit: 'cover',
+              }}
+              className="opacity-80"
+            />
             <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, transparent 50%, #0d0d0d), linear-gradient(to top, #0d0d0d 0%, transparent 40%)' }} />
             <div className="absolute bottom-4 left-4">
               <span className="font-mono-ui text-[10px] uppercase tracking-widest border border-[#4f8ef7]/40 text-[#4f8ef7] px-2 py-1 bg-[#0a0a0a]/80">
