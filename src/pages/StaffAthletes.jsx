@@ -331,18 +331,19 @@ export default function StaffAthletes() {
                     {form.image ? (
                       <div className="space-y-2">
                         <div className="relative w-full aspect-square border border-[#333] overflow-hidden">
-                          <img
-                            src={form.image}
-                            alt="preview"
-                            style={{
-                              width: `${100 * form.imageFit.scale}%`,
-                              height: `${100 * form.imageFit.scale}%`,
-                              left: `${form.imageFit.offsetX - 50 * form.imageFit.scale}%`,
-                              top: `${form.imageFit.offsetY - 50 * form.imageFit.scale}%`,
-                              position: 'absolute',
-                              objectFit: 'cover',
-                            }}
-                          />
+                           <img
+                             src={form.image}
+                             alt="preview"
+                             style={{
+                               width: '100%',
+                               height: '100%',
+                               left: `-${form.imageFit.cropX}%`,
+                               top: `-${form.imageFit.cropY}%`,
+                               position: 'absolute',
+                               objectFit: 'cover',
+                               clipPath: `inset(${form.imageFit.cropY}% ${100 - form.imageFit.cropX - form.imageFit.cropWidth}% ${100 - form.imageFit.cropY - form.imageFit.cropWidth}% ${form.imageFit.cropX}%)`,
+                             }}
+                           />
                         </div>
                         <div className="flex gap-2">
                           <button
