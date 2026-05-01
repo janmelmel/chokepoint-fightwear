@@ -130,6 +130,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
               </div>
             );
           })}
+          <Link to="/Services" className={navLink(isActive('/Services'))}>Services</Link>
           <Link to="/Custom" className={navLink(isActive('/Custom'))}>Custom</Link>
         </nav>
 
@@ -220,6 +221,10 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
               </div>
             );
           })}
+          <Link to="/Services" onClick={() => setMenuOpen(false)}
+            className={`block font-mono-ui text-[11px] tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/Services') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
+            Services
+          </Link>
           <Link to="/Custom" onClick={() => setMenuOpen(false)}
             className={`block font-mono-ui text-[11px] tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/Custom') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
             Custom

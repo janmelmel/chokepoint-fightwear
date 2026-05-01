@@ -29,6 +29,7 @@ import StaffCustomers from './pages/StaffCustomers';
 import Search from './pages/Search';
 import StaffStockLog from './pages/StaffStockLog';
 import StaffMetrics from './pages/StaffMetrics';
+import Services from './pages/Services';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -70,6 +71,7 @@ const AuthenticatedApp = () => {
       <Route path="/Search" element={<Search />} />
       <Route path="/StaffStockLog" element={<StaffStockLog />} />
       <Route path="/StaffMetrics" element={<StaffMetrics />} />
+      <Route path="/Services" element={<Services />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
