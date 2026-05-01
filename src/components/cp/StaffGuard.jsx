@@ -20,12 +20,12 @@ export default function StaffGuard({ children, adminOnly = false }) {
         return;
       }
 
-      // Both admin and user (staff) roles can access the staff portal
-      // Disabled accounts and regular customers are redirected to Home
-      if (u.role !== 'admin' && u.role !== 'user') {
-        window.location.href = '/Home';
-        return;
-      }
+      // Only admin and staff roles can access the staff portal
+       // Regular customers and unregistered users are denied access
+       if (u.role !== 'admin' && u.role !== 'staff') {
+         setStatus('denied');
+         return;
+       }
 
       setUser(u);
       setStatus('allowed');

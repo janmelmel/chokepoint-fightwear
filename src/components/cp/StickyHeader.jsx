@@ -14,10 +14,6 @@ function ProfileButton({ authUser, profileOpen, setProfileOpen }) {
           title="Login" className="text-[#555] hover:text-white transition-colors">
           <UserCircle className="w-5 h-5" />
         </button>
-      ) : authUser?.role === 'admin' ? (
-        <Link to="/Staff" title="Staff Portal" className="text-[#4f8ef7] hover:text-white transition-colors">
-          <UserCircle className="w-5 h-5" />
-        </Link>
       ) : authUser ? (
         <div className="relative">
           <button onClick={() => setProfileOpen(o => !o)} title={authUser.email}
@@ -295,7 +291,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
             className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/FAQ') ? 'text-[#4f8ef7]' : 'text-[#888] hover:text-white'}`}>
             FAQ
           </Link>
-          {authUser && authUser.role !== 'admin' && (
+          {authUser && (
             <Link to="/MyOrders" onClick={() => setMenuOpen(false)}
               className="block font-mono-ui text-xs text-[#4f8ef7] hover:text-white tracking-widest uppercase py-2.5 border-b border-[#1a1a1a]">
               My Orders

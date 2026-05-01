@@ -60,9 +60,6 @@ export default function FooterLinks() {
           <p className="font-mono-ui text-xs text-[#444] uppercase tracking-widest">
             © 2026 Chokepoint Fightwear. All Rights Reserved.
           </p>
-          <Link to="/Staff" className="font-mono-ui text-xs text-[#333] hover:text-[#555] uppercase tracking-widest transition-colors">
-            Staff Portal
-          </Link>
         </div>
       </div>
     </footer>);
