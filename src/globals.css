@@ -7,10 +7,11 @@
 
 :root {
   --bg: #0a0a0a;
-  --surface: #1c1c1c;
-  --border: #333333;
-  --red: #ff0000;
-  --orange: #ff6b00;
+  --surface: #141414;
+  --border: #2a2a2a;
+  --accent: #4f8ef7;
+  --accent-bright: #6ea8ff;
+  --accent-dark: #2563eb;
   --text: #f0f0f0;
   --muted: #888888;
 }
@@ -36,24 +37,13 @@ body {
   font-family: 'JetBrains Mono', monospace;
 }
 
-.btn-glow-red {
-  background: transparent;
-  border: 1px solid #ff0000;
-  color: #ff0000;
-  transition: all 0.2s;
-}
-.btn-glow-red:hover {
-  background: #ff0000;
-  color: #fff;
-  box-shadow: 0 0 16px rgba(255,0,0,0.5), 0 0 32px rgba(255,0,0,0.2);
-}
-
+/* Primary accent button */
 .btn-glow-orange {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ff6b00 !important;
-  border: 1px solid #ff6b00 !important;
+  background: #4f8ef7 !important;
+  border: 1px solid #4f8ef7 !important;
   color: #ffffff !important;
   font-weight: 700 !important;
   cursor: pointer;
@@ -63,9 +53,9 @@ body {
   min-height: 36px;
 }
 .btn-glow-orange:hover:not(:disabled) {
-  background: #ff8c00 !important;
-  border-color: #ff8c00 !important;
-  box-shadow: 0 0 18px rgba(255,107,0,0.55), 0 0 36px rgba(255,107,0,0.25);
+  background: #6ea8ff !important;
+  border-color: #6ea8ff !important;
+  box-shadow: 0 0 18px rgba(79,142,247,0.45), 0 0 36px rgba(79,142,247,0.18);
   color: #ffffff !important;
 }
 .btn-glow-orange:disabled {
@@ -73,13 +63,14 @@ body {
   cursor: not-allowed;
 }
 
+/* Secondary / ghost button */
 .btn-glow-white {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #2a2a2a !important;
-  border: 1px solid #555 !important;
-  color: #e0e0e0 !important;
+  background: transparent !important;
+  border: 1px solid #3a3a3a !important;
+  color: #c0c0c0 !important;
   font-weight: 600 !important;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
@@ -90,34 +81,38 @@ body {
 .btn-glow-white:hover:not(:disabled) {
   border-color: #fff !important;
   color: #fff !important;
-  background: #3a3a3a !important;
+  background: rgba(255,255,255,0.04) !important;
 }
 .btn-glow-white:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
+/* Danger button (kept for destructive actions) */
 .btn-glow-red {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: transparent !important;
-  border: 1px solid #ff0000 !important;
-  color: #ff0000 !important;
+  border: 1px solid #555 !important;
+  color: #999 !important;
   transition: all 0.2s;
 }
 .btn-glow-red:hover {
-  background: #ff0000 !important;
+  background: rgba(255,255,255,0.05) !important;
+  border-color: #888 !important;
   color: #fff !important;
-  box-shadow: 0 0 16px rgba(255,0,0,0.5), 0 0 32px rgba(255,0,0,0.2);
 }
 
 .card-tactical {
-  background: #1c1c1c;
-  border: 1px solid #333333;
+  background: #141414;
+  border: 1px solid #2a2a2a;
   border-radius: 0;
 }
 
 .scrollbar-tactical::-webkit-scrollbar { width: 4px; }
 .scrollbar-tactical::-webkit-scrollbar-track { background: #111; }
-.scrollbar-tactical::-webkit-scrollbar-thumb { background: #333; }
+.scrollbar-tactical::-webkit-scrollbar-thumb { background: #2a2a2a; }
 
 /* Ensure HubSpot chat widget is always visible */
 #hubspot-messages-iframe-container,

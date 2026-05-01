@@ -16,7 +16,7 @@ export default function Custom() {
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 pt-28 pb-20">
         <div className="text-center mb-12">
-          <p className="font-mono-ui text-xs text-[#ff6b00] uppercase tracking-widest mb-2">Bespoke</p>
+          <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-widest mb-2">Bespoke</p>
           <h1 className="font-tactical text-5xl sm:text-6xl text-white">Custom Gear</h1>
           <div className="w-12 h-px bg-[#333] mx-auto mt-4 mb-4" />
           <p className="font-mono-ui text-sm text-[#666]">Team kits, custom patches, academy sets. Tell us what you need.</p>

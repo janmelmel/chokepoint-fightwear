@@ -41,7 +41,7 @@ export default function MessengerButton() {
       <button
         onClick={() => setOpen(o => !o)}
         className="w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-transform hover:scale-110"
-        style={{ background: open ? '#333' : 'linear-gradient(135deg, #0084ff, #0099ff)' }}
+        style={{ background: open ? '#1a1a1a' : 'linear-gradient(135deg, #2563eb, #4f8ef7)' }}
         aria-label="Contact us"
       >
         {open ? (

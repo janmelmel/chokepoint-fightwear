@@ -57,7 +57,7 @@ function Stars({ count = 5 }) {
   return (
     <div className="flex gap-0.5">
       {[...Array(5)].map((_, i) => (
-        <Star key={i} className={`w-3.5 h-3.5 ${i < count ? 'text-[#ff8c00] fill-[#ff8c00]' : 'text-[#333]'}`} />
+        <Star key={i} className={`w-3.5 h-3.5 ${i < count ? 'text-[#4f8ef7] fill-[#4f8ef7]' : 'text-[#2a2a2a]'}`} />
       ))}
     </div>
   );
@@ -75,7 +75,7 @@ export default function CustomerReviews() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
           <div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-              className="font-mono-ui text-xs uppercase tracking-[0.4em] text-[#ff6b00] mb-2">
+              className="font-mono-ui text-xs uppercase tracking-[0.4em] text-[#4f8ef7] mb-2">
               What Fighters Say
             </motion.p>
             <motion.h2 initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -86,7 +86,7 @@ export default function CustomerReviews() {
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="font-tactical text-3xl text-[#ff8c00]">5.0</p>
+              <p className="font-tactical text-3xl text-[#6ea8ff]">5.0</p>
               <Stars />
               <p className="font-mono-ui text-[10px] text-[#555] mt-0.5">{REVIEWS.length} verified reviews</p>
             </div>
@@ -102,8 +102,8 @@ export default function CustomerReviews() {
                 <Stars count={r.rating} />
                 <p className="font-mono-ui text-xs text-[#888] leading-relaxed flex-1">"{r.text}"</p>
                 <div className="border-t border-[#1a1a1a] pt-4 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#ff6b00]/10 border border-[#ff6b00]/20 flex items-center justify-center flex-shrink-0">
-                    <span className="font-mono-ui text-[10px] text-[#ff6b00] font-bold">{r.avatar}</span>
+                  <div className="w-8 h-8 rounded-full bg-[#4f8ef7]/10 border border-[#4f8ef7]/20 flex items-center justify-center flex-shrink-0">
+                    <span className="font-mono-ui text-[10px] text-[#4f8ef7] font-bold">{r.avatar}</span>
                   </div>
                   <div>
                     <p className="font-mono-ui text-xs text-white font-semibold">{r.name}</p>
@@ -119,17 +119,17 @@ export default function CustomerReviews() {
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-4 mt-8">
             <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
-              className="p-2 border border-[#222] text-[#555] hover:border-[#ff6b00] hover:text-[#ff6b00] transition-colors disabled:opacity-30">
+              className="p-2 border border-[#222] text-[#555] hover:border-[#4f8ef7] hover:text-[#4f8ef7] transition-colors disabled:opacity-30">
               <ChevronLeft className="w-4 h-4" />
             </button>
             <div className="flex gap-2">
               {[...Array(totalPages)].map((_, i) => (
                 <button key={i} onClick={() => setPage(i)}
-                  className={`h-1 transition-all ${i === page ? 'w-8 bg-[#ff8c00]' : 'w-2 bg-[#333]'}`} />
+                  className={`h-1 transition-all ${i === page ? 'w-8 bg-[#4f8ef7]' : 'w-2 bg-[#2a2a2a]'}`} />
               ))}
             </div>
             <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1}
-              className="p-2 border border-[#222] text-[#555] hover:border-[#ff6b00] hover:text-[#ff6b00] transition-colors disabled:opacity-30">
+              className="p-2 border border-[#222] text-[#555] hover:border-[#4f8ef7] hover:text-[#4f8ef7] transition-colors disabled:opacity-30">
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>

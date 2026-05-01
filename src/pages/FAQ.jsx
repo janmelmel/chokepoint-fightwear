@@ -128,7 +128,7 @@ export default function FAQ() {
 
       <main className="max-w-3xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
-          <p className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-widest mb-2">Support</p>
+          <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-widest mb-2">Support</p>
           <h1 className="font-tactical text-4xl sm:text-5xl text-white">FAQs</h1>
           <p className="font-inter text-sm text-[#666] mt-3">Common questions about orders, products, and more.</p>
         </div>
@@ -155,7 +155,7 @@ export default function FAQ() {
           <p className="font-inter text-sm text-[#666] mb-4">Reach out to us on social media or email.</p>
           <div className="flex items-center justify-center gap-3">
             <a href="https://www.facebook.com/profile.php?id=61571430141920" target="_blank" rel="noreferrer"
-              style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
+              style={{ background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff', fontWeight: 700 }}
               className="px-5 py-2.5 font-mono-ui text-xs uppercase tracking-widest">
               Facebook
             </a>

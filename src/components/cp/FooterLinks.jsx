@@ -13,7 +13,7 @@ export default function FooterLinks() {
           {/* Brand */}
           <div className="md:col-span-1">
             <CPLogo size={32} variant="white" />
-            <p className="font-tactical text-sm text-[#ff8c00] italic mt-2">"No Escape From Chokepoint"</p>
+            <p className="font-tactical text-sm text-[#6ea8ff] italic mt-2">"No Escape From Chokepoint"</p>
             <div className="flex gap-3 mt-4">
               <a href={FB_URL} target="_blank" rel="noreferrer" className="text-[#555] hover:text-white transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

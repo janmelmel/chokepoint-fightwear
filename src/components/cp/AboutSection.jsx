@@ -31,7 +31,7 @@ export default function AboutSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <p className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-widest mb-2">Our Story</p>
+            <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-widest mb-2">Our Story</p>
             <h2 className="font-tactical text-4xl sm:text-5xl text-white mb-6">About Chokepoint</h2>
             <div className="space-y-4 text-[#888] font-inter text-sm leading-relaxed">
               <p>
@@ -49,7 +49,7 @@ export default function AboutSection() {
               </p>
             </div>
             <div className="mt-6">
-              <p className="font-tactical text-xl text-[#ff8c00] italic">"No Escape From Chokepoint"</p>
+              <p className="font-tactical text-xl text-[#6ea8ff] italic">"No Escape From Chokepoint"</p>
             </div>
           </motion.div>
 
@@ -69,8 +69,8 @@ export default function AboutSection() {
                 transition={{ delay: i * 0.1 }}
                 className="card-tactical p-5 flex gap-4"
               >
-                <div className="w-10 h-10 flex-shrink-0 border border-[#ff8c00]/30 flex items-center justify-center bg-[#ff8c00]/5">
-                  <v.icon className="w-5 h-5 text-[#ff8c00]" />
+                <div className="w-10 h-10 flex-shrink-0 border border-[#4f8ef7]/30 flex items-center justify-center bg-[#4f8ef7]/5">
+                  <v.icon className="w-5 h-5 text-[#4f8ef7]" />
                 </div>
                 <div>
                   <h3 className="font-tactical text-lg text-white">{v.title}</h3>

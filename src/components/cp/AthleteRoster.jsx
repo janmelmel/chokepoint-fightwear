@@ -49,7 +49,7 @@ export default function AthleteRoster() {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            className="font-mono-ui text-xs uppercase tracking-[0.4em] text-[#ff6b00] mb-2">
+            className="font-mono-ui text-xs uppercase tracking-[0.4em] text-[#4f8ef7] mb-2">
             Team Chokepoint
           </motion.p>
           <motion.h2 initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -65,7 +65,7 @@ export default function AthleteRoster() {
             <button key={i} onClick={() => setActive(i)}
               className={`flex-shrink-0 px-5 py-2.5 font-mono-ui text-xs uppercase tracking-widest transition-all border ${
                 active === i
-                  ? 'border-[#ff6b00] text-[#ff6b00] bg-[#ff6b00]/5'
+                  ? 'border-[#4f8ef7] text-[#4f8ef7] bg-[#4f8ef7]/5'
                   : 'border-[#222] text-[#555] hover:border-[#444] hover:text-[#888]'
               }`}>
               {a.name.split(' ')[0]}
@@ -81,7 +81,7 @@ export default function AthleteRoster() {
             <img src={athlete.image} alt={athlete.name} className="w-full h-full object-cover object-top opacity-80" />
             <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, transparent 50%, #0d0d0d), linear-gradient(to top, #0d0d0d 0%, transparent 40%)' }} />
             <div className="absolute bottom-4 left-4">
-              <span className="font-mono-ui text-[10px] uppercase tracking-widest border border-[#ff6b00]/40 text-[#ff6b00] px-2 py-1 bg-[#0a0a0a]/80">
+              <span className="font-mono-ui text-[10px] uppercase tracking-widest border border-[#4f8ef7]/40 text-[#4f8ef7] px-2 py-1 bg-[#0a0a0a]/80">
                 {athlete.belt}
               </span>
             </div>
@@ -96,13 +96,13 @@ export default function AthleteRoster() {
               <ul className="space-y-2 mb-6">
                 {athlete.achievements.map((ach, j) => (
                   <li key={j} className="flex items-start gap-2 font-mono-ui text-xs text-[#888]">
-                    <span className="w-1 h-1 rounded-full bg-[#ff6b00] flex-shrink-0 mt-1.5" />
+                    <span className="w-1 h-1 rounded-full bg-[#4f8ef7] flex-shrink-0 mt-1.5" />
                     {ach}
                   </li>
                 ))}
               </ul>
 
-              <blockquote className="border-l-2 border-[#ff6b00]/40 pl-4">
+              <blockquote className="border-l-2 border-[#4f8ef7]/40 pl-4">
                 <p className="font-mono-ui text-xs text-[#666] italic leading-relaxed">"{athlete.quote}"</p>
               </blockquote>
             </div>
@@ -120,7 +120,7 @@ export default function AthleteRoster() {
         <div className="flex gap-2 justify-center mt-5">
           {ATHLETES.map((_, i) => (
             <button key={i} onClick={() => setActive(i)}
-              className={`h-1 transition-all ${i === active ? 'w-8 bg-[#ff8c00]' : 'w-2 bg-[#333]'}`} />
+              className={`h-1 transition-all ${i === active ? 'w-8 bg-[#4f8ef7]' : 'w-2 bg-[#2a2a2a]'}`} />
           ))}
         </div>
       </div>

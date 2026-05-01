@@ -84,9 +84,9 @@ export default function Home() {
       {/* CUSTOM GEAR CTA */}
       <section className="py-20 px-4 border-t border-[#1a1a1a] relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] blur-[140px] pointer-events-none opacity-20"
-          style={{ background: 'radial-gradient(circle, #ff6b00, transparent)' }} />
+          style={{ background: 'radial-gradient(circle, #2563eb, transparent)' }} />
         <div className="max-w-2xl mx-auto text-center relative z-10">
-          <p className="font-mono-ui text-xs text-[#ff6b00] uppercase tracking-widest mb-2">Bespoke</p>
+          <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-widest mb-2">Bespoke</p>
           <h2 className="font-tactical text-4xl sm:text-6xl text-white leading-none mb-4">CUSTOM GEAR</h2>
           <div className="w-12 h-px bg-[#333] mx-auto mb-6" />
           <p className="font-mono-ui text-sm text-[#666] mb-8">

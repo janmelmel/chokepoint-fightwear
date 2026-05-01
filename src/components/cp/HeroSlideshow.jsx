@@ -61,9 +61,9 @@ export default function HeroSlideshow({ banners }) {
           style={{ opacity: contentOpacity }}
         >
           <h1 style={{ fontFamily: "'Bitsumishi', sans-serif" }} className="text-6xl sm:text-8xl md:text-9xl text-white mt-6 leading-none uppercase">CHOKEPOINT</h1>
-          <p className="font-mono-ui text-[11px] tracking-[0.5em] text-[#ff6b00] uppercase mt-3">No Escape From Chokepoint</p>
-          <div className="w-24 h-px bg-[#ff6b00] mx-auto mt-6 mb-8" />
-          <a href="#gear" className="font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 inline-block bg-[#ff6b00] text-white font-bold hover:bg-[#ff8c00] transition-all">
+          <p className="font-mono-ui text-[11px] tracking-[0.5em] text-[#4f8ef7] uppercase mt-3">No Escape From Chokepoint</p>
+          <div className="w-24 h-px bg-[#4f8ef7] mx-auto mt-6 mb-8" />
+          <a href="#gear" className="font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 inline-block bg-[#4f8ef7] text-white font-bold hover:bg-[#6ea8ff] transition-all">
             Shop the Drop
           </a>
         </motion.div>
@@ -125,7 +125,7 @@ export default function HeroSlideshow({ banners }) {
             transition={{ duration: 0.5 }}
           >
             {banner.subtitle && (
-              <p className="font-mono-ui text-[11px] tracking-[0.4em] text-[#ff6b00] uppercase mb-3">{banner.subtitle}</p>
+              <p className="font-mono-ui text-[11px] tracking-[0.4em] text-[#4f8ef7] uppercase mb-3">{banner.subtitle}</p>
             )}
             {banner.title && (
               <h2
@@ -137,7 +137,7 @@ export default function HeroSlideshow({ banners }) {
             )}
             <a
               href={banner.cta_href || '#gear'}
-              className="inline-block font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 bg-[#ff6b00] text-white font-bold hover:bg-[#ff8c00] transition-all"
+              className="inline-block font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 bg-[#4f8ef7] text-white font-bold hover:bg-[#6ea8ff] transition-all"
             >
               {banner.cta_label || 'Shop Now'}
             </a>
@@ -150,13 +150,13 @@ export default function HeroSlideshow({ banners }) {
         <>
           <button
             onClick={() => setIdx(i => (i - 1 + banners.length) % banners.length)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-black/40 border border-white/10 text-white hover:border-[#ff8c00] hover:text-[#ff8c00] transition-all"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-black/40 border border-white/10 text-white hover:border-[#4f8ef7] hover:text-[#4f8ef7] transition-all"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={() => setIdx(i => (i + 1) % banners.length)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-black/40 border border-white/10 text-white hover:border-[#ff8c00] hover:text-[#ff8c00] transition-all"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-black/40 border border-white/10 text-white hover:border-[#4f8ef7] hover:text-[#4f8ef7] transition-all"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -165,7 +165,7 @@ export default function HeroSlideshow({ banners }) {
               <button
                 key={i}
                 onClick={() => setIdx(i)}
-                className={`h-1 transition-all ${i === idx ? 'w-8 bg-[#ff8c00]' : 'w-2 bg-white/30'}`}
+                className={`h-1 transition-all ${i === idx ? 'w-8 bg-[#4f8ef7]' : 'w-2 bg-white/20'}`}
               />
             ))}
           </div>

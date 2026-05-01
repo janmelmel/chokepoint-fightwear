@@ -106,7 +106,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
 
   const navLink = (active) =>
     `flex items-center gap-1 px-3 py-2 font-mono-ui text-xs tracking-widest uppercase transition-colors border-b-2 ${
-      active ? 'text-[#E87722] border-[#E87722]' : 'text-[#888] hover:text-white border-transparent'
+      active ? 'text-[#4f8ef7] border-[#4f8ef7]' : 'text-[#888] hover:text-white border-transparent'
     }`;
 
   const handleSearchResult = (product) => {
@@ -140,7 +140,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
                   style={{ gridTemplateColumns: `repeat(${PRODUCT_COLS.length}, 1fr)` }}>
                   {PRODUCT_COLS.map(col => (
                     <div key={col.label} className="px-5 py-3 border-r border-[#1a1a1a] last:border-r-0">
-                      <p className="font-mono-ui text-xs text-[#ff6b00] uppercase tracking-[0.2em]">{col.label}</p>
+                      <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-[0.2em]">{col.label}</p>
                     </div>
                   ))}
                 </div>
@@ -155,7 +155,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
                           <div key={cat.id}>
                             <Link to={`/category/${cat.slug || cat.id}`}
                               onClick={() => setOpenDropdown(null)}
-                              className="block px-5 py-2 font-mono-ui text-[11px] text-white hover:text-[#ff8c00] hover:bg-[#111] uppercase tracking-widest transition-colors">
+                              className="block px-5 py-2 font-mono-ui text-[11px] text-white hover:text-[#4f8ef7] hover:bg-[#111] uppercase tracking-widest transition-colors">
                               {cat.name}
                             </Link>
                             {children.map(child => (
@@ -193,7 +193,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
           <button onClick={onCartClick} className="relative text-[#888] hover:text-white transition-colors">
             <ShoppingBag className="w-5 h-5" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#ff6b00] text-white text-xs font-bold flex items-center justify-center font-mono-ui">
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#4f8ef7] text-white text-xs font-bold flex items-center justify-center font-mono-ui">
                 {cartCount}
               </span>
             )}
@@ -210,7 +210,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
         <button onClick={onCartClick} className="relative text-[#888] hover:text-white">
           <ShoppingBag className="w-5 h-5" />
           {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#ff6b00] text-white text-xs font-bold flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#4f8ef7] text-white text-xs font-bold flex items-center justify-center">
               {cartCount}
             </span>
           )}
@@ -226,7 +226,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
         <button onClick={onCartClick} className="relative text-[#888] hover:text-white">
           <ShoppingBag className="w-5 h-5" />
           {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#ff6b00] text-white text-xs font-bold flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#4f8ef7] text-white text-xs font-bold flex items-center justify-center">
               {cartCount}
             </span>
           )}
@@ -247,20 +247,20 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
             <NavSearchBar alwaysOpen onResultClick={(p) => { setMenuOpen(false); handleSearchResult(p); }} />
           </div>
           <Link to="/Home" onClick={() => setMenuOpen(false)}
-            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isHomePage ? 'text-[#E87722]' : 'text-white'}`}>
+            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isHomePage ? 'text-[#4f8ef7]' : 'text-white'}`}>
             Home
           </Link>
 
           {/* Products — grouped by bucket */}
           {PRODUCT_COLS.map(col => (
             <div key={col.label}>
-              <p className="font-mono-ui text-xs text-[#ff6b00] uppercase tracking-[0.2em] px-1 pt-3 pb-1">{col.label}</p>
+              <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-[0.2em] px-1 pt-3 pb-1">{col.label}</p>
               {col.cats.map(cat => {
                 const children = getChildren(cat.id);
                 return (
                   <div key={cat.id}>
                     <Link to={`/category/${cat.slug || cat.id}`} onClick={() => setMenuOpen(false)}
-                      className={`block font-mono-ui text-xs tracking-widest uppercase py-2 border-b border-[#1a1a1a] ${isCategoryActive(cat) ? 'text-[#E87722]' : 'text-white'}`}>
+                      className={`block font-mono-ui text-xs tracking-widest uppercase py-2 border-b border-[#1a1a1a] ${isCategoryActive(cat) ? 'text-[#4f8ef7]' : 'text-white'}`}>
                       {cat.name}
                     </Link>
                     {children.map(child => (
@@ -276,28 +276,28 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
           ))}
 
           <Link to="/Services" onClick={() => setMenuOpen(false)}
-            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] mt-2 ${isActive('/Services') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
+            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] mt-2 ${isActive('/Services') ? 'text-[#4f8ef7]' : 'text-[#888] hover:text-white'}`}>
             Services
           </Link>
           <Link to="/Custom" onClick={() => setMenuOpen(false)}
-            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/Custom') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
+            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/Custom') ? 'text-[#4f8ef7]' : 'text-[#888] hover:text-white'}`}>
             Custom
           </Link>
           <Link to="/About" onClick={() => setMenuOpen(false)}
-            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/About') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
+            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/About') ? 'text-[#4f8ef7]' : 'text-[#888] hover:text-white'}`}>
             About
           </Link>
           <Link to="/TrackOrder" onClick={() => setMenuOpen(false)}
-            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/TrackOrder') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
+            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/TrackOrder') ? 'text-[#4f8ef7]' : 'text-[#888] hover:text-white'}`}>
             Track Order
           </Link>
           <Link to="/FAQ" onClick={() => setMenuOpen(false)}
-            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/FAQ') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
+            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/FAQ') ? 'text-[#4f8ef7]' : 'text-[#888] hover:text-white'}`}>
             FAQ
           </Link>
           {authUser && authUser.role !== 'admin' && (
             <Link to="/MyOrders" onClick={() => setMenuOpen(false)}
-              className="block font-mono-ui text-xs text-[#ff8c00] hover:text-white tracking-widest uppercase py-2.5 border-b border-[#1a1a1a]">
+              className="block font-mono-ui text-xs text-[#4f8ef7] hover:text-white tracking-widest uppercase py-2.5 border-b border-[#1a1a1a]">
               My Orders
             </Link>
           )}

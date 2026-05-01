@@ -24,10 +24,10 @@ export default function About() {
       {/* HERO */}
       <section className="pt-32 pb-16 px-4 text-center relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] blur-[120px] pointer-events-none opacity-30"
-          style={{ background: 'radial-gradient(circle, #ff6b00, transparent)' }} />
+          style={{ background: 'radial-gradient(circle, #2563eb, transparent)' }} />
         <div className="max-w-3xl mx-auto relative z-10">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}
-            className="font-mono-ui text-xs uppercase tracking-[0.4em] text-[#ff6b00] mb-3">
+            className="font-mono-ui text-xs uppercase tracking-[0.4em] text-[#4f8ef7] mb-3">
             Our Story
           </motion.p>
           <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.1 }}
@@ -73,7 +73,7 @@ export default function About() {
               <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=700&q=80" alt="Custom fight gear" className="w-full h-full object-cover opacity-75" />
               <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, transparent 60%, #0a0a0a)' }} />
               <div className="absolute bottom-4 left-4">
-                <span className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest border border-[#ff6b00]/30 px-2 py-1 bg-[#0a0a0a]/70">Cebu, PH</span>
+                <span className="font-mono-ui text-[10px] text-[#4f8ef7] uppercase tracking-widest border border-[#4f8ef7]/30 px-2 py-1 bg-[#0a0a0a]/70">Cebu, PH</span>
               </div>
             </motion.div>
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp}
@@ -82,7 +82,7 @@ export default function About() {
                 We are a brand made by athletes who understand what real training demands. Our founders compete and roll regularly — which means we design and test every piece of gear from the inside out. We know the difference between a seam that holds through a scramble and one that doesn't.
               </p>
               <p className="font-mono-ui text-sm text-[#999] leading-relaxed mt-4">
-                Our mission is simple: <span className="text-[#ff8c00]">give fighters the confidence to perform at their best by giving them gear that won't let them down.</span> Whether you're a beginner finding your footing or a seasoned competitor preparing for your next tournament, Chokepoint gear is made to move with you.
+                Our mission is simple: <span className="text-[#6ea8ff]">give fighters the confidence to perform at their best by giving them gear that won't let them down.</span> Whether you're a beginner finding your footing or a seasoned competitor preparing for your next tournament, Chokepoint gear is made to move with you.
               </p>
               <p className="font-mono-ui text-sm text-[#999] leading-relaxed mt-4">
                 We're based in Lapu-Lapu City, Cebu — the heart of Philippine combat sports culture. Our community drives everything we do.
@@ -99,7 +99,7 @@ export default function About() {
             {PILLARS.map((p, i) => (
               <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} variants={fadeUp}
                 className="bg-[#0a0a0a] p-6 flex flex-col gap-3">
-                <p.icon className="w-5 h-5 text-[#ff6b00]" />
+                <p.icon className="w-5 h-5 text-[#4f8ef7]" />
                 <h3 className="font-tactical text-xl text-white">{p.title}</h3>
                 <p className="font-mono-ui text-xs text-[#666] leading-relaxed">{p.body}</p>
               </motion.div>
@@ -119,14 +119,14 @@ export default function About() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
-            className="flex items-start gap-5 border border-[#1a1a1a] bg-[#111] p-6 hover:border-[#ff6b00]/40 transition-colors group"
+            className="flex items-start gap-5 border border-[#1a1a1a] bg-[#111] p-6 hover:border-[#4f8ef7]/40 transition-colors group"
           >
-            <MapPin className="w-6 h-6 text-[#ff6b00] flex-shrink-0 mt-1" />
+            <MapPin className="w-6 h-6 text-[#4f8ef7] flex-shrink-0 mt-1" />
             <div>
               <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-1">Our Location</p>
               <p className="font-tactical text-2xl text-white">Lapu-Lapu City, Cebu</p>
               <p className="font-mono-ui text-xs text-[#666] mt-1">Philippines</p>
-              <p className="font-mono-ui text-xs text-[#ff6b00] mt-2 group-hover:underline">View on Google Maps →</p>
+              <p className="font-mono-ui text-xs text-[#4f8ef7] mt-2 group-hover:underline">View on Google Maps →</p>
             </div>
           </motion.a>
         </div>

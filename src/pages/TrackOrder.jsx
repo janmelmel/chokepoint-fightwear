@@ -64,7 +64,7 @@ function OrderCard({ order }) {
             {order.is_preorder ? ' · Pre-order' : ''}
             {order.custom_print_text ? ` · Custom: ${order.custom_print_text}` : ''}
           </p>
-          <p className="font-mono-ui text-sm text-[#ff8c00] font-bold mt-0.5">₱{Number(order.total_amount || 0).toLocaleString()}</p>
+          <p className="font-mono-ui text-sm text-[#6ea8ff] font-bold mt-0.5">₱{Number(order.total_amount || 0).toLocaleString()}</p>
         </div>
       </div>
 
@@ -143,7 +143,7 @@ export default function TrackOrder() {
 
       <main className="max-w-2xl mx-auto px-4 py-12">
         <div className="text-center mb-10">
-          <p className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-widest mb-2">Live Production Status</p>
+          <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-widest mb-2">Live Production Status</p>
           <h1 className="font-tactical text-4xl sm:text-5xl text-white">Track Your Order</h1>
           <p className="font-mono-ui text-sm text-[#666] mt-3">Enter your order number or email to see your production trail.</p>
         </div>
@@ -162,7 +162,7 @@ export default function TrackOrder() {
             <button
               type="submit"
               disabled={loading}
-              style={{ background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700 }}
+              style={{ background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff', fontWeight: 700 }}
               className="px-6 py-3 font-mono-ui text-xs uppercase tracking-widest disabled:opacity-50 flex items-center gap-2">
               {loading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Searching...</> : 'Track'}
             </button>
