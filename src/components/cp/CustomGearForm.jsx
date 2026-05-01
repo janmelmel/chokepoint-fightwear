@@ -14,7 +14,7 @@ const CATEGORIES = [
 
 const GI_STANDARD_COLORS = ['White', 'Blue', 'Black'];
 
-const FIELD_CLS = "w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#ff8c00]/60 placeholder-[#444]";
+const FIELD_CLS = "w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm px-4 py-3 focus:outline-none focus:border-[#4f8ef7]/60 placeholder-[#444]";
 const LABEL_CLS = "font-mono-ui text-[10px] text-[#666] uppercase tracking-widest block mb-1.5";
 
 export default function CustomGearForm({ onSuccess }) {
@@ -22,7 +22,7 @@ export default function CustomGearForm({ onSuccess }) {
     name: '', email: '', phone: '', category: '',
     details: '', rashguard_sleeve: '', shorts_slit: '',
     gi_colors: [], gi_color_request: '',
-    color_hex: '#ff8c00', quantity: '', mat_sqm: '',
+    color_hex: '#4f8ef7', quantity: '', mat_sqm: '',
     design_image_url: '',
   });
   const [submitting, setSubmitting] = useState(false);
@@ -98,7 +98,7 @@ export default function CustomGearForm({ onSuccess }) {
             <button key={c.value} type="button" onClick={() => set('category', c.value)}
               className={`px-3 py-2.5 border font-mono-ui text-xs text-left transition-all ${
                 cat === c.value
-                  ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]'
+                  ? 'border-[#4f8ef7] bg-[#4f8ef7]/10 text-[#4f8ef7]'
                   : 'border-[#333] text-[#666] hover:border-[#555] hover:text-white'
               }`}>
               <span className="block font-bold">{c.label}</span>
@@ -116,7 +116,7 @@ export default function CustomGearForm({ onSuccess }) {
             {['Long Sleeve', 'Short Sleeve'].map(s => (
               <button key={s} type="button" onClick={() => set('rashguard_sleeve', s)}
                 className={`flex-1 py-3 border font-mono-ui text-xs uppercase tracking-widest transition-all ${
-                  form.rashguard_sleeve === s ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]' : 'border-[#333] text-[#666] hover:border-[#555] hover:text-white'
+                  form.rashguard_sleeve === s ? 'border-[#4f8ef7] bg-[#4f8ef7]/10 text-[#4f8ef7]' : 'border-[#333] text-[#666] hover:border-[#555] hover:text-white'
                 }`}>{s}</button>
             ))}
           </div>
@@ -130,7 +130,7 @@ export default function CustomGearForm({ onSuccess }) {
             {['With Slit', 'No Slit'].map(s => (
               <button key={s} type="button" onClick={() => set('shorts_slit', s)}
                 className={`flex-1 py-3 border font-mono-ui text-xs uppercase tracking-widest transition-all ${
-                  form.shorts_slit === s ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]' : 'border-[#333] text-[#666] hover:border-[#555] hover:text-white'
+                  form.shorts_slit === s ? 'border-[#4f8ef7] bg-[#4f8ef7]/10 text-[#4f8ef7]' : 'border-[#333] text-[#666] hover:border-[#555] hover:text-white'
                 }`}>{s}</button>
             ))}
           </div>
@@ -145,7 +145,7 @@ export default function CustomGearForm({ onSuccess }) {
               {GI_STANDARD_COLORS.map(c => (
                 <button key={c} type="button" onClick={() => toggleGiColor(c)}
                   className={`flex-1 py-2.5 border font-mono-ui text-xs uppercase tracking-widest transition-all ${
-                    form.gi_colors.includes(c) ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]' : 'border-[#333] text-[#666] hover:border-[#555] hover:text-white'
+                    form.gi_colors.includes(c) ? 'border-[#4f8ef7] bg-[#4f8ef7]/10 text-[#4f8ef7]' : 'border-[#333] text-[#666] hover:border-[#555] hover:text-white'
                   }`}>{c}</button>
               ))}
             </div>
@@ -187,7 +187,7 @@ export default function CustomGearForm({ onSuccess }) {
         <div>
           <label className={LABEL_CLS}>
             Quantity *
-            {catInfo?.moq && <span className="ml-2 text-[#ff8c00]">({catInfo.moq})</span>}
+            {catInfo?.moq && <span className="ml-2 text-[#4f8ef7]">({catInfo.moq})</span>}
           </label>
           <input type="number" min="1" value={form.quantity} onChange={e => set('quantity', e.target.value)}
             placeholder="e.g. 15" className={FIELD_CLS} />
@@ -206,7 +206,7 @@ export default function CustomGearForm({ onSuccess }) {
       <div>
         <label className={LABEL_CLS}>Upload Design / Reference Image (optional)</label>
         {form.design_image_url ? (
-          <div className="relative w-32 h-32 border border-[#ff8c00] overflow-hidden">
+          <div className="relative w-32 h-32 border border-[#4f8ef7] overflow-hidden">
             <img src={form.design_image_url} className="w-full h-full object-cover" alt="design" />
             <button type="button" onClick={() => set('design_image_url', '')}
               className="absolute top-1 right-1 bg-black/70 text-white rounded-full p-0.5">
@@ -214,7 +214,7 @@ export default function CustomGearForm({ onSuccess }) {
             </button>
           </div>
         ) : (
-          <label className={`flex items-center gap-2 border border-dashed border-[#444] px-4 py-3 font-mono-ui text-xs text-[#555] hover:border-[#ff8c00]/60 hover:text-[#ff8c00] transition-colors cursor-pointer ${uploadingImg ? 'opacity-50 pointer-events-none' : ''}`}>
+          <label className={`flex items-center gap-2 border border-dashed border-[#444] px-4 py-3 font-mono-ui text-xs text-[#555] hover:border-[#4f8ef7]/60 hover:text-[#4f8ef7] transition-colors cursor-pointer ${uploadingImg ? 'opacity-50 pointer-events-none' : ''}`}>
             <Upload className="w-4 h-4" />
             {uploadingImg ? 'Uploading...' : 'Click to upload image'}
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
@@ -223,7 +223,7 @@ export default function CustomGearForm({ onSuccess }) {
       </div>
 
       <button type="submit" disabled={submitting || !form.category}
-        style={{ background: '#ff8c00', color: '#000', border: '1px solid #ff8c00', fontWeight: 700 }}
+        style={{ background: '#4f8ef7', color: '#000', border: '1px solid #4f8ef7', fontWeight: 700 }}
         className="w-full py-4 font-mono-ui text-xs tracking-[0.3em] uppercase flex items-center justify-center gap-2 transition-all hover:bg-[#ffa020] disabled:opacity-40 disabled:cursor-not-allowed rounded-sm">
         <Send className="w-4 h-4" />
         {submitting ? 'Sending...' : 'Submit Custom Request'}
