@@ -83,6 +83,27 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
     return getChildren(cat.id).some(c => location.pathname === `/category/${c.slug || c.id}`);
   };
 
+  const isProductsActive = categories.some(c => isCategoryActive(c));
+
+  // Group categories into named buckets by matching name keywords
+  const bucket = (keywords) => parents.filter(p =>
+    keywords.some(k => p.name.toLowerCase().includes(k.toLowerCase()))
+  );
+  const fightwear   = bucket(['fightwear', 'fight wear', 'gi', 'no-gi', 'nogi', 'rashguard', 'shorts', 'singlet']);
+  const fightgear   = bucket(['gear', 'glove', 'wrap', 'protector', 'equipment', 'pad']);
+  const lifestyle   = bucket(['lifestyle', 'shirt', 'apparel', 'casual', 'streetwear', 'tee']);
+  // Anything not matched goes into "other"
+  const matched = new Set([...fightwear, ...fightgear, ...lifestyle].map(c => c.id));
+  const other   = parents.filter(c => !matched.has(c.id));
+
+  // Build the Products mega-dropdown columns
+  const PRODUCT_COLS = [
+    { label: 'Fightwear',  cats: fightwear  },
+    { label: 'Fight Gear', cats: fightgear  },
+    { label: 'Lifestyle',  cats: lifestyle  },
+    ...(other.length ? [{ label: 'More', cats: other }] : []),
+  ].filter(col => col.cats.length > 0);
+
   const navLink = (active) =>
     `flex items-center gap-1 px-3 py-2 font-mono-ui text-[11px] tracking-widest uppercase transition-colors border-b-2 ${
       active ? 'text-[#E87722] border-[#E87722]' : 'text-[#888] hover:text-white border-transparent'
@@ -103,33 +124,57 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
         {/* LEFT: nav links */}
         <nav className="flex items-center gap-0">
           <Link to="/Home" className={navLink(isHomePage)}>Home</Link>
-          {parents.slice(0, 3).map(cat => {
-            const children = getChildren(cat.id);
-            return (
-              <div key={cat.id} className="relative"
-                onMouseEnter={() => setOpenDropdown(cat.id)}
-                onMouseLeave={() => setOpenDropdown(null)}>
-                <Link to={`/category/${cat.slug || cat.id}`} className={navLink(isCategoryActive(cat))}>
-                  {cat.name}
-                  {children.length > 0 && <ChevronDown className="w-3 h-3" />}
-                </Link>
-                {children.length > 0 && openDropdown === cat.id && (
-                  <div className="absolute top-full left-0 min-w-[180px] bg-[#0d0d0d] border border-[#333] shadow-xl z-50">
-                    <Link to={`/category/${cat.slug || cat.id}`}
-                      className="block px-4 py-2.5 font-mono-ui text-[10px] text-[#ff8c00] hover:bg-[#1a1a1a] uppercase tracking-widest border-b border-[#222]">
-                      View All
-                    </Link>
-                    {children.map(child => (
-                      <Link key={child.id} to={`/category/${child.slug || child.id}`}
-                        className="block px-4 py-2.5 font-mono-ui text-[11px] text-[#888] hover:text-white hover:bg-[#1a1a1a] uppercase tracking-widest transition-colors">
-                        {child.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+
+          {/* Products mega-dropdown */}
+          <div className="relative"
+            onMouseEnter={() => setOpenDropdown('products')}
+            onMouseLeave={() => setOpenDropdown(null)}>
+            <button className={navLink(isProductsActive)}>
+              Products <ChevronDown className="w-3 h-3" />
+            </button>
+            {openDropdown === 'products' && (
+              <div className="absolute top-full left-0 bg-[#0d0d0d] border border-[#333] shadow-2xl z-50"
+                style={{ minWidth: `${Math.max(PRODUCT_COLS.length, 2) * 160}px` }}>
+                {/* Column header row */}
+                <div className={`grid border-b border-[#1a1a1a]`}
+                  style={{ gridTemplateColumns: `repeat(${PRODUCT_COLS.length}, 1fr)` }}>
+                  {PRODUCT_COLS.map(col => (
+                    <div key={col.label} className="px-5 py-3 border-r border-[#1a1a1a] last:border-r-0">
+                      <p className="font-mono-ui text-[9px] text-[#ff6b00] uppercase tracking-[0.2em]">{col.label}</p>
+                    </div>
+                  ))}
+                </div>
+                {/* Items */}
+                <div className={`grid`}
+                  style={{ gridTemplateColumns: `repeat(${PRODUCT_COLS.length}, 1fr)` }}>
+                  {PRODUCT_COLS.map(col => (
+                    <div key={col.label} className="border-r border-[#1a1a1a] last:border-r-0 py-2">
+                      {col.cats.map(cat => {
+                        const children = getChildren(cat.id);
+                        return (
+                          <div key={cat.id}>
+                            <Link to={`/category/${cat.slug || cat.id}`}
+                              onClick={() => setOpenDropdown(null)}
+                              className="block px-5 py-2 font-mono-ui text-[11px] text-white hover:text-[#ff8c00] hover:bg-[#111] uppercase tracking-widest transition-colors">
+                              {cat.name}
+                            </Link>
+                            {children.map(child => (
+                              <Link key={child.id} to={`/category/${child.slug || child.id}`}
+                                onClick={() => setOpenDropdown(null)}
+                                className="block px-5 py-1.5 pl-7 font-mono-ui text-[10px] text-[#555] hover:text-white hover:bg-[#111] uppercase tracking-widest transition-colors">
+                                — {child.name}
+                              </Link>
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
               </div>
-            );
-          })}
+            )}
+          </div>
+
           <Link to="/Services" className={navLink(isActive('/Services'))}>Services</Link>
           <Link to="/Custom" className={navLink(isActive('/Custom'))}>Custom</Link>
         </nav>
@@ -204,25 +249,33 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
             className={`block font-mono-ui text-[11px] tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isHomePage ? 'text-[#E87722]' : 'text-white'}`}>
             Home
           </Link>
-          {parents.map(cat => {
-            const children = getChildren(cat.id);
-            return (
-              <div key={cat.id}>
-                <Link to={`/category/${cat.slug || cat.id}`} onClick={() => setMenuOpen(false)}
-                  className={`block font-mono-ui text-[11px] tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isCategoryActive(cat) ? 'text-[#E87722]' : 'text-white'}`}>
-                  {cat.name}
-                </Link>
-                {children.map(child => (
-                  <Link key={child.id} to={`/category/${child.slug || child.id}`} onClick={() => setMenuOpen(false)}
-                    className="block font-mono-ui text-[10px] text-[#666] tracking-widest uppercase py-2 pl-4 border-b border-[#1a1a1a] hover:text-white">
-                    {child.name}
-                  </Link>
-                ))}
-              </div>
-            );
-          })}
+
+          {/* Products — grouped by bucket */}
+          {PRODUCT_COLS.map(col => (
+            <div key={col.label}>
+              <p className="font-mono-ui text-[9px] text-[#ff6b00] uppercase tracking-[0.2em] px-1 pt-3 pb-1">{col.label}</p>
+              {col.cats.map(cat => {
+                const children = getChildren(cat.id);
+                return (
+                  <div key={cat.id}>
+                    <Link to={`/category/${cat.slug || cat.id}`} onClick={() => setMenuOpen(false)}
+                      className={`block font-mono-ui text-[11px] tracking-widest uppercase py-2 border-b border-[#1a1a1a] ${isCategoryActive(cat) ? 'text-[#E87722]' : 'text-white'}`}>
+                      {cat.name}
+                    </Link>
+                    {children.map(child => (
+                      <Link key={child.id} to={`/category/${child.slug || child.id}`} onClick={() => setMenuOpen(false)}
+                        className="block font-mono-ui text-[10px] text-[#555] tracking-widest uppercase py-1.5 pl-4 border-b border-[#111] hover:text-white">
+                        — {child.name}
+                      </Link>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+
           <Link to="/Services" onClick={() => setMenuOpen(false)}
-            className={`block font-mono-ui text-[11px] tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/Services') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
+            className={`block font-mono-ui text-[11px] tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] mt-2 ${isActive('/Services') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
             Services
           </Link>
           <Link to="/Custom" onClick={() => setMenuOpen(false)}
