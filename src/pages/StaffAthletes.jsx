@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Plus, Edit2, Trash2, Upload, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Upload, X, Move } from 'lucide-react';
 import StaffGuard from '@/components/cp/StaffGuard';
 import AdminSidebar from '@/components/cp/AdminSidebar';
 
@@ -13,8 +13,13 @@ export default function StaffAthletes() {
     name: '', discipline: '', belt: '', location: '',
     achievements: [], image: '', quote: '', ig: '',
     sort_order: 0, is_active: true,
+    imageFit: { scale: 1, offsetX: 50, offsetY: 50 },
   });
   const [uploadingImg, setUploadingImg] = useState(false);
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [cropScale, setCropScale] = useState(1);
+  const [cropOffsetX, setCropOffsetX] = useState(50);
+  const [cropOffsetY, setCropOffsetY] = useState(50);
 
   useEffect(() => {
     loadAthletes();
@@ -32,11 +37,14 @@ export default function StaffAthletes() {
       name: '', discipline: '', belt: '', location: '',
       achievements: [], image: '', quote: '', ig: '',
       sort_order: 0, is_active: true,
+      imageFit: { scale: 1, offsetX: 50, offsetY: 50 },
     });
     setEditingId(null);
+    setShowCropModal(false);
   };
 
   const handleEdit = (athlete) => {
+    const imageFit = athlete.imageFit || { scale: 1, offsetX: 50, offsetY: 50 };
     setForm({
       name: athlete.name,
       discipline: athlete.discipline,
@@ -48,7 +56,11 @@ export default function StaffAthletes() {
       ig: athlete.ig || '',
       sort_order: athlete.sort_order || 0,
       is_active: athlete.is_active !== false,
+      imageFit,
     });
+    setCropScale(imageFit.scale);
+    setCropOffsetX(imageFit.offsetX);
+    setCropOffsetY(imageFit.offsetY);
     setEditingId(athlete.id);
     setShowForm(true);
   };
@@ -59,10 +71,22 @@ export default function StaffAthletes() {
     setUploadingImg(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setForm(f => ({ ...f, image: file_url }));
+      setForm(f => ({ ...f, image: file_url, imageFit: { scale: 1, offsetX: 50, offsetY: 50 } }));
+      setCropScale(1);
+      setCropOffsetX(50);
+      setCropOffsetY(50);
+      setShowCropModal(true);
     } finally {
       setUploadingImg(false);
     }
+  };
+
+  const saveCrop = () => {
+    setForm(f => ({
+      ...f,
+      imageFit: { scale: cropScale, offsetX: cropOffsetX, offsetY: cropOffsetY },
+    }));
+    setShowCropModal(false);
   };
 
   const handleSubmit = async (e) => {
@@ -219,14 +243,37 @@ export default function StaffAthletes() {
                   <div>
                     <label className="block text-xs text-[#666] uppercase tracking-widest mb-2">Photo</label>
                     {form.image ? (
-                      <div className="relative w-32 h-32 border border-[#333]">
-                        <img src={form.image} alt="preview" className="w-full h-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={() => setForm(f => ({ ...f, image: '' }))}
-                          className="absolute top-1 right-1 bg-black/70 text-white p-0.5">
-                          <X className="w-3 h-3" />
-                        </button>
+                      <div className="space-y-2">
+                        <div className="relative w-full aspect-square border border-[#333] overflow-hidden">
+                          <img
+                            src={form.image}
+                            alt="preview"
+                            style={{
+                              width: `${100 * form.imageFit.scale}%`,
+                              height: `${100 * form.imageFit.scale}%`,
+                              left: `${form.imageFit.offsetX - 50 * form.imageFit.scale}%`,
+                              top: `${form.imageFit.offsetY - 50 * form.imageFit.scale}%`,
+                              position: 'absolute',
+                              objectFit: 'cover',
+                            }}
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setShowCropModal(true)}
+                            style={{ background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff' }}
+                            className="flex-1 px-3 py-2 text-xs flex items-center justify-center gap-2 hover:bg-[#6ea8ff] transition-colors">
+                            <Move className="w-3 h-3" /> Adjust
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setForm(f => ({ ...f, image: '' }))}
+                            style={{ background: '#ff0000', border: '1px solid #ff0000', color: '#fff' }}
+                            className="flex-1 px-3 py-2 text-xs hover:bg-[#ff4444] transition-colors">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
                       </div>
                     ) : (
                       <label className="flex items-center gap-2 border border-dashed border-[#444] px-3 py-2 cursor-pointer hover:border-[#4f8ef7]/60 transition-colors">
@@ -316,6 +363,65 @@ export default function StaffAthletes() {
           </div>
         </main>
       </div>
+
+      {/* Crop Modal */}
+      {showCropModal && form.image && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={() => setShowCropModal(false)}>
+          <div className="w-full max-w-md bg-[#111] border border-[#333]" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-[#222]">
+              <h3 className="font-tactical text-xl text-white">Adjust Photo</h3>
+              <button onClick={() => setShowCropModal(false)} className="text-[#555] hover:text-white"><X className="w-5 h-5" /></button>
+            </div>
+            <div className="p-5 space-y-4">
+              {/* Preview */}
+              <div className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222] overflow-hidden">
+                <img
+                  src={form.image}
+                  style={{
+                    width: `${100 * cropScale}%`,
+                    height: `${100 * cropScale}%`,
+                    left: `${cropOffsetX - 50 * cropScale}%`,
+                    top: `${cropOffsetY - 50 * cropScale}%`,
+                    position: 'absolute',
+                    objectFit: 'cover',
+                  }}
+                  alt="crop preview"
+                />
+              </div>
+
+              {/* Controls */}
+              <div className="space-y-3">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Zoom</label>
+                    <span className="font-mono-ui text-xs text-white">{(cropScale * 100).toFixed(0)}%</span>
+                  </div>
+                  <input type="range" min="1" max="3" step="0.1" value={cropScale} onChange={(e) => setCropScale(parseFloat(e.target.value))} className="w-full h-1 bg-[#222] rounded cursor-pointer accent-[#4f8ef7]" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Horizontal</label>
+                    <span className="font-mono-ui text-xs text-white">{cropOffsetX.toFixed(0)}%</span>
+                  </div>
+                  <input type="range" min="0" max="100" step="1" value={cropOffsetX} onChange={(e) => setCropOffsetX(parseFloat(e.target.value))} className="w-full h-1 bg-[#222] rounded cursor-pointer accent-[#4f8ef7]" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Vertical</label>
+                    <span className="font-mono-ui text-xs text-white">{cropOffsetY.toFixed(0)}%</span>
+                  </div>
+                  <input type="range" min="0" max="100" step="1" value={cropOffsetY} onChange={(e) => setCropOffsetY(parseFloat(e.target.value))} className="w-full h-1 bg-[#222] rounded cursor-pointer accent-[#4f8ef7]" />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button onClick={() => setShowCropModal(false)} style={{ background: '#1a1a1a', border: '1px solid #555', color: '#ccc' }} className="flex-1 py-2.5 font-mono-ui text-xs uppercase tracking-widest hover:border-white hover:text-white transition-colors">Cancel</button>
+                <button onClick={saveCrop} style={{ background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff', fontWeight: 700 }} className="flex-1 py-2.5 font-mono-ui text-xs uppercase tracking-widest">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </StaffGuard>
   );
 }

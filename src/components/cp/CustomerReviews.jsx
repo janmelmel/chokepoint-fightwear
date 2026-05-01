@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import ReviewCard from './ReviewCard';
 
 const DUMMY_REVIEWS = [
   {
@@ -81,11 +80,7 @@ export default function CustomerReviews() {
   const [reviews, setReviews] = useState(DUMMY_REVIEWS);
   const [page, setPage] = useState(0);
 
-  const updateReview = (idx, updatedReview) => {
-    const newReviews = [...reviews];
-    newReviews[idx] = updatedReview;
-    setReviews(newReviews);
-  };
+  useEffect(() => {}, []);
 
   const perPage = 3;
   const totalPages = Math.ceil(reviews.length / perPage);
@@ -119,16 +114,21 @@ export default function CustomerReviews() {
           <motion.div key={page} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#1a1a1a]">
-            {visible.map((r, i) => {
-              const actualIdx = page * 3 + i;
-              return (
-                <ReviewCard
-                  key={actualIdx}
-                  review={r}
-                  onUpdate={(updated) => updateReview(actualIdx, updated)}
-                />
-              );
-            })}
+            {visible.map((r, i) => (
+              <div key={i} className="bg-[#0a0a0a] p-6 flex flex-col gap-4 hover:bg-[#111] transition-colors">
+                <Stars count={r.rating} />
+                <p className="font-mono-ui text-xs text-[#888] leading-relaxed flex-1">"{r.text}"</p>
+                <div className="border-t border-[#1a1a1a] pt-4 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#4f8ef7]/10 border border-[#4f8ef7]/20 flex items-center justify-center flex-shrink-0">
+                    <span className="font-mono-ui text-[10px] text-[#4f8ef7] font-bold">{r.avatar}</span>
+                  </div>
+                  <div>
+                    <p className="font-mono-ui text-xs text-white font-semibold">{r.name}</p>
+                    <p className="font-mono-ui text-[10px] text-[#555]">{r.product} · {r.location}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </motion.div>
         </AnimatePresence>
 
