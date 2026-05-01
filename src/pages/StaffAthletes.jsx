@@ -37,7 +37,18 @@ export default function StaffAthletes() {
   };
 
   const handleEdit = (athlete) => {
-    setForm(athlete);
+    setForm({
+      name: athlete.name,
+      discipline: athlete.discipline,
+      belt: athlete.belt,
+      location: athlete.location,
+      achievements: Array.isArray(athlete.achievements) ? athlete.achievements : [],
+      image: athlete.image || '',
+      quote: athlete.quote || '',
+      ig: athlete.ig || '',
+      sort_order: athlete.sort_order || 0,
+      is_active: athlete.is_active !== false,
+    });
     setEditingId(athlete.id);
     setShowForm(true);
   };
@@ -92,7 +103,8 @@ export default function StaffAthletes() {
               <h1 className="font-tactical text-4xl text-white">Athletes</h1>
               <button
                 onClick={() => { setShowForm(!showForm); resetForm(); }}
-                className="btn-glow-orange px-4 py-2 flex items-center gap-2">
+                style={{ background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff', fontWeight: 700 }}
+                className="px-4 py-2 flex items-center gap-2 hover:bg-[#6ea8ff] transition-colors">
                 <Plus className="w-4 h-4" /> Add Athlete
               </button>
             </div>
@@ -167,7 +179,8 @@ export default function StaffAthletes() {
                           handleAchievementAdd(input.value);
                           input.value = '';
                         }}
-                        className="btn-glow-white px-3">Add</button>
+                        style={{ background: '#1a1a1a', border: '1px solid #555', color: '#ccc' }}
+                        className="px-3 hover:border-[#4f8ef7] hover:text-white transition-colors">Add</button>
                     </div>
                     <div className="space-y-1">
                       {form.achievements.map((ach, i) => (
@@ -239,13 +252,14 @@ export default function StaffAthletes() {
                   </div>
 
                   <div className="flex gap-2">
-                    <button type="submit" className="btn-glow-orange px-6 py-2 flex-1">
+                    <button type="submit" style={{ background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff', fontWeight: 700 }} className="px-6 py-2 flex-1 hover:bg-[#6ea8ff] transition-colors">
                       {editingId ? 'Update' : 'Create'}
                     </button>
                     <button
                       type="button"
                       onClick={() => { setShowForm(false); resetForm(); }}
-                      className="btn-glow-white px-6 py-2">Cancel</button>
+                      style={{ background: '#1a1a1a', border: '1px solid #555', color: '#ccc' }}
+                      className="px-6 py-2 hover:border-white hover:text-white transition-colors">Cancel</button>
                   </div>
                 </form>
               </div>
@@ -283,12 +297,14 @@ export default function StaffAthletes() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(athlete)}
-                          className="p-2 text-[#555] hover:text-white transition-colors">
+                          style={{ background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff' }}
+                          className="p-2 hover:bg-[#6ea8ff] transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(athlete.id)}
-                          className="p-2 text-[#555] hover:text-[#ff0000] transition-colors">
+                          style={{ background: '#ff0000', border: '1px solid #ff0000', color: '#fff' }}
+                          className="p-2 hover:bg-[#ff4444] transition-colors">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
