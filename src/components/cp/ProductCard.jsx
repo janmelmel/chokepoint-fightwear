@@ -26,12 +26,12 @@ export default function ProductCard({ product, onPreview }) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
 
         {isContactToOrder && (
-          <span className="absolute top-3 left-3 font-mono-ui text-xs tracking-widest uppercase px-2 py-1 border border-[#ff6b00]/50 text-[#ff6b00] bg-[#0a0a0a]/80">
+          <span className="absolute top-3 left-3 font-mono-ui text-xs tracking-widest uppercase px-2 py-1 border border-[#4f8ef7]/50 text-[#4f8ef7] bg-[#0a0a0a]/80">
             INQUIRE
           </span>
         )}
         {!isContactToOrder && orderType === 'preorder' && !isSoldOut && (
-          <span className="absolute top-3 left-3 font-mono-ui text-xs tracking-widest uppercase px-2 py-1 bg-[#ff6b00] text-white font-bold">
+          <span className="absolute top-3 left-3 font-mono-ui text-xs tracking-widest uppercase px-2 py-1 bg-[#4f8ef7] text-white font-bold">
             PRE-ORDER
           </span>
         )}
@@ -57,7 +57,7 @@ export default function ProductCard({ product, onPreview }) {
       <div className="p-4 flex flex-col flex-1">
         <p className="font-mono-ui text-xs text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
         <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
-        <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
+        <p className="font-mono-ui text-base text-[#6ea8ff] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
         {(product.sold_count || product.total_ordered || 0) > 0 && (
           <span className="font-mono-ui text-xs text-[#555] mt-1 block">
             {(product.sold_count || product.total_ordered || 0)} sold
@@ -67,7 +67,7 @@ export default function ProductCard({ product, onPreview }) {
         {/* CTA — always opens modal so customer must select size/variant first */}
         {isContactToOrder ? (
           <button onClick={() => onPreview && onPreview(product)}
-            className="mt-auto py-3 font-mono-ui text-xs uppercase tracking-[0.2em] w-full flex items-center justify-center gap-2 border border-[#ff6b00]/50 text-[#ff6b00] hover:bg-[#ff6b00]/10 transition-all">
+            className="mt-auto py-3 font-mono-ui text-xs uppercase tracking-[0.2em] w-full flex items-center justify-center gap-2 border border-[#4f8ef7]/50 text-[#4f8ef7] hover:bg-[#4f8ef7]/10 transition-all">
             <MessageCircle className="w-3.5 h-3.5" /> Inquire Now
           </button>
         ) : (
@@ -75,7 +75,7 @@ export default function ProductCard({ product, onPreview }) {
             style={
               isSoldOut
                 ? { background: '#1a1a1a', border: '1px solid #222', color: '#444', cursor: 'not-allowed' }
-                : { background: '#ff6b00', border: '1px solid #ff6b00', color: '#fff', fontWeight: 700, cursor: 'pointer' }
+                : { background: '#4f8ef7', border: '1px solid #4f8ef7', color: '#fff', fontWeight: 700, cursor: 'pointer' }
             }
             onClick={() => { if (!isSoldOut) onPreview && onPreview(product); }}
             disabled={isSoldOut}

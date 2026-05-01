@@ -240,7 +240,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
                   <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
                     {displayImages.map((_, i) => (
                       <button key={i} onClick={() => setImageIdx(i)}
-                        className={`w-1.5 h-1.5 rounded-full transition-colors ${i === imageIdx ? 'bg-[#ff8c00]' : 'bg-white/30'}`} />
+                        className={`w-1.5 h-1.5 rounded-full transition-colors ${i === imageIdx ? 'bg-[#4f8ef7]' : 'bg-white/30'}`} />
                     ))}
                   </div>
                 </>
@@ -255,7 +255,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
             <X className="w-4 h-4" />
           </button>
           {isPreorder && (
-            <span className="absolute top-3 left-3 font-mono-ui text-[9px] bg-[#ff8c00] text-black px-2 py-1 uppercase tracking-widest">Pre-Order</span>
+            <span className="absolute top-3 left-3 font-mono-ui text-[9px] bg-[#4f8ef7] text-white px-2 py-1 uppercase tracking-widest">Pre-Order</span>
           )}
           {product.edition && (
             <span className="absolute bottom-3 left-3 font-mono-ui text-[9px] border border-white/30 text-white/70 px-2 py-1 uppercase tracking-widest bg-black/50">
@@ -275,7 +275,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
               <div className="flex items-center gap-3 mt-1 flex-wrap">
                 {avgRating && (
                   <div className="flex items-center gap-1">
-                    <Star className="w-3 h-3 text-[#ff8c00]" style={{ fill: '#ff8c00' }} />
+                    <Star className="w-3 h-3 text-[#4f8ef7]" style={{ fill: '#4f8ef7' }} />
                     <span className="font-mono-ui text-[10px] text-[#888]">{avgRating} ({reviews.length})</span>
                   </div>
                 )}
@@ -285,7 +285,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
               </div>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="font-tactical text-2xl text-[#ff6b00]">₱{Number(displayPrice).toLocaleString()}</p>
+              <p className="font-tactical text-2xl text-[#6ea8ff]">₱{Number(displayPrice).toLocaleString()}</p>
             </div>
           </div>
 
@@ -302,16 +302,16 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
                   <button key={v.id} type="button"
                     onClick={() => setSelectedVariant(selectedVariant?.id === v.id ? null : v)}
                     className={`text-left border px-3 py-2 transition-all ${
-                      selectedVariant?.id === v.id ? 'border-[#ff8c00] bg-[#ff8c00]/10' : 'border-[#333] hover:border-[#555]'
+                      selectedVariant?.id === v.id ? 'border-[#4f8ef7] bg-[#4f8ef7]/10' : 'border-[#333] hover:border-[#555]'
                     }`}>
                     {v.images?.[0] && (
                       <img src={v.images[0]} className="w-full h-16 object-cover mb-1.5 opacity-80" alt={v.name} />
                     )}
-                    <p className={`font-mono-ui text-[10px] uppercase tracking-wide ${selectedVariant?.id === v.id ? 'text-[#ff8c00]' : 'text-white'}`}>
+                    <p className={`font-mono-ui text-[10px] uppercase tracking-wide ${selectedVariant?.id === v.id ? 'text-[#4f8ef7]' : 'text-white'}`}>
                       {v.name}
                     </p>
                     {v.price && v.price !== product.price && (
-                      <p className="font-mono-ui text-[10px] text-[#ff6b00]">₱{Number(v.price).toLocaleString()}</p>
+                      <p className="font-mono-ui text-[10px] text-[#6ea8ff]">₱{Number(v.price).toLocaleString()}</p>
                     )}
                   </button>
                 ))}
@@ -334,7 +334,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
                         oos
                           ? 'border-[#222] text-[#333] cursor-not-allowed line-through'
                           : selectedSize === s
-                            ? 'border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]'
+                            ? 'border-[#4f8ef7] bg-[#4f8ef7]/10 text-[#4f8ef7]'
                             : 'border-[#333] text-[#888] hover:border-[#555] hover:text-white'
                       }`}>
                       {s}
@@ -354,7 +354,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
                   onClick={() => setQuantity(q => Math.max(1, q - 1))}
                   disabled={quantity <= 1 || isSizeCurrentlyOOS}
                   style={{ background: '#1c1c1c', border: '1px solid #555' }}
-                  className="w-8 h-8 flex items-center justify-center text-[#ccc] hover:border-[#ff8c00] hover:text-[#ff8c00] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                  className="w-8 h-8 flex items-center justify-center text-[#ccc] hover:border-[#4f8ef7] hover:text-[#4f8ef7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                   <Minus className="w-3.5 h-3.5" />
                 </button>
                 <span className="font-mono-ui text-sm text-white w-6 text-center">
@@ -364,7 +364,7 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
                   onClick={() => setQuantity(q => Math.min(q + 1, maxQty))}
                   disabled={isSizeCurrentlyOOS || (!isPreorder && currentStock !== null && quantity >= maxQty)}
                   style={{ background: '#1c1c1c', border: '1px solid #555' }}
-                  className="w-8 h-8 flex items-center justify-center text-[#ccc] hover:border-[#ff8c00] hover:text-[#ff8c00] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                  className="w-8 h-8 flex items-center justify-center text-[#ccc] hover:border-[#4f8ef7] hover:text-[#4f8ef7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                   <Plus className="w-3.5 h-3.5" />
                 </button>
                 {stockLoading && (
@@ -398,14 +398,14 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
           {/* Custom Print */}
           {product.allow_custom_print && (
             <div>
-              <label className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest block mb-1">
+              <label className="font-mono-ui text-[10px] text-[#4f8ef7] uppercase tracking-widest block mb-1">
                 {product.custom_print_label || 'Custom Print Text'}
               </label>
               <input
                 value={customText}
                 onChange={(e) => setCustomText(e.target.value.toUpperCase())}
                 placeholder="e.g. DELA CRUZ"
-                className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60 uppercase" />
+                className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#4f8ef7]/60 uppercase" />
             </div>
           )}
 
@@ -416,8 +416,8 @@ export default function ProductDetailModal({ product, onClose, onOrder }) {
 
           {/* Inquiry Note */}
           {product.order_type === 'contact_to_order' && product.inquiry_note && (
-            <div className="border border-[#ff8c00]/20 bg-[#ff8c00]/5 px-4 py-3">
-              <p className="font-mono-ui text-xs text-[#ff8c00]">{product.inquiry_note}</p>
+            <div className="border border-[#4f8ef7]/20 bg-[#4f8ef7]/5 px-4 py-3">
+              <p className="font-mono-ui text-xs text-[#4f8ef7]">{product.inquiry_note}</p>
             </div>
           )}
 

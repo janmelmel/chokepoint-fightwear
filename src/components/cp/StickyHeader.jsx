@@ -15,7 +15,7 @@ function ProfileButton({ authUser, profileOpen, setProfileOpen }) {
           <UserCircle className="w-5 h-5" />
         </button>
       ) : authUser?.role === 'admin' ? (
-        <Link to="/Staff" title="Staff Portal" className="text-[#ff8c00] hover:text-white transition-colors">
+        <Link to="/Staff" title="Staff Portal" className="text-[#4f8ef7] hover:text-white transition-colors">
           <UserCircle className="w-5 h-5" />
         </Link>
       ) : authUser ? (
