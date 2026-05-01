@@ -49,7 +49,7 @@ export default function AthleteRoster() {
                   ? 'border-[#4f8ef7] text-[#4f8ef7] bg-[#4f8ef7]/5'
                   : 'border-[#222] text-[#555] hover:border-[#444] hover:text-[#888]'
               }`}>
-              {a.name.length > 15 ? a.name.split(' ')[0] : a.name}
+              {a.name ? (a.name.length > 15 ? a.name.split(' ')[0] : a.name) : 'Athlete'}
             </button>
           ))}
         </div>
