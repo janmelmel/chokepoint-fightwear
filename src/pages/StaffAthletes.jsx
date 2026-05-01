@@ -24,23 +24,11 @@ export default function StaffAthletes() {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragType, setDragType] = useState(null);
   const cropContainerRef = useRef(null);
+  const handlersRef = useRef({});
 
   useEffect(() => {
     loadAthletes();
   }, []);
-
-  // Attach global mouse listeners when dragging
-  useEffect(() => {
-    if (!isDragging) return;
-
-    document.addEventListener('mousemove', handleCropMouseMove);
-    document.addEventListener('mouseup', handleCropMouseUp);
-
-    return () => {
-      document.removeEventListener('mousemove', handleCropMouseMove);
-      document.removeEventListener('mouseup', handleCropMouseUp);
-    };
-  }, [isDragging, handleCropMouseMove, handleCropMouseUp]);
 
   const loadAthletes = async () => {
     setLoading(true);
@@ -113,68 +101,79 @@ export default function StaffAthletes() {
     setDragStart({ x: e.clientX, y: e.clientY });
   };
 
-  const handleCropMouseMove = useCallback((e) => {
-    if (!isDragging || !dragType) return;
-    e.preventDefault();
+  // Update handler ref whenever deps change
+  useEffect(() => {
+    handlersRef.current.handleMove = (e) => {
+      if (!isDragging || !dragType) return;
+      e.preventDefault();
 
-    const container = cropContainerRef.current;
-    if (!container) return;
+      const container = cropContainerRef.current;
+      if (!container) return;
 
-    const rect = container.getBoundingClientRect();
-    const deltaX = (e.clientX - dragStart.x) / rect.width * 100;
-    const deltaY = (e.clientY - dragStart.y) / rect.height * 100;
+      const rect = container.getBoundingClientRect();
+      const deltaX = (e.clientX - dragStart.x) / rect.width * 100;
+      const deltaY = (e.clientY - dragStart.y) / rect.height * 100;
 
-    const MIN_SIZE = 10; // 80px minimum on ~800px container = ~10%
+      const MIN_SIZE = 10;
 
-    if (dragType === 'move') {
-      // Move the entire box within bounds
-      let newX = cropX + deltaX;
-      let newY = cropY + deltaY;
-      newX = Math.max(0, Math.min(100 - cropWidth, newX));
-      newY = Math.max(0, Math.min(100 - cropWidth, newY));
-      setCropX(newX);
-      setCropY(newY);
-    } else {
-      // Resize from corners/edges - maintain square aspect ratio
-      let newWidth = cropWidth;
-      let newX = cropX;
-      let newY = cropY;
+      if (dragType === 'move') {
+        let newX = cropX + deltaX;
+        let newY = cropY + deltaY;
+        newX = Math.max(0, Math.min(100 - cropWidth, newX));
+        newY = Math.max(0, Math.min(100 - cropWidth, newY));
+        setCropX(newX);
+        setCropY(newY);
+      } else {
+        let newWidth = cropWidth;
+        let newX = cropX;
+        let newY = cropY;
 
-      if (dragType === 'nw') {
-        // Top-left: expand up/left, shrink down/right
-        newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
-        newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
-        newY = Math.min(cropY + (cropWidth - newWidth), 100 - newWidth);
-      } else if (dragType === 'ne') {
-        // Top-right: expand up/right, shrink down/left
-        newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
-        newY = Math.min(cropY + (newWidth - cropWidth), 100 - newWidth);
-      } else if (dragType === 'sw') {
-        // Bottom-left: expand down/left, shrink up/right
-        newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
-        newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
-      } else if (dragType === 'se') {
-        // Bottom-right: expand down/right, shrink up/left
-        newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
+        if (dragType === 'nw') {
+          newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
+          newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
+          newY = Math.min(cropY + (cropWidth - newWidth), 100 - newWidth);
+        } else if (dragType === 'ne') {
+          newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
+          newY = Math.min(cropY + (newWidth - cropWidth), 100 - newWidth);
+        } else if (dragType === 'sw') {
+          newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
+          newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
+        } else if (dragType === 'se') {
+          newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
+        }
+
+        newWidth = Math.min(newWidth, 100 - newX);
+        newY = Math.max(0, Math.min(newY, 100 - newWidth));
+        newX = Math.max(0, Math.min(newX, 100 - newWidth));
+
+        setCropWidth(newWidth);
+        setCropX(newX);
+        setCropY(newY);
       }
 
-      // Constrain to image boundaries
-      newWidth = Math.min(newWidth, 100 - newX);
-      newY = Math.max(0, Math.min(newY, 100 - newWidth));
-      newX = Math.max(0, Math.min(newX, 100 - newWidth));
+      setDragStart({ x: e.clientX, y: e.clientY });
+    };
 
-      setCropWidth(newWidth);
-      setCropX(newX);
-      setCropY(newY);
-    }
-
-    setDragStart({ x: e.clientX, y: e.clientY });
+    handlersRef.current.handleUp = () => {
+      setIsDragging(false);
+      setDragType(null);
+    };
   }, [isDragging, dragType, dragStart, cropX, cropY, cropWidth]);
 
-  const handleCropMouseUp = useCallback(() => {
-    setIsDragging(false);
-    setDragType(null);
-  }, []);
+  // Attach global listeners when dragging starts
+  useEffect(() => {
+    if (!isDragging) return;
+    
+    const moveFn = handlersRef.current.handleMove;
+    const upFn = handlersRef.current.handleUp;
+    document.addEventListener('mousemove', moveFn);
+    document.addEventListener('mouseup', upFn);
+    
+    return () => {
+      document.removeEventListener('mousemove', moveFn);
+      document.removeEventListener('mouseup', upFn);
+    };
+  }, [isDragging]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
