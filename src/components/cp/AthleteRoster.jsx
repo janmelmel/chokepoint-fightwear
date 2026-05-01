@@ -44,12 +44,12 @@ export default function AthleteRoster() {
         <div className="flex gap-2 mb-8 overflow-x-auto pb-1">
           {athletes.map((a, i) => (
             <button key={i} onClick={() => setActive(i)}
-              className={`flex-shrink-0 px-5 py-2.5 font-mono-ui text-xs uppercase tracking-widest transition-all border ${
+              className={`flex-shrink-0 px-5 py-2.5 font-mono-ui text-xs uppercase tracking-widest transition-all border whitespace-nowrap ${
                 active === i
                   ? 'border-[#4f8ef7] text-[#4f8ef7] bg-[#4f8ef7]/5'
                   : 'border-[#222] text-[#555] hover:border-[#444] hover:text-[#888]'
               }`}>
-              {a.name.split(' ')[0]}
+              {a.name.length > 15 ? a.name.split(' ')[0] : a.name}
             </button>
           ))}
         </div>
@@ -58,7 +58,7 @@ export default function AthleteRoster() {
         <motion.div key={active} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-px bg-[#1a1a1a]">
           {/* Image */}
-          <div className="relative overflow-hidden" style={{ minHeight: '380px' }}>
+          <div className="relative overflow-hidden aspect-square">
             <img src={athlete.image} alt={athlete.name} className="w-full h-full object-cover object-top opacity-80" />
             <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, transparent 50%, #0d0d0d), linear-gradient(to top, #0d0d0d 0%, transparent 40%)' }} />
             <div className="absolute bottom-4 left-4">

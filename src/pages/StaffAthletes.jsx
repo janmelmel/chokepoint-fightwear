@@ -369,45 +369,35 @@ export default function StaffAthletes() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={() => setShowCropModal(false)}>
           <div className="w-full max-w-md bg-[#111] border border-[#333]" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#222]">
-              <h3 className="font-tactical text-xl text-white">Adjust Photo</h3>
+              <h3 className="font-tactical text-xl text-white">Position Photo</h3>
               <button onClick={() => setShowCropModal(false)} className="text-[#555] hover:text-white"><X className="w-5 h-5" /></button>
             </div>
             <div className="p-5 space-y-4">
-              {/* Preview */}
-              <div className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222] overflow-hidden">
+              {/* Preview — shows full image, no zoom */}
+              <div className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222] overflow-hidden flex items-center justify-center">
                 <img
                   src={form.image}
                   style={{
-                    width: `${100 * cropScale}%`,
-                    height: `${100 * cropScale}%`,
-                    left: `${cropOffsetX - 50 * cropScale}%`,
-                    top: `${cropOffsetY - 50 * cropScale}%`,
-                    position: 'absolute',
-                    objectFit: 'cover',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
                   }}
-                  alt="crop preview"
+                  alt="preview"
                 />
               </div>
 
-              {/* Controls */}
+              {/* Controls — simple positioning only */}
               <div className="space-y-3">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Zoom</label>
-                    <span className="font-mono-ui text-xs text-white">{(cropScale * 100).toFixed(0)}%</span>
-                  </div>
-                  <input type="range" min="1" max="3" step="0.1" value={cropScale} onChange={(e) => setCropScale(parseFloat(e.target.value))} className="w-full h-1 bg-[#222] rounded cursor-pointer accent-[#4f8ef7]" />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Horizontal</label>
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Horizontal Position</label>
                     <span className="font-mono-ui text-xs text-white">{cropOffsetX.toFixed(0)}%</span>
                   </div>
                   <input type="range" min="0" max="100" step="1" value={cropOffsetX} onChange={(e) => setCropOffsetX(parseFloat(e.target.value))} className="w-full h-1 bg-[#222] rounded cursor-pointer accent-[#4f8ef7]" />
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Vertical</label>
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Vertical Position</label>
                     <span className="font-mono-ui text-xs text-white">{cropOffsetY.toFixed(0)}%</span>
                   </div>
                   <input type="range" min="0" max="100" step="1" value={cropOffsetY} onChange={(e) => setCropOffsetY(parseFloat(e.target.value))} className="w-full h-1 bg-[#222] rounded cursor-pointer accent-[#4f8ef7]" />
