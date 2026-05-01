@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Plus, Edit2, Trash2, Upload, X, Move } from 'lucide-react';
 import StaffGuard from '@/components/cp/StaffGuard';
@@ -23,10 +23,24 @@ export default function StaffAthletes() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragType, setDragType] = useState(null);
+  const cropContainerRef = useRef(null);
 
   useEffect(() => {
     loadAthletes();
   }, []);
+
+  // Attach global mouse listeners when dragging
+  useEffect(() => {
+    if (!isDragging) return;
+
+    document.addEventListener('mousemove', handleCropMouseMove);
+    document.addEventListener('mouseup', handleCropMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleCropMouseMove);
+      document.removeEventListener('mouseup', handleCropMouseUp);
+    };
+  }, [isDragging, handleCropMouseMove, handleCropMouseUp]);
 
   const loadAthletes = async () => {
     setLoading(true);
@@ -99,35 +113,52 @@ export default function StaffAthletes() {
     setDragStart({ x: e.clientX, y: e.clientY });
   };
 
-  const handleCropMouseMove = (e) => {
+  const handleCropMouseMove = useCallback((e) => {
     if (!isDragging || !dragType) return;
+    e.preventDefault();
 
-    const deltaX = (e.clientX - dragStart.x) / 2;
-    const deltaY = (e.clientY - dragStart.y) / 2;
+    const container = cropContainerRef.current;
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    const deltaX = (e.clientX - dragStart.x) / rect.width * 100;
+    const deltaY = (e.clientY - dragStart.y) / rect.height * 100;
+
+    const MIN_SIZE = 10; // 80px minimum on ~800px container = ~10%
 
     if (dragType === 'move') {
-      setCropX(prev => Math.max(0, Math.min(100 - cropWidth, prev + deltaX)));
-      setCropY(prev => Math.max(0, Math.min(100 - cropWidth, prev + deltaY)));
-    } else if (dragType.includes('corner') || dragType.includes('edge')) {
-      // Resize logic - maintain square aspect ratio for corners
+      // Move the entire box within bounds
+      let newX = cropX + deltaX;
+      let newY = cropY + deltaY;
+      newX = Math.max(0, Math.min(100 - cropWidth, newX));
+      newY = Math.max(0, Math.min(100 - cropWidth, newY));
+      setCropX(newX);
+      setCropY(newY);
+    } else {
+      // Resize from corners/edges - maintain square aspect ratio
       let newWidth = cropWidth;
       let newX = cropX;
       let newY = cropY;
 
       if (dragType === 'nw') {
-        newWidth = Math.max(10, cropWidth - deltaX);
+        // Top-left: expand up/left, shrink down/right
+        newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
         newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
-        newY = Math.min(cropY + (newWidth - cropWidth), 100 - newWidth);
+        newY = Math.min(cropY + (cropWidth - newWidth), 100 - newWidth);
       } else if (dragType === 'ne') {
-        newWidth = Math.max(10, cropWidth + deltaX);
+        // Top-right: expand up/right, shrink down/left
+        newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
         newY = Math.min(cropY + (newWidth - cropWidth), 100 - newWidth);
       } else if (dragType === 'sw') {
-        newWidth = Math.max(10, cropWidth - deltaX);
+        // Bottom-left: expand down/left, shrink up/right
+        newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
         newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
       } else if (dragType === 'se') {
-        newWidth = Math.max(10, cropWidth + deltaX);
+        // Bottom-right: expand down/right, shrink up/left
+        newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
       }
 
+      // Constrain to image boundaries
       newWidth = Math.min(newWidth, 100 - newX);
       newY = Math.max(0, Math.min(newY, 100 - newWidth));
       newX = Math.max(0, Math.min(newX, 100 - newWidth));
@@ -138,12 +169,12 @@ export default function StaffAthletes() {
     }
 
     setDragStart({ x: e.clientX, y: e.clientY });
-  };
+  }, [isDragging, dragType, dragStart, cropX, cropY, cropWidth]);
 
-  const handleCropMouseUp = () => {
+  const handleCropMouseUp = useCallback(() => {
     setIsDragging(false);
     setDragType(null);
-  };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -431,10 +462,8 @@ export default function StaffAthletes() {
             <div className="p-5 space-y-4">
               {/* Fixed crop box overlay */}
               <div
+                ref={cropContainerRef}
                 className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222] overflow-hidden select-none"
-                onMouseMove={handleCropMouseMove}
-                onMouseUp={handleCropMouseUp}
-                onMouseLeave={handleCropMouseUp}
                 style={{ userSelect: 'none' }}
               >
                 {/* Full background image */}
@@ -479,25 +508,35 @@ export default function StaffAthletes() {
                     <div style={{ position: 'absolute', top: '66.666%', left: 0, width: '100%', height: '1px', background: 'rgba(255,255,255,0.3)' }} />
                   </div>
 
-                  {/* Corner handles */}
+                  {/* Corner handles — 20×20px hit area, 6×6px visible indicator */}
                   {[
-                    { corner: 'nw', top: '-4px', left: '-4px', cursor: 'nwse-resize' },
-                    { corner: 'ne', top: '-4px', right: '-4px', cursor: 'nesw-resize' },
-                    { corner: 'sw', bottom: '-4px', left: '-4px', cursor: 'nesw-resize' },
-                    { corner: 'se', bottom: '-4px', right: '-4px', cursor: 'nwse-resize' },
+                    { corner: 'nw', top: '-10px', left: '-10px', cursor: 'nwse-resize' },
+                    { corner: 'ne', top: '-10px', right: '-10px', cursor: 'nesw-resize' },
+                    { corner: 'sw', bottom: '-10px', left: '-10px', cursor: 'nesw-resize' },
+                    { corner: 'se', bottom: '-10px', right: '-10px', cursor: 'nwse-resize' },
                   ].map(h => (
                     <div
                       key={h.corner}
                       onMouseDown={(e) => handleCropBoxMouseDown(e, h.corner)}
                       style={{
                         position: 'absolute',
-                        width: '8px',
-                        height: '8px',
-                        background: 'white',
+                        width: '20px',
+                        height: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         ...h,
                         cursor: h.cursor,
                       }}
-                    />
+                    >
+                      {/* Visible white square indicator */}
+                      <div style={{
+                        width: '6px',
+                        height: '6px',
+                        background: 'white',
+                        border: '1px solid rgba(0,0,0,0.5)',
+                      }} />
+                    </div>
                   ))}
                 </div>
               </div>
