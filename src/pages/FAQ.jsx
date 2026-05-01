@@ -121,14 +121,14 @@ export default function FAQ() {
         <Link to="/Home">
           <CPLogo size={32} variant="white" />
         </Link>
-        <Link to="/Home" className="flex items-center gap-1 font-mono-ui text-[10px] text-[#555] hover:text-white uppercase tracking-widest transition-colors">
+        <Link to="/Home" className="flex items-center gap-1 font-mono-ui text-xs text-[#555] hover:text-white uppercase tracking-widest transition-colors">
           <ChevronLeft className="w-3 h-3" /> Back to Shop
         </Link>
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
-          <p className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest mb-2">Support</p>
+          <p className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-widest mb-2">Support</p>
           <h1 className="font-tactical text-4xl sm:text-5xl text-white">FAQs</h1>
           <p className="font-inter text-sm text-[#666] mt-3">Common questions about orders, products, and more.</p>
         </div>

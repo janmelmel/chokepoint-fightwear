@@ -29,7 +29,7 @@ export default function AdminSidebar({ user, collapsed = false, processingCount 
     <aside className="hidden md:flex flex-col w-56 min-h-screen bg-[#0d0d0d] border-r border-[#1a1a1a] flex-shrink-0">
       <div className="p-5 border-b border-[#1a1a1a]">
         <CPLogo size={28} variant="white" />
-        <p className="font-mono-ui text-[9px] text-[#444] uppercase tracking-widest mt-2">
+        <p className="font-mono-ui text-xs text-[#444] uppercase tracking-widest mt-2">
           {isAdmin ? 'Admin Portal' : 'Staff Portal'}
         </p>
       </div>
@@ -47,7 +47,7 @@ export default function AdminSidebar({ user, collapsed = false, processingCount 
               <l.icon className="w-4 h-4 flex-shrink-0" />
               <span className="flex-1">{l.label}</span>
               {l.badge && (
-                <span className="font-mono-ui text-[9px] px-1.5 py-0.5 bg-[#E87722] text-white rounded-none">
+                <span className="font-mono-ui text-xs px-1.5 py-0.5 bg-[#E87722] text-white rounded-none">
                   {l.badge}
                 </span>
               )}
@@ -66,8 +66,8 @@ export default function AdminSidebar({ user, collapsed = false, processingCount 
           <LogOut className="w-3.5 h-3.5" /> Logout
         </button>
         <div className="px-3 py-2">
-          <p className="font-mono-ui text-[9px] text-[#333] truncate">{user?.email}</p>
-          <p className="font-mono-ui text-[9px] text-[#ff6b00]">{user?.role?.toUpperCase()}</p>
+          <p className="font-mono-ui text-xs text-[#333] truncate">{user?.email}</p>
+          <p className="font-mono-ui text-xs text-[#ff6b00]">{user?.role?.toUpperCase()}</p>
         </div>
       </div>
     </aside>

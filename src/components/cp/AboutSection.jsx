@@ -31,7 +31,7 @@ export default function AboutSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <p className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest mb-2">Our Story</p>
+            <p className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-widest mb-2">Our Story</p>
             <h2 className="font-tactical text-4xl sm:text-5xl text-white mb-6">About Chokepoint</h2>
             <div className="space-y-4 text-[#888] font-inter text-sm leading-relaxed">
               <p>

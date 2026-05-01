@@ -26,22 +26,22 @@ export default function ProductCard({ product, onPreview }) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
 
         {isContactToOrder && (
-          <span className="absolute top-3 left-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 border border-[#ff6b00]/50 text-[#ff6b00] bg-[#0a0a0a]/80">
+          <span className="absolute top-3 left-3 font-mono-ui text-xs tracking-widest uppercase px-2 py-1 border border-[#ff6b00]/50 text-[#ff6b00] bg-[#0a0a0a]/80">
             INQUIRE
           </span>
         )}
         {!isContactToOrder && orderType === 'preorder' && !isSoldOut && (
-          <span className="absolute top-3 left-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 bg-[#ff6b00] text-white font-bold">
+          <span className="absolute top-3 left-3 font-mono-ui text-xs tracking-widest uppercase px-2 py-1 bg-[#ff6b00] text-white font-bold">
             PRE-ORDER
           </span>
         )}
         {isSoldOut && (
-          <span className="absolute top-3 left-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 bg-[#ff0000]/80 text-white">
+          <span className="absolute top-3 left-3 font-mono-ui text-xs tracking-widest uppercase px-2 py-1 bg-[#ff0000]/80 text-white">
             SOLD OUT
           </span>
         )}
         {isLowStock && (
-          <span className="absolute top-3 right-3 font-mono-ui text-[10px] tracking-widest uppercase px-2 py-1 border border-[#ff0000]/50 text-[#ff0000]">
+          <span className="absolute top-3 right-3 font-mono-ui text-xs tracking-widest uppercase px-2 py-1 border border-[#ff0000]/50 text-[#ff0000]">
             {stockLeft} LEFT
           </span>
         )}
@@ -55,11 +55,11 @@ export default function ProductCard({ product, onPreview }) {
 
       {/* Info */}
       <div className="p-4 flex flex-col flex-1">
-        <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
+        <p className="font-mono-ui text-xs text-[#555] uppercase tracking-widest">{product.category_name || 'Fightwear'}</p>
         <h3 className="font-tactical text-xl text-white mt-0.5 leading-tight">{product.name}</h3>
         <p className="font-mono-ui text-base text-[#ff6b00] mt-2 font-bold">₱{Number(product.price).toLocaleString()}</p>
         {(product.sold_count || product.total_ordered || 0) > 0 && (
-          <span className="font-mono-ui text-[10px] text-[#555] mt-1 block">
+          <span className="font-mono-ui text-xs text-[#555] mt-1 block">
             {(product.sold_count || product.total_ordered || 0)} sold
           </span>
         )}

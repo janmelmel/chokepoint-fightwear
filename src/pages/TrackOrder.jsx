@@ -143,7 +143,7 @@ export default function TrackOrder() {
 
       <main className="max-w-2xl mx-auto px-4 py-12">
         <div className="text-center mb-10">
-          <p className="font-mono-ui text-[10px] text-[#ff8c00] uppercase tracking-widest mb-2">Live Production Status</p>
+          <p className="font-mono-ui text-xs text-[#ff8c00] uppercase tracking-widest mb-2">Live Production Status</p>
           <h1 className="font-tactical text-4xl sm:text-5xl text-white">Track Your Order</h1>
           <p className="font-mono-ui text-sm text-[#666] mt-3">Enter your order number or email to see your production trail.</p>
         </div>

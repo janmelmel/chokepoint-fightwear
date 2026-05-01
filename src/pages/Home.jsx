@@ -115,11 +115,11 @@ export default function Home() {
               {/* Parent header */}
               <div className="flex items-center gap-4 mb-8">
                 <div>
-                  <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Collection</p>
+                  <p className="font-mono-ui text-xs text-[#555] uppercase tracking-widest">Collection</p>
                   <h2 className="font-tactical text-4xl sm:text-5xl text-white">{cat.name}</h2>
                 </div>
                 <div className="flex-1 h-px bg-[#1a1a1a]" />
-                <span className="font-mono-ui text-[11px] text-[#444]">{totalItems} items</span>
+                <span className="font-mono-ui text-xs text-[#444]">{totalItems} items</span>
               </div>
 
               {/* Subcategory groups */}
@@ -129,7 +129,7 @@ export default function Home() {
                     <div className="w-1 h-5 bg-[#ff6b00]" />
                     <h3 className="font-tactical text-2xl text-[#ccc] uppercase">{sub.name}</h3>
                     <div className="flex-1 h-px bg-[#1a1a1a]" />
-                    <span className="font-mono-ui text-[10px] text-[#444]">{items.length}</span>
+                    <span className="font-mono-ui text-xs text-[#444]">{items.length}</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
                     {items.map((p, i) =>
@@ -160,7 +160,7 @@ export default function Home() {
 
         {/* CUSTOM GEAR CTA */}
         <section id="custom" className="border-t border-[#1a1a1a] pt-16 max-w-2xl mx-auto text-center">
-          <p className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest mb-2">Bespoke</p>
+          <p className="font-mono-ui text-xs text-[#ff6b00] uppercase tracking-widest mb-2">Bespoke</p>
           <h2 className="font-tactical text-4xl sm:text-5xl text-white">Custom Gear</h2>
           <div className="w-12 h-px bg-[#333] mx-auto mt-4 mb-4" />
           <p className="font-mono-ui text-sm text-[#666] mb-8">Team kits, custom patches, academy sets. Tell us what you need.</p>

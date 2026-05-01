@@ -30,7 +30,7 @@ export default function FooterLinks() {
 
           {/* Shop */}
           <div>
-            <h4 className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-3">Shop</h4>
+            <h4 className="font-mono-ui text-xs text-[#555] uppercase tracking-widest mb-3">Shop</h4>
             <ul className="space-y-2">
               <li><a href="#gear" className="font-mono-ui text-xs text-[#888] hover:text-white transition-colors">All Products</a></li>
               <li><a href="#custom" className="font-mono-ui text-xs text-[#888] hover:text-white transition-colors">Custom Gear</a></li>
@@ -40,7 +40,7 @@ export default function FooterLinks() {
 
           {/* Support */}
           <div>
-            <h4 className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-3">Support</h4>
+            <h4 className="font-mono-ui text-xs text-[#555] uppercase tracking-widest mb-3">Support</h4>
             <ul className="space-y-2">
               <li><Link to="/FAQ" className="font-mono-ui text-xs text-[#888] hover:text-white transition-colors">FAQs</Link></li>
               <li><a href="#about" className="font-mono-ui text-xs text-[#888] hover:text-white transition-colors">About Us</a></li>
@@ -50,17 +50,17 @@ export default function FooterLinks() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest mb-3">Contact</h4>
+            <h4 className="font-mono-ui text-xs text-[#555] uppercase tracking-widest mb-3">Contact</h4>
             <p className="font-mono-ui text-xs text-[#888]">sales@chokepoint-fightwear.com</p>
-            <p className="font-mono-ui text-[10px] text-[#555] mt-2">Lapu Lapu City, CEBU Philippines</p>
+            <p className="font-mono-ui text-xs text-[#555] mt-2">Lapu Lapu City, CEBU Philippines</p>
           </div>
         </div>
 
         <div className="border-t border-[#1a1a1a] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-mono-ui text-[10px] text-[#444] uppercase tracking-widest">
+          <p className="font-mono-ui text-xs text-[#444] uppercase tracking-widest">
             © 2026 Chokepoint Fightwear. All Rights Reserved.
           </p>
-          <Link to="/Staff" className="font-mono-ui text-[10px] text-[#333] hover:text-[#555] uppercase tracking-widest transition-colors">
+          <Link to="/Staff" className="font-mono-ui text-xs text-[#333] hover:text-[#555] uppercase tracking-widest transition-colors">
             Staff Portal
           </Link>
         </div>
