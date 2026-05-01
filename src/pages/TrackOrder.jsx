@@ -155,7 +155,7 @@ export default function TrackOrder() {
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Order number (e.g., CP-ABC123)"
-                className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm pl-10 pr-4 py-3 focus:outline-none focus:border-[#ff8c00]/60"
+                className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm pl-10 pr-4 py-3 focus:outline-none focus:border-[#3B82F6]/60"
               />
             </div>
             <button
