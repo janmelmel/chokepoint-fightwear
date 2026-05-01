@@ -41,21 +41,54 @@ export default function About() {
         </div>
       </section>
 
+      {/* PHOTO GRID */}
+      <section className="py-8 px-4">
+        <div className="max-w-3xl mx-auto grid grid-cols-3 gap-2">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} variants={fadeUp}
+            className="col-span-2 relative overflow-hidden" style={{ height: '280px' }}>
+            <img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?w=800&q=80" alt="BJJ training" className="w-full h-full object-cover opacity-80" />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #0a0a0a 0%, transparent 60%)' }} />
+          </motion.div>
+          <div className="flex flex-col gap-2">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp}
+              className="relative overflow-hidden flex-1">
+              <img src="https://images.unsplash.com/photo-1579216715010-7a0420c53c05?w=400&q=80" alt="Grappling gear" className="w-full h-full object-cover opacity-80" />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #0a0a0a 0%, transparent 60%)' }} />
+            </motion.div>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2} variants={fadeUp}
+              className="relative overflow-hidden flex-1">
+              <img src="https://images.unsplash.com/photo-1517438322307-e67111335449?w=400&q=80" alt="MMA fighters" className="w-full h-full object-cover opacity-80" />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #0a0a0a 0%, transparent 60%)' }} />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* STORY BODY */}
       <section className="py-12 px-4">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-            className="border border-[#1a1a1a] bg-[#111] p-8">
-            <p className="font-mono-ui text-sm text-[#999] leading-relaxed">
-              We are a brand made by athletes who understand what real training demands. Our founders compete and roll regularly — which means we design and test every piece of gear from the inside out. We know the difference between a seam that holds through a scramble and one that doesn't. We know how important it is to feel locked in when you step onto the mat.
-            </p>
-            <p className="font-mono-ui text-sm text-[#999] leading-relaxed mt-4">
-              Our mission is simple: <span className="text-[#ff8c00]">give fighters the confidence to perform at their best by giving them gear that won't let them down.</span> Whether you're a beginner finding your footing or a seasoned competitor preparing for your next tournament, Chokepoint gear is made to move with you — and take whatever the mat throws at it.
-            </p>
-            <p className="font-mono-ui text-sm text-[#999] leading-relaxed mt-4">
-              We're based in Lapu-Lapu City, Cebu — the heart of Philippine combat sports culture. Our community drives everything we do. We work with local gyms, academies, and fighters to make sure what we build actually serves the people who train every day.
-            </p>
-          </motion.div>
+        <div className="max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+              className="relative overflow-hidden" style={{ height: '360px' }}>
+              <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=700&q=80" alt="Custom fight gear" className="w-full h-full object-cover opacity-75" />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, transparent 60%, #0a0a0a)' }} />
+              <div className="absolute bottom-4 left-4">
+                <span className="font-mono-ui text-[10px] text-[#ff6b00] uppercase tracking-widest border border-[#ff6b00]/30 px-2 py-1 bg-[#0a0a0a]/70">Cebu, PH</span>
+              </div>
+            </motion.div>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} variants={fadeUp}
+              className="border border-[#1a1a1a] bg-[#111] p-8">
+              <p className="font-mono-ui text-sm text-[#999] leading-relaxed">
+                We are a brand made by athletes who understand what real training demands. Our founders compete and roll regularly — which means we design and test every piece of gear from the inside out. We know the difference between a seam that holds through a scramble and one that doesn't.
+              </p>
+              <p className="font-mono-ui text-sm text-[#999] leading-relaxed mt-4">
+                Our mission is simple: <span className="text-[#ff8c00]">give fighters the confidence to perform at their best by giving them gear that won't let them down.</span> Whether you're a beginner finding your footing or a seasoned competitor preparing for your next tournament, Chokepoint gear is made to move with you.
+              </p>
+              <p className="font-mono-ui text-sm text-[#999] leading-relaxed mt-4">
+                We're based in Lapu-Lapu City, Cebu — the heart of Philippine combat sports culture. Our community drives everything we do.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
