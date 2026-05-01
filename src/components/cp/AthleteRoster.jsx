@@ -63,14 +63,13 @@ export default function AthleteRoster() {
               src={athlete.image}
               alt={athlete.name}
               style={{
-                width: `${100 * (athlete.imageFit?.scale || 1)}%`,
-                height: `${100 * (athlete.imageFit?.scale || 1)}%`,
-                left: `${(athlete.imageFit?.offsetX || 50) - 50 * (athlete.imageFit?.scale || 1)}%`,
-                top: `${(athlete.imageFit?.offsetY || 50) - 50 * (athlete.imageFit?.scale || 1)}%`,
-                position: 'absolute',
                 objectFit: 'cover',
+                objectPosition: `${athlete.imageFit?.cropX || 0}% ${athlete.imageFit?.cropY || 0}%`,
+                width: '100%',
+                height: '100%',
+                opacity: 0.8,
               }}
-              className="opacity-80"
+              className="w-full h-full"
             />
             <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, transparent 50%, #0d0d0d), linear-gradient(to top, #0d0d0d 0%, transparent 40%)' }} />
             <div className="absolute bottom-4 left-4">
