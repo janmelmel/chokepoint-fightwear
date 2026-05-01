@@ -32,6 +32,7 @@ import StaffMetrics from './pages/StaffMetrics';
 import Services from './pages/Services';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import StaffAthletes from './pages/StaffAthletes';
 import MessengerButton from '@/components/cp/MessengerButton';
 
 const AuthenticatedApp = () => {
@@ -78,6 +79,7 @@ const AuthenticatedApp = () => {
       <Route path="/Services" element={<Services />} />
       <Route path="/About" element={<About />} />
       <Route path="/Contact" element={<Contact />} />
+      <Route path="/StaffAthletes" element={<StaffAthletes />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
     <MessengerButton />

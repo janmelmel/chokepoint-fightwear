@@ -1,39 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Instagram } from 'lucide-react';
-
-const ATHLETES = [
-  {
-    name: 'Kyle "The Technician" Santos',
-    discipline: 'Brazilian Jiu-Jitsu',
-    belt: 'Brown Belt',
-    location: 'Cebu City, PH',
-    achievements: ['2x Regional IBJJF Champion', 'NABJJF Gold Medalist', 'Head Coach — Apex BJJ Cebu'],
-    image: 'https://images.unsplash.com/photo-1546483875-ad9014c88eba?w=600&q=80',
-    quote: 'Chokepoint gear moves with me in every scramble. The fit is dialed in and it never lets me down on the mat.',
-    ig: '#',
-  },
-  {
-    name: 'Maria "Iron" Reyes',
-    discipline: 'Muay Thai / MMA',
-    belt: 'Pro Fighter',
-    location: 'Lapu-Lapu City, PH',
-    achievements: ['ONE Championship Contender', '5x National Muay Thai Champ', 'Featured in Fight PH Magazine'],
-    image: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=600&q=80',
-    quote: 'Training in Chokepoint rashguards changed the game for me — no rashes, no restrictions, just pure performance.',
-    ig: '#',
-  },
-  {
-    name: 'Jomar "Lockdown" Cruz',
-    discipline: 'No-Gi Grappling',
-    belt: 'Black Belt',
-    location: 'Mandaue, Cebu PH',
-    achievements: ['ADCC Regional Trials Finalist', '3x Cebu Open Gold', 'Head Instructor — Ground Zero Grappling'],
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80',
-    quote: 'I\'ve worn a lot of brands. Chokepoint is the only one I trust in a high-stakes match.',
-    ig: '#',
-  },
-];
+import { base44 } from '@/api/base44Client';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -41,8 +9,21 @@ const fadeUp = {
 };
 
 export default function AthleteRoster() {
+  const [athletes, setAthletes] = useState([]);
   const [active, setActive] = useState(0);
-  const athlete = ATHLETES[active];
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const data = await base44.entities.Athlete.filter({ is_active: true }, 'sort_order');
+      setAthletes(data);
+      setLoading(false);
+    })();
+  }, []);
+
+  if (loading || athletes.length === 0) return null;
+
+  const athlete = athletes[active];
 
   return (
     <section className="py-20 px-4 border-t border-[#1a1a1a] bg-[#0d0d0d]">
@@ -61,7 +42,7 @@ export default function AthleteRoster() {
 
         {/* Athlete tab selector */}
         <div className="flex gap-2 mb-8 overflow-x-auto pb-1">
-          {ATHLETES.map((a, i) => (
+          {athletes.map((a, i) => (
             <button key={i} onClick={() => setActive(i)}
               className={`flex-shrink-0 px-5 py-2.5 font-mono-ui text-xs uppercase tracking-widest transition-all border ${
                 active === i
@@ -118,7 +99,7 @@ export default function AthleteRoster() {
 
         {/* Dot indicators */}
         <div className="flex gap-2 justify-center mt-5">
-          {ATHLETES.map((_, i) => (
+          {athletes.map((_, i) => (
             <button key={i} onClick={() => setActive(i)}
               className={`h-1 transition-all ${i === active ? 'w-8 bg-[#4f8ef7]' : 'w-2 bg-[#2a2a2a]'}`} />
           ))}
