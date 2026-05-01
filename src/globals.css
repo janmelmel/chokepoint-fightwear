@@ -118,3 +118,14 @@ body {
 .scrollbar-tactical::-webkit-scrollbar { width: 4px; }
 .scrollbar-tactical::-webkit-scrollbar-track { background: #111; }
 .scrollbar-tactical::-webkit-scrollbar-thumb { background: #333; }
+
+/* Ensure HubSpot chat widget is always visible */
+#hubspot-messages-iframe-container,
+#hs-web-interactives-top-anchor,
+.hs-web-interactives-overlay,
+#hubspot-messages-iframe-container iframe {
+  z-index: 999999 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
