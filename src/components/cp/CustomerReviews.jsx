@@ -69,22 +69,7 @@ export default function CustomerReviews() {
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    (async () => {
-      const dbReviews = await base44.entities.Review.list('-created_date', 100);
-      if (dbReviews.length > 0) {
-        const formatted = dbReviews.map(r => ({
-          name: r.customer_name,
-          location: r.customer_email ? r.customer_email.split('@')[0] : 'Customer',
-          product: r.product_name,
-          rating: r.rating || 5,
-          text: r.comment || '',
-          avatar: r.customer_name ? r.customer_name.split(' ').map(n => n[0]).join('') : 'C',
-        })).filter(r => r.text);
-        setReviews(formatted.length > 0 ? formatted : DUMMY_REVIEWS);
-      } else {
-        setReviews(DUMMY_REVIEWS);
-      }
-    })();
+    setReviews(DUMMY_REVIEWS);
   }, []);
 
   const perPage = 3;
