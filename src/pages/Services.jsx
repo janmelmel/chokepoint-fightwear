@@ -75,9 +75,9 @@ export default function Services() {
     bg:        '#141414',
     surface:   '#1c1c1e',
     border:    '#2a2a2a',
-    red:       '#a00000',
-    redBright: '#c00000',
-    redGlow:   'rgba(160,0,0,0.15)',
+    red:       '#4f8ef7',
+    redBright: '#6ea8ff',
+    redGlow:   'rgba(79,142,247,0.15)',
     silver:    '#a8a8a8',
     navy:      '#0a192f',
     text:      '#e0e0e0',
@@ -90,7 +90,7 @@ export default function Services() {
 
       {/* HERO */}
       <section className="relative overflow-hidden pt-20 pb-14 px-4">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] blur-[120px] pointer-events-none" style={{ background: 'rgba(160,0,0,0.12)' }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] blur-[120px] pointer-events-none" style={{ background: 'rgba(79,142,247,0.12)' }} />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}
             className="font-mono-ui text-xs uppercase tracking-[0.4em] mb-3" style={{ color: C.silver }}>
@@ -271,9 +271,9 @@ export default function Services() {
 
       {/* CTA */}
       <section className="py-16 px-4 relative overflow-hidden" style={{ borderTop: `1px solid ${C.border}`, background: C.surface }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] blur-[130px] pointer-events-none" style={{ background: 'rgba(160,0,0,0.1)' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] blur-[130px] pointer-events-none" style={{ background: 'rgba(79,142,247,0.1)' }} />
         {/* Dark navy accent stripe */}
-        <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: `linear-gradient(to right, ${C.navy}, ${C.red}, ${C.navy})` }} />
+        <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: `linear-gradient(to right, ${C.navy}, ${C.redBright}, ${C.navy})` }} />
         <div className="max-w-xl mx-auto text-center relative z-10">
           <p className="font-mono-ui text-xs uppercase tracking-[0.3em] mb-3" style={{ color: C.silver }}>Ready to Build?</p>
           <h2 className="font-tactical text-4xl sm:text-6xl text-white leading-none mb-4">
