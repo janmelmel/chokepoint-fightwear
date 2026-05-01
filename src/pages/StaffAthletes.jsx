@@ -453,8 +453,8 @@ export default function StaffAthletes() {
               {/* Fixed crop box overlay */}
               <div
                 ref={cropContainerRef}
-                className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222] overflow-hidden select-none"
-                style={{ userSelect: 'none' }}
+                className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222] select-none"
+                style={{ userSelect: 'none', overflow: 'visible' }}
               >
                 {/* Full background image */}
                 <img
@@ -486,6 +486,8 @@ export default function StaffAthletes() {
                     width: `${cropWidth}%`,
                     height: `${cropWidth}%`,
                     border: '2px solid rgba(255,255,255,0.5)',
+                    pointerEvents: 'auto',
+                    touchAction: 'none',
                   }}
                   onMouseDown={(e) => handleCropBoxMouseDown(e, 'move')}
                   className="cursor-move"
