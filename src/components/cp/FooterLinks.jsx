@@ -43,8 +43,8 @@ export default function FooterLinks() {
             <h4 className="font-mono-ui text-xs text-[#555] uppercase tracking-widest mb-3">Support</h4>
             <ul className="space-y-2">
               <li><Link to="/FAQ" className="font-mono-ui text-xs text-[#888] hover:text-white transition-colors">FAQs</Link></li>
-              <li><a href="#about" className="font-mono-ui text-xs text-[#888] hover:text-white transition-colors">About Us</a></li>
-              <li><a href={`mailto:chokepoint-fightwear@gmail.com`} className="font-mono-ui text-xs text-[#888] hover:text-white transition-colors">Contact</a></li>
+              <li><Link to="/About" className="font-mono-ui text-xs text-[#888] hover:text-white transition-colors">About Us</Link></li>
+              <li><Link to="/Contact" className="font-mono-ui text-xs text-[#888] hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
 

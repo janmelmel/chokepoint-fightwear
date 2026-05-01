@@ -30,6 +30,8 @@ import Search from './pages/Search';
 import StaffStockLog from './pages/StaffStockLog';
 import StaffMetrics from './pages/StaffMetrics';
 import Services from './pages/Services';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import MessengerButton from '@/components/cp/MessengerButton';
 
 const AuthenticatedApp = () => {
@@ -74,6 +76,8 @@ const AuthenticatedApp = () => {
       <Route path="/StaffStockLog" element={<StaffStockLog />} />
       <Route path="/StaffMetrics" element={<StaffMetrics />} />
       <Route path="/Services" element={<Services />} />
+      <Route path="/About" element={<About />} />
+      <Route path="/Contact" element={<Contact />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
     <MessengerButton />

@@ -187,6 +187,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
         {/* RIGHT: search, track order, FAQ, cart, profile — right-aligned */}
         <div className="flex items-center gap-3 justify-end">
           <NavSearchBar onResultClick={handleSearchResult} />
+          <Link to="/About" className={navLink(isActive('/About'))}>About</Link>
           <Link to="/TrackOrder" className={navLink(isActive('/TrackOrder'))}>Track Order</Link>
           <Link to="/FAQ" className={navLink(isActive('/FAQ'))}>FAQ</Link>
           <button onClick={onCartClick} className="relative text-[#888] hover:text-white transition-colors">
@@ -281,6 +282,10 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
           <Link to="/Custom" onClick={() => setMenuOpen(false)}
             className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/Custom') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
             Custom
+          </Link>
+          <Link to="/About" onClick={() => setMenuOpen(false)}
+            className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/About') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
+            About
           </Link>
           <Link to="/TrackOrder" onClick={() => setMenuOpen(false)}
             className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/TrackOrder') ? 'text-[#E87722]' : 'text-[#888] hover:text-white'}`}>
