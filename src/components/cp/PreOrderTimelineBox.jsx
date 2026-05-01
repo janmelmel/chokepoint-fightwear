@@ -11,11 +11,11 @@ export default function PreOrderTimelineBox({ orderDate }) {
   return (
     <div style={{
       background: '#111',
-      borderLeft: '3px solid #E87722',
+      borderLeft: '3px solid #3B82F6',
       padding: '10px 14px',
-      fontSize: '11px'
+      fontSize: '11px',
     }}>
-      <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#E87722', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '8px' }} className="text-[#3B82F6]">
+      <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#3B82F6', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '8px' }}>
         📦 Pre-Order Timeline
       </p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -29,9 +29,9 @@ export default function PreOrderTimelineBox({ orderDate }) {
         </div>
         <div style={{ borderTop: '1px solid #222', marginTop: '4px', paddingTop: '4px', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#aaa' }}>⏱ Est. Arrival</span>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#E87722', fontWeight: 700 }}>{tl.arrivalRange}</span>
+          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#3B82F6', fontWeight: 700 }}>{tl.arrivalRange}</span>
         </div>
       </div>
-    </div>);
-
+    </div>
+  );
 }
