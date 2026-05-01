@@ -116,7 +116,7 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? 'bg-[#0a0a0a]/97 backdrop-blur-sm border-b border-[#333]' : 'bg-[#0a0a0a]/90 backdrop-blur-sm'
+      scrolled ? 'bg-[#0a0a0a] border-b border-[#333]' : 'bg-[#0a0a0a] border-b border-[#333]/20'
     }`}>
 
       {/* ── DESKTOP (lg+) — strict 3-column grid so logo is always centered ── */}
