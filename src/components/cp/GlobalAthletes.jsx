@@ -8,21 +8,21 @@ const REGIONS = [
     icon: Globe,
     location: 'Japan, Philippines, Vietnam',
     story: 'From Japan to Manila competitions, grapplers and fighters across Southeast Asia choose Chokepoint for gear built for tropical climates and intense training.',
-    image: 'https://images.unsplash.com/photo-1546483875-ad9014c88eba?w=600&q=80',
+    image: 'https://media.base44.com/images/public/699c180d84abb747333a6889/93d97a702_kyleartph.png',
   },
   {
     region: 'North America',
     icon: Award,
     location: 'USA, Canada, Mexico',
     story: 'Wrestlers, MMA fighters, and BJJ competitors trust Chokepoint from training camps to competition day.',
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80',
+    image: 'https://media.base44.com/images/public/699c180d84abb747333a6889/74eb9213d_maxalam.png',
   },
   {
     region: 'Europe',
     icon: Users,
     location: 'UK',
     story: 'European fight communities rely on Chokepoint for consistent, tournament-tested gear across the continent.',
-    image: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=600&q=80',
+    image: 'https://media.base44.com/images/public/699c180d84abb747333a6889/ac2ec04e9_mickeu.jpg',
   },
 ];
 
