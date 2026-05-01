@@ -20,6 +20,8 @@ export default function StaffAthletes() {
   const [cropScale, setCropScale] = useState(1);
   const [cropOffsetX, setCropOffsetX] = useState(50);
   const [cropOffsetY, setCropOffsetY] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     loadAthletes();
@@ -87,6 +89,30 @@ export default function StaffAthletes() {
       imageFit: { scale: cropScale, offsetX: cropOffsetX, offsetY: cropOffsetY },
     }));
     setShowCropModal(false);
+  };
+
+  const handleCropMouseDown = (e) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleCropMouseMove = (e) => {
+    if (!isDragging) return;
+    const deltaX = e.clientX - dragStart.x;
+    const deltaY = e.clientY - dragStart.y;
+    setCropOffsetX(prev => Math.max(0, Math.min(100, prev + deltaX / 2)));
+    setCropOffsetY(prev => Math.max(0, Math.min(100, prev + deltaY / 2)));
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleCropMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleCropWheel = (e) => {
+    e.preventDefault();
+    const zoom = e.deltaY > 0 ? 0.9 : 1.1;
+    setCropScale(prev => Math.max(1, Math.min(3, prev * zoom)));
   };
 
   const handleSubmit = async (e) => {
@@ -369,39 +395,42 @@ export default function StaffAthletes() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm" onClick={() => setShowCropModal(false)}>
           <div className="w-full max-w-md bg-[#111] border border-[#333]" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#222]">
-              <h3 className="font-tactical text-xl text-white">Position Photo</h3>
+              <h3 className="font-tactical text-xl text-white">Crop Photo</h3>
               <button onClick={() => setShowCropModal(false)} className="text-[#555] hover:text-white"><X className="w-5 h-5" /></button>
             </div>
             <div className="p-5 space-y-4">
-              {/* Preview — shows full image, no zoom */}
-              <div className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222] overflow-hidden flex items-center justify-center">
+              {/* Interactive crop preview */}
+              <div
+                className="relative w-full aspect-square bg-[#0a0a0a] border border-[#222] overflow-hidden cursor-move select-none"
+                onMouseDown={handleCropMouseDown}
+                onMouseMove={handleCropMouseMove}
+                onMouseUp={handleCropMouseUp}
+                onMouseLeave={handleCropMouseUp}
+                onWheel={handleCropWheel}
+                style={{ userSelect: 'none' }}
+              >
                 <img
                   src={form.image}
                   style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    objectFit: 'contain',
+                    width: `${100 * cropScale}%`,
+                    height: `${100 * cropScale}%`,
+                    left: `${cropOffsetX - 50 * cropScale}%`,
+                    top: `${cropOffsetY - 50 * cropScale}%`,
+                    position: 'absolute',
+                    objectFit: 'cover',
                   }}
-                  alt="preview"
+                  alt="crop preview"
+                  draggable="false"
                 />
               </div>
 
-              {/* Controls — simple positioning only */}
-              <div className="space-y-3">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Horizontal Position</label>
-                    <span className="font-mono-ui text-xs text-white">{cropOffsetX.toFixed(0)}%</span>
-                  </div>
-                  <input type="range" min="0" max="100" step="1" value={cropOffsetX} onChange={(e) => setCropOffsetX(parseFloat(e.target.value))} className="w-full h-1 bg-[#222] rounded cursor-pointer accent-[#4f8ef7]" />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Vertical Position</label>
-                    <span className="font-mono-ui text-xs text-white">{cropOffsetY.toFixed(0)}%</span>
-                  </div>
-                  <input type="range" min="0" max="100" step="1" value={cropOffsetY} onChange={(e) => setCropOffsetY(parseFloat(e.target.value))} className="w-full h-1 bg-[#222] rounded cursor-pointer accent-[#4f8ef7]" />
-                </div>
+              {/* Instructions */}
+              <div className="bg-[#0a0a0a] border border-[#222] px-3 py-2.5 space-y-1.5">
+                <p className="font-mono-ui text-[10px] text-[#4f8ef7] uppercase tracking-widest">Instructions</p>
+                <ul className="space-y-1 text-[10px] text-[#666]">
+                  <li>• <strong>Drag</strong> to move the image</li>
+                  <li>• <strong>Scroll</strong> to zoom in/out</li>
+                </ul>
               </div>
 
               <div className="flex gap-3">
