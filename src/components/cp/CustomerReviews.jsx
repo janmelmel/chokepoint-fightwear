@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
-const REVIEWS = [
+const DUMMY_REVIEWS = [
   {
     name: 'Aldrin M.',
     location: 'Cebu City',
@@ -64,10 +65,31 @@ function Stars({ count = 5 }) {
 }
 
 export default function CustomerReviews() {
+  const [reviews, setReviews] = useState([]);
   const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      const dbReviews = await base44.entities.Review.list('-created_date', 100);
+      if (dbReviews.length > 0) {
+        const formatted = dbReviews.map(r => ({
+          name: r.customer_name,
+          location: r.customer_email ? r.customer_email.split('@')[0] : 'Customer',
+          product: r.product_name,
+          rating: r.rating || 5,
+          text: r.comment || '',
+          avatar: r.customer_name ? r.customer_name.split(' ').map(n => n[0]).join('') : 'C',
+        })).filter(r => r.text);
+        setReviews(formatted.length > 0 ? formatted : DUMMY_REVIEWS);
+      } else {
+        setReviews(DUMMY_REVIEWS);
+      }
+    })();
+  }, []);
+
   const perPage = 3;
-  const totalPages = Math.ceil(REVIEWS.length / perPage);
-  const visible = REVIEWS.slice(page * perPage, page * perPage + perPage);
+  const totalPages = Math.ceil(reviews.length / perPage);
+  const visible = reviews.slice(page * perPage, page * perPage + perPage);
 
   return (
     <section className="py-20 px-4 border-t border-[#1a1a1a]">
@@ -88,7 +110,7 @@ export default function CustomerReviews() {
             <div className="text-right">
               <p className="font-tactical text-3xl text-[#6ea8ff]">5.0</p>
               <Stars />
-              <p className="font-mono-ui text-[10px] text-[#555] mt-0.5">{REVIEWS.length} verified reviews</p>
+              <p className="font-mono-ui text-[10px] text-[#555] mt-0.5">{reviews.length} verified reviews</p>
             </div>
           </div>
         </div>
