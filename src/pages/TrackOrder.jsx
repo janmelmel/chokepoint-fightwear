@@ -124,8 +124,7 @@ export default function TrackOrder() {
 
     const allOrders = await base44.entities.Order.list('-created_date', 100);
     const found = allOrders.filter(o =>
-      o.order_number?.toLowerCase().includes(query.toLowerCase()) ||
-      o.customer_email?.toLowerCase() === query.toLowerCase()
+      o.order_number?.toLowerCase().includes(query.toLowerCase())
     );
 
     setOrders(found);
@@ -145,7 +144,7 @@ export default function TrackOrder() {
         <div className="text-center mb-10">
           <p className="font-mono-ui text-xs text-[#4f8ef7] uppercase tracking-widest mb-2">Live Production Status</p>
           <h1 className="font-tactical text-4xl sm:text-5xl text-white">Track Your Order</h1>
-          <p className="font-mono-ui text-sm text-[#666] mt-3">Enter your order number or email to see your production trail.</p>
+          <p className="font-mono-ui text-sm text-[#666] mt-3">Enter your order number to see your production trail.</p>
         </div>
 
         <form onSubmit={handleSearch} className="mb-10">
@@ -155,7 +154,7 @@ export default function TrackOrder() {
               <input
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                placeholder="Order number (e.g., CP-ABC123) or email"
+                placeholder="Order number (e.g., CP-ABC123)"
                 className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm pl-10 pr-4 py-3 focus:outline-none focus:border-[#ff8c00]/60"
               />
             </div>
@@ -175,7 +174,7 @@ export default function TrackOrder() {
               <div className="card-tactical p-8 text-center">
                 <XCircle className="w-10 h-10 text-[#333] mx-auto mb-3" />
                 <p className="font-mono-ui text-sm text-[#666]">No orders found.</p>
-                <p className="font-mono-ui text-[10px] text-[#444] mt-1">Double-check your order number or email.</p>
+                <p className="font-mono-ui text-[10px] text-[#444] mt-1">Double-check your order number.</p>
               </div>
             ) : (
               orders.map(order => <OrderCard key={order.id} order={order} />)
