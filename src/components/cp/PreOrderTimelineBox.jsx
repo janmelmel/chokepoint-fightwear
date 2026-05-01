@@ -13,9 +13,9 @@ export default function PreOrderTimelineBox({ orderDate }) {
       background: '#111',
       borderLeft: '3px solid #E87722',
       padding: '10px 14px',
-      fontSize: '11px',
+      fontSize: '11px'
     }}>
-      <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#E87722', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '8px' }}>
+      <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#E87722', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '8px' }} className="text-[#00a6ff]">
         📦 Pre-Order Timeline
       </p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -32,6 +32,6 @@ export default function PreOrderTimelineBox({ orderDate }) {
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#E87722', fontWeight: 700 }}>{tl.arrivalRange}</span>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
