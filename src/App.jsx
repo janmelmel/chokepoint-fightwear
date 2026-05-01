@@ -30,6 +30,7 @@ import Search from './pages/Search';
 import StaffStockLog from './pages/StaffStockLog';
 import StaffMetrics from './pages/StaffMetrics';
 import Services from './pages/Services';
+import MessengerButton from '@/components/cp/MessengerButton';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -48,6 +49,7 @@ const AuthenticatedApp = () => {
   }
 
   return (
+    <>
     <Routes>
       <Route path="/" element={<Navigate to="/Home" replace />} />
       <Route path="/Home" element={<Home />} />
@@ -74,6 +76,8 @@ const AuthenticatedApp = () => {
       <Route path="/Services" element={<Services />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
+    <MessengerButton />
+    </>
   );
 };
 
