@@ -4,23 +4,23 @@ import { Globe, Award, Users } from 'lucide-react';
 
 const REGIONS = [
   {
-    region: 'Southeast Asia',
+    region: 'Asia',
     icon: Globe,
-    location: 'Thailand, Philippines, Indonesia, Vietnam',
-    story: 'From Bangkok gyms to Manila competitions, grapplers and fighters across Southeast Asia choose Chokepoint for gear built for tropical climates and intense training.',
+    location: 'Japan, Philippines, Vietnam',
+    story: 'From Japan to Manila competitions, grapplers and fighters across Southeast Asia choose Chokepoint for gear built for tropical climates and intense training.',
     image: 'https://images.unsplash.com/photo-1546483875-ad9014c88eba?w=600&q=80',
   },
   {
     region: 'North America',
     icon: Award,
     location: 'USA, Canada, Mexico',
-    story: 'College wrestlers, MMA fighters, and BJJ competitors trust Chokepoint from training camps to competition day.',
+    story: 'Wrestlers, MMA fighters, and BJJ competitors trust Chokepoint from training camps to competition day.',
     image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80',
   },
   {
     region: 'Europe',
     icon: Users,
-    location: 'UK, Germany, France, Portugal, Poland',
+    location: 'UK',
     story: 'European fight communities rely on Chokepoint for consistent, tournament-tested gear across the continent.',
     image: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=600&q=80',
   },
