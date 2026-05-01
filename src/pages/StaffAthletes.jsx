@@ -24,7 +24,6 @@ export default function StaffAthletes() {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragType, setDragType] = useState(null);
   const cropContainerRef = useRef(null);
-  const handlersRef = useRef({});
 
   useEffect(() => {
     loadAthletes();
@@ -101,79 +100,70 @@ export default function StaffAthletes() {
     setDragStart({ x: e.clientX, y: e.clientY });
   };
 
-  // Update handler ref whenever deps change
-  useEffect(() => {
-    handlersRef.current.handleMove = (e) => {
-      if (!isDragging || !dragType) return;
-      e.preventDefault();
+  const handleCropMouseMove = useCallback((e) => {
+    if (!isDragging || !dragType) return;
+    e.preventDefault();
 
-      const container = cropContainerRef.current;
-      if (!container) return;
+    const container = cropContainerRef.current;
+    if (!container) return;
 
-      const rect = container.getBoundingClientRect();
-      const deltaX = (e.clientX - dragStart.x) / rect.width * 100;
-      const deltaY = (e.clientY - dragStart.y) / rect.height * 100;
+    const rect = container.getBoundingClientRect();
+    const deltaX = (e.clientX - dragStart.x) / rect.width * 100;
+    const deltaY = (e.clientY - dragStart.y) / rect.height * 100;
+    const MIN_SIZE = 10;
 
-      const MIN_SIZE = 10;
+    if (dragType === 'move') {
+      let newX = cropX + deltaX;
+      let newY = cropY + deltaY;
+      newX = Math.max(0, Math.min(100 - cropWidth, newX));
+      newY = Math.max(0, Math.min(100 - cropWidth, newY));
+      setCropX(newX);
+      setCropY(newY);
+    } else {
+      let newWidth = cropWidth;
+      let newX = cropX;
+      let newY = cropY;
 
-      if (dragType === 'move') {
-        let newX = cropX + deltaX;
-        let newY = cropY + deltaY;
-        newX = Math.max(0, Math.min(100 - cropWidth, newX));
-        newY = Math.max(0, Math.min(100 - cropWidth, newY));
-        setCropX(newX);
-        setCropY(newY);
-      } else {
-        let newWidth = cropWidth;
-        let newX = cropX;
-        let newY = cropY;
-
-        if (dragType === 'nw') {
-          newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
-          newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
-          newY = Math.min(cropY + (cropWidth - newWidth), 100 - newWidth);
-        } else if (dragType === 'ne') {
-          newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
-          newY = Math.min(cropY + (newWidth - cropWidth), 100 - newWidth);
-        } else if (dragType === 'sw') {
-          newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
-          newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
-        } else if (dragType === 'se') {
-          newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
-        }
-
-        newWidth = Math.min(newWidth, 100 - newX);
-        newY = Math.max(0, Math.min(newY, 100 - newWidth));
-        newX = Math.max(0, Math.min(newX, 100 - newWidth));
-
-        setCropWidth(newWidth);
-        setCropX(newX);
-        setCropY(newY);
+      if (dragType === 'nw') {
+        newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
+        newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
+        newY = Math.min(cropY + (cropWidth - newWidth), 100 - newWidth);
+      } else if (dragType === 'ne') {
+        newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
+        newY = Math.min(cropY + (newWidth - cropWidth), 100 - newWidth);
+      } else if (dragType === 'sw') {
+        newWidth = Math.max(MIN_SIZE, cropWidth - deltaX);
+        newX = Math.min(cropX + (cropWidth - newWidth), 100 - newWidth);
+      } else if (dragType === 'se') {
+        newWidth = Math.max(MIN_SIZE, cropWidth + deltaX);
       }
 
-      setDragStart({ x: e.clientX, y: e.clientY });
-    };
+      newWidth = Math.min(newWidth, 100 - newX);
+      newY = Math.max(0, Math.min(newY, 100 - newWidth));
+      newX = Math.max(0, Math.min(newX, 100 - newWidth));
 
-    handlersRef.current.handleUp = () => {
-      setIsDragging(false);
-      setDragType(null);
-    };
+      setCropWidth(newWidth);
+      setCropX(newX);
+      setCropY(newY);
+    }
+
+    setDragStart({ x: e.clientX, y: e.clientY });
   }, [isDragging, dragType, dragStart, cropX, cropY, cropWidth]);
 
-  // Attach global listeners when dragging starts
+  const handleCropMouseUp = useCallback(() => {
+    setIsDragging(false);
+    setDragType(null);
+  }, []);
+
   useEffect(() => {
     if (!isDragging) return;
-    
-    const moveFn = handlersRef.current.handleMove;
-    const upFn = handlersRef.current.handleUp;
-    document.addEventListener('mousemove', moveFn);
-    document.addEventListener('mouseup', upFn);
-    
+    document.addEventListener('mousemove', handleCropMouseMove);
+    document.addEventListener('mouseup', handleCropMouseUp);
     return () => {
-      document.removeEventListener('mousemove', moveFn);
-      document.removeEventListener('mouseup', upFn);
+      document.removeEventListener('mousemove', handleCropMouseMove);
+      document.removeEventListener('mouseup', handleCropMouseUp);
     };
-  }, [isDragging]);
+  }, [isDragging, handleCropMouseMove, handleCropMouseUp]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
