@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Globe, Award, Users } from 'lucide-react';
+import { Globe, Award, Users, MapPin } from 'lucide-react';
 
 const REGIONS = [
   {
@@ -23,6 +23,13 @@ const REGIONS = [
     location: 'UK',
     story: 'European fight communities rely on Chokepoint for consistent, tournament-tested gear across the continent.',
     image: 'https://media.base44.com/images/public/699c180d84abb747333a6889/ac2ec04e9_mickeu.jpg',
+  },
+  {
+    region: 'South Pacific',
+    icon: MapPin,
+    location: 'New Zealand, Fiji',
+    story: 'From the ADCC Grappling podium in New Zealand to the islands of Fiji, South Pacific fighters compete on the world stage repping Chokepoint.',
+    image: 'https://media.base44.com/images/public/699c180d84abb747333a6889/8f5016b63_adccnz.jpg',
   },
 ];
 
@@ -52,7 +59,7 @@ export default function GlobalAthletes() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#1a1a1a]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#1a1a1a]">
           {REGIONS.map((region, i) => (
             <motion.div key={i} custom={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
               className="bg-[#0a0a0a] p-6 flex flex-col group hover:bg-[#111] transition-colors">
