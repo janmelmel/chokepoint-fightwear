@@ -22,7 +22,7 @@ const REGIONS = [
     icon: Users,
     location: 'UK',
     story: 'European fight communities rely on Chokepoint for consistent, tournament-tested gear across the continent.',
-    image: 'https://media.base44.com/images/public/699c180d84abb747333a6889/ac2ec04e9_mickeu.jpg',
+    image: 'https://media.base44.com/images/public/699c180d84abb747333a6889/b8e5718c6_Eu.jpg',
   },
   {
     region: 'South Pacific',
