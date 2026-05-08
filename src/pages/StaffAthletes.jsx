@@ -238,19 +238,26 @@ export default function StaffAthletes() {
                     {form.image ? (
                       <div className="space-y-2">
                         <div className="relative w-full aspect-square border border-[#333] overflow-hidden">
-                           <img
-                             src={form.image}
-                             alt="preview"
-                             style={{
-                               width: '100%',
-                               height: '100%',
-                               left: `-${form.imageFit.cropX}%`,
-                               top: `-${form.imageFit.cropY}%`,
-                               position: 'absolute',
-                               objectFit: 'cover',
-                               clipPath: `inset(${form.imageFit.cropY}% ${100 - form.imageFit.cropX - form.imageFit.cropWidth}% ${100 - form.imageFit.cropY - form.imageFit.cropWidth}% ${form.imageFit.cropX}%)`,
-                             }}
-                           />
+                          {(() => {
+                            const cropX = form.imageFit?.cropX || 0;
+                            const cropY = form.imageFit?.cropY || 0;
+                            const cropWidth = form.imageFit?.cropWidth || 100;
+                            const scale = 100 / cropWidth;
+                            return (
+                              <img
+                                src={form.image}
+                                alt="preview"
+                                style={{
+                                  position: 'absolute',
+                                  width: `${scale * 100}%`,
+                                  height: `${scale * 100}%`,
+                                  left: `-${(cropX / cropWidth) * 100}%`,
+                                  top: `-${(cropY / cropWidth) * 100}%`,
+                                  maxWidth: 'none',
+                                }}
+                              />
+                            );
+                          })()}
                         </div>
                         <div className="flex gap-2">
                           <button

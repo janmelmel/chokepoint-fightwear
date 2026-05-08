@@ -59,18 +59,27 @@ export default function AthleteRoster() {
           className="grid grid-cols-1 md:grid-cols-2 gap-px bg-[#1a1a1a]">
           {/* Image */}
           <div className="relative overflow-hidden aspect-square">
-            <img
-              src={athlete.image}
-              alt={athlete.name}
-              style={{
-                objectFit: 'cover',
-                objectPosition: `${athlete.imageFit?.cropX || 0}% ${athlete.imageFit?.cropY || 0}%`,
-                width: '100%',
-                height: '100%',
-                opacity: 0.8,
-              }}
-              className="w-full h-full"
-            />
+            {(() => {
+              const cropX = athlete.imageFit?.cropX || 0;
+              const cropY = athlete.imageFit?.cropY || 0;
+              const cropWidth = athlete.imageFit?.cropWidth || 100;
+              const scale = 100 / cropWidth;
+              return (
+                <img
+                  src={athlete.image}
+                  alt={athlete.name}
+                  style={{
+                    position: 'absolute',
+                    width: `${scale * 100}%`,
+                    height: `${scale * 100}%`,
+                    left: `-${(cropX / cropWidth) * 100}%`,
+                    top: `-${(cropY / cropWidth) * 100}%`,
+                    maxWidth: 'none',
+                    opacity: 0.8,
+                  }}
+                />
+              );
+            })()}
             <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, transparent 50%, #0d0d0d), linear-gradient(to top, #0d0d0d 0%, transparent 40%)' }} />
             <div className="absolute bottom-4 left-4">
               <span className="font-mono-ui text-[10px] uppercase tracking-widest border border-[#4f8ef7]/40 text-[#4f8ef7] px-2 py-1 bg-[#0a0a0a]/80">
