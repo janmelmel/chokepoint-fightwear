@@ -575,6 +575,7 @@ export default function StaffAthletes() {
                     const newCropX = (cropX / container.offsetWidth) * 100;
                     const newCropY = (cropY / container.offsetHeight) * 100;
                     const newCropWidth = (cropSize / container.offsetWidth) * 100;
+                    console.log('Saving imageFit:', { cropX: newCropX, cropY: newCropY, cropWidth: newCropWidth });
                     setForm(f => ({ ...f, imageFit: { cropX: newCropX, cropY: newCropY, cropWidth: newCropWidth } }));
                     setShowCropModal(false);
                   }
