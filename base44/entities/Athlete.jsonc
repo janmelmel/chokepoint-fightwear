@@ -36,6 +36,21 @@
     "is_active": {
       "type": "boolean",
       "default": true
+    },
+    "imageFit": {
+      "type": "object",
+      "description": "Crop coordinates for the athlete photo (all values are percentages)",
+      "properties": {
+        "cropX": {
+          "type": "number"
+        },
+        "cropY": {
+          "type": "number"
+        },
+        "cropWidth": {
+          "type": "number"
+        }
+      }
     }
   },
   "required": [
