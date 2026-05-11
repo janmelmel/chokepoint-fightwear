@@ -47,7 +47,7 @@ export default function StaffProducts() {
     is_preorder: false, is_featured: false,
     stock_limit: 0, stock_per_size: {}, sizes: [], edition: '',
     allow_custom_print: false, custom_print_label: '',
-    shipping_fee_override: '', variants: [],
+    shipping_fee_override: '', weight_kg: 0.3, variants: [],
   });
 
   useEffect(() => {
@@ -74,13 +74,13 @@ export default function StaffProducts() {
 
   const openCreate = () => {
     setEditProduct(null);
-    setForm({ name: '', category_id: '', price: '', description: '', images: [], status: 'Draft', order_type: 'add_to_bag', inquiry_note: '', is_preorder: false, is_featured: false, stock_limit: 0, stock_per_size: {}, sizes: [], edition: '', allow_custom_print: false, custom_print_label: '', shipping_fee_override: '', variants: [] });
+    setForm({ name: '', category_id: '', price: '', description: '', images: [], status: 'Draft', order_type: 'add_to_bag', inquiry_note: '', is_preorder: false, is_featured: false, stock_limit: 0, stock_per_size: {}, sizes: [], edition: '', allow_custom_print: false, custom_print_label: '', shipping_fee_override: '', weight_kg: 0.3, variants: [] });
     setShowForm(true);
   };
 
   const openEdit = (p) => {
     setEditProduct(p);
-    setForm({ name: p.name, category_id: p.category_id || '', price: p.price, description: p.description || '', images: p.images || [], status: p.status, order_type: p.order_type || 'add_to_bag', inquiry_note: p.inquiry_note || '', is_preorder: !!p.is_preorder, is_featured: !!p.is_featured, stock_limit: p.stock_limit || 0, stock_per_size: p.stock_per_size || {}, sizes: p.sizes || [], edition: p.edition || '', allow_custom_print: !!p.allow_custom_print, custom_print_label: p.custom_print_label || '', shipping_fee_override: p.shipping_fee_override ?? '', variants: p.variants || [] });
+    setForm({ name: p.name, category_id: p.category_id || '', price: p.price, description: p.description || '', images: p.images || [], status: p.status, order_type: p.order_type || 'add_to_bag', inquiry_note: p.inquiry_note || '', is_preorder: !!p.is_preorder, is_featured: !!p.is_featured, stock_limit: p.stock_limit || 0, stock_per_size: p.stock_per_size || {}, sizes: p.sizes || [], edition: p.edition || '', allow_custom_print: !!p.allow_custom_print, custom_print_label: p.custom_print_label || '', shipping_fee_override: p.shipping_fee_override ?? '', weight_kg: p.weight_kg ?? 0.3, variants: p.variants || [] });
     setShowForm(true);
   };
 
@@ -100,6 +100,7 @@ export default function StaffProducts() {
       price: Number(form.price),
       stock_limit: Number(form.stock_limit),
       shipping_fee_override: form.shipping_fee_override !== '' ? Number(form.shipping_fee_override) : null,
+      weight_kg: form.weight_kg !== '' ? Number(form.weight_kg) : 0.3,
       stock_per_size: form.order_type === 'contact_to_order' || form.is_preorder ? {} : form.stock_per_size,
       is_preorder: form.order_type === 'preorder',
       variants: cleanVariants,
@@ -140,6 +141,7 @@ export default function StaffProducts() {
       allow_custom_print: !!p.allow_custom_print,
       custom_print_label: p.custom_print_label || '',
       shipping_fee_override: p.shipping_fee_override ?? '',
+      weight_kg: p.weight_kg ?? 0.3,
       variants: p.variants || [],
     });
     setShowForm(true);
@@ -479,14 +481,22 @@ export default function StaffProducts() {
                     )}
                   </div>
 
-                  {/* Shipping Fee Override */}
-                  <div className="col-span-2">
+                  {/* Shipping Fee Override + Weight */}
+                  <div>
                     <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Shipping Fee Override (₱)</label>
                     <input type="number" min="0" value={form.shipping_fee_override}
                       onChange={e => setForm(f => ({ ...f, shipping_fee_override: e.target.value }))}
                       placeholder="Leave blank for zone-based rate"
                       className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
-                    <p className="font-mono-ui text-[9px] text-[#444] mt-0.5">For Lifestyle/bulk items: leave blank to prompt staff quote</p>
+                    <p className="font-mono-ui text-[9px] text-[#444] mt-0.5">Leave blank to prompt staff quote</p>
+                  </div>
+                  <div>
+                    <label className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest block mb-1">Weight (kg)</label>
+                    <input type="number" min="0" step="0.25" value={form.weight_kg}
+                      onChange={e => setForm(f => ({ ...f, weight_kg: e.target.value }))}
+                      placeholder="0.3"
+                      className="w-full bg-[#0a0a0a] border border-[#333] text-white font-mono-ui text-sm px-3 py-2.5 focus:outline-none focus:border-[#ff8c00]/60" />
+                    <p className="font-mono-ui text-[9px] text-[#444] mt-0.5">Default: 0.3 kg · step: 0.25</p>
                   </div>
 
                   <div className="col-span-2 flex items-center gap-6">

@@ -1,0 +1,192 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "category_id": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number"
+    },
+    "description": {
+      "type": "string"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Pending Review",
+        "Live"
+      ],
+      "default": "Draft"
+    },
+    "order_type": {
+      "type": "string",
+      "enum": [
+        "add_to_bag",
+        "preorder",
+        "contact_to_order"
+      ],
+      "default": "add_to_bag",
+      "description": "How customers can order this product"
+    },
+    "inquiry_note": {
+      "type": "string"
+    },
+    "is_preorder": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "stock_limit": {
+      "type": "number",
+      "default": 0
+    },
+    "stock_per_size": {
+      "type": "object",
+      "description": "Map of size -> stock count, e.g. {XS: 10, S: 5}"
+    },
+    "total_ordered": {
+      "type": "number",
+      "default": 0
+    },
+    "is_archived": {
+      "type": "boolean",
+      "default": false
+    },
+    "sizes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "edition": {
+      "type": "string"
+    },
+    "allow_custom_print": {
+      "type": "boolean",
+      "default": false
+    },
+    "custom_print_label": {
+      "type": "string"
+    },
+    "shipping_fee_override": {
+      "type": "number"
+    },
+    "weight_kg": {
+      "type": "number",
+      "default": 0.3,
+      "description": "Product weight in kilograms, used for shipping calculations"
+    },
+    "variants": {
+      "type": "array",
+      "description": "Product variants (e.g. color editions, set configurations)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sizes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "size": {
+                  "type": "string"
+                },
+                "stock": {
+                  "type": "number"
+                },
+                "available": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "name",
+    "price"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.status": "Live",
+          "data.is_archived": false
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
