@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '@/components/cp/AdminSidebar';
 import ProductPreviewModal from '@/components/cp/ProductPreviewModal';
-import { Plus, Eye, Archive, Edit2, CheckCircle, Clock, X, Trash2, ImagePlus, XCircle, Copy, Star, Package } from 'lucide-react';
+import { Plus, Eye, Archive, Edit2, CheckCircle, Clock, X, Trash2, ImagePlus, XCircle, Copy, Star, Package, Search, RotateCcw } from 'lucide-react';
 import StaffGuard from '@/components/cp/StaffGuard';
 import VariantEditor from '@/components/cp/VariantEditor';
 import StockManageModal from '@/components/cp/StockManageModal';
@@ -35,12 +35,16 @@ const STATUS_STYLE = {
 export default function StaffProducts() {
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
+  const [archivedProducts, setArchivedProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [previewProduct, setPreviewProduct] = useState(null);
   const [stockProduct, setStockProduct] = useState(null);
+  const [search, setSearch] = useState('');
+  const [activeCatFilter, setActiveCatFilter] = useState('all');
+  const [showArchived, setShowArchived] = useState(false);
   const [form, setForm] = useState({
     name: '', category_id: '', price: '', description: '',
     images: [], status: 'Draft', order_type: 'add_to_bag', inquiry_note: '',
@@ -60,12 +64,14 @@ export default function StaffProducts() {
 
   const loadData = async () => {
     setLoading(true);
-    const [p, c] = await Promise.all([
-    base44.entities.Product.filter({ is_archived: false }),
-    base44.entities.Category.list()]
-    );
+    const [p, archived, c] = await Promise.all([
+      base44.entities.Product.filter({ is_archived: false }),
+      base44.entities.Product.filter({ is_archived: true }),
+      base44.entities.Category.list(),
+    ]);
     const catMap = Object.fromEntries(c.map((cat) => [cat.id, cat.name]));
     setProducts(p.map((prod) => ({ ...prod, category_name: catMap[prod.category_id] || '—' })));
+    setArchivedProducts(archived.map((prod) => ({ ...prod, category_name: catMap[prod.category_id] || '—' })));
     setCategories(c);
     setLoading(false);
   };
@@ -115,6 +121,23 @@ export default function StaffProducts() {
     await base44.entities.Product.update(id, { is_archived: true });
     await loadData();
   };
+
+  const unarchive = async (id) => {
+    await base44.entities.Product.update(id, { is_archived: false });
+    await loadData();
+  };
+
+  const filteredProducts = products.filter(p => {
+    const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || (p.edition || '').toLowerCase().includes(search.toLowerCase());
+    const matchCat = activeCatFilter === 'all' || p.category_id === activeCatFilter;
+    return matchSearch && matchCat;
+  });
+
+  const filteredArchived = archivedProducts.filter(p => {
+    const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase());
+    const matchCat = activeCatFilter === 'all' || p.category_id === activeCatFilter;
+    return matchSearch && matchCat;
+  });
 
   const approve = async (id) => {
     await base44.entities.Product.update(id, { status: 'Live' });
@@ -198,7 +221,8 @@ export default function StaffProducts() {
       <AdminSidebar user={user} />
       <div className="flex-1 overflow-auto">
         <div className="px-6 py-8">
-          <div className="flex items-center justify-between mb-8">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
             <div>
               <p className="font-mono-ui text-[10px] text-[#555] uppercase tracking-widest">Inventory</p>
               <h1 className="font-tactical text-4xl text-white">Products</h1>
@@ -208,13 +232,41 @@ export default function StaffProducts() {
             </button>
           </div>
 
+          {/* Search + Category Filter */}
+          <div className="mb-6 space-y-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#555]" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search products..."
+                className="w-full bg-[#111] border border-[#333] text-white font-mono-ui text-sm pl-10 pr-4 py-2.5 focus:outline-none focus:border-[#ff8c00]/60"
+              />
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              <button
+                onClick={() => setActiveCatFilter('all')}
+                className={`px-3 py-1.5 font-mono-ui text-[10px] uppercase tracking-wider border transition-all ${activeCatFilter === 'all' ? 'border-[#ff8c00] text-[#ff8c00] bg-[#ff8c00]/10' : 'border-[#333] text-[#555] hover:border-[#555] hover:text-[#888]'}`}>
+                All
+              </button>
+              {categories.filter(c => !c.parent_id).map(c => (
+                <button key={c.id}
+                  onClick={() => setActiveCatFilter(c.id)}
+                  className={`px-3 py-1.5 font-mono-ui text-[10px] uppercase tracking-wider border transition-all ${activeCatFilter === c.id ? 'border-[#ff8c00] text-[#ff8c00] bg-[#ff8c00]/10' : 'border-[#333] text-[#555] hover:border-[#555] hover:text-[#888]'}`}>
+                  {c.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {loading ?
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[...Array(6)].map((_, i) => <div key={i} className="card-tactical h-48 animate-pulse" />)}
             </div> :
-
+          <>
+          {/* Active Products */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {products.map((p) =>
+              {filteredProducts.map((p) =>
             <div key={p.id} className="card-tactical overflow-hidden">
                   <div className="aspect-video bg-[#0d0d0d] relative">
                     {p.images?.[0] ?
@@ -233,7 +285,7 @@ export default function StaffProducts() {
                         {p.status}
                       </span>
                     </div>
-                    <div className="bg-transparent text-slate-50 mt-4 flex items-center gap-2">
+                    <div className="bg-transparent text-slate-50 mt-4 flex items-center gap-2 flex-wrap">
                       <button
                         onClick={() => base44.entities.Product.update(p.id, { is_featured: !p.is_featured }).then(loadData)}
                         title={p.is_featured ? 'Remove from Featured' : 'Add to Featured'}
@@ -275,12 +327,60 @@ export default function StaffProducts() {
                   </div>
                 </div>
             )}
-              {products.length === 0 &&
+              {filteredProducts.length === 0 &&
             <div className="col-span-full text-center py-20">
-                  <p className="font-mono-ui text-[#333] text-sm">No products. Create one to get started.</p>
+                  <p className="font-mono-ui text-[#333] text-sm">No products found.</p>
                 </div>
             }
             </div>
+
+          {/* Archived Section */}
+          <div className="mt-10">
+            <button
+              onClick={() => setShowArchived(v => !v)}
+              className="flex items-center gap-2 font-mono-ui text-xs text-[#555] uppercase tracking-widest hover:text-white transition-colors mb-4">
+              <Archive className="w-4 h-4" />
+              Archived ({filteredArchived.length})
+              <span className="text-[#333]">{showArchived ? '▲' : '▼'}</span>
+            </button>
+            {showArchived && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredArchived.map(p => (
+                  <div key={p.id} className="card-tactical overflow-hidden opacity-60 hover:opacity-80 transition-opacity">
+                    <div className="aspect-video bg-[#0d0d0d] relative">
+                      {p.images?.[0] ?
+                        <img src={p.images[0]} className="w-full h-full object-cover opacity-50" /> :
+                        <div className="w-full h-full flex items-center justify-center"><span className="font-tactical text-4xl text-[#1a1a1a]">CP</span></div>}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+                      <span className="absolute top-2 left-2 font-mono-ui text-[9px] border border-[#444] text-[#555] px-2 py-1 uppercase tracking-wider bg-[#0a0a0a]/80">Archived</span>
+                    </div>
+                    <div className="p-4">
+                      <p className="font-mono-ui text-[10px] text-[#444] truncate">{p.category_name}</p>
+                      <p className="font-tactical text-lg text-[#888] truncate">{p.name}</p>
+                      <p className="font-mono-ui text-sm text-[#555]">₱{Number(p.price).toLocaleString()}</p>
+                      <div className="flex gap-2 mt-3">
+                        <button onClick={() => unarchive(p.id)}
+                          className="btn-glow-white flex-1 py-2 font-mono-ui text-[10px] tracking-widest uppercase flex items-center justify-center gap-1">
+                          <RotateCcw className="w-3 h-3" /> Restore
+                        </button>
+                        {isAdmin && (
+                          <button onClick={() => deleteProduct(p.id)} className="btn-glow-red p-2 flex-shrink-0" title="Delete permanently">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {filteredArchived.length === 0 && (
+                  <div className="col-span-full text-center py-10">
+                    <p className="font-mono-ui text-[#333] text-sm">No archived products.</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          </>
           }
         </div>
       </div>
