@@ -20,7 +20,7 @@ export default function Checkout() {
   const [cart, setCart] = useState([]);
   const [contact, setContact] = useState({ name: '', email: '', phone: '' });
   const [address, setAddress] = useState({
-    country: 'Philippines', province: '', city: '', barangay: '', street: '', postal_code: '', notes: ''
+    country: 'Philippines', province: '', city: '', barangay: '', street: '', state: '', postal_code: '', notes: ''
   });
   const [confirmed, setConfirmed] = useState(false);
   const [placing, setPlacing] = useState(false);
@@ -299,8 +299,12 @@ export default function Checkout() {
                     <input value={address.street} onChange={e => setAddress(a => ({ ...a, street: e.target.value }))} className={INPUT} placeholder="123 Sample Street, Apt 4" />
                   </div>
                   <div>
-                    <label className={LABEL}>City *</label>
-                    <input value={address.city} onChange={e => setAddress(a => ({ ...a, city: e.target.value }))} className={INPUT} placeholder="London" />
+                    <label className={LABEL}>State / Region</label>
+                    <input value={address.state} onChange={e => setAddress(a => ({ ...a, state: e.target.value }))} className={INPUT} placeholder="e.g. California, New South Wales" />
+                  </div>
+                  <div>
+                    <label className={LABEL}>City / State / Province *</label>
+                    <input value={address.city} onChange={e => setAddress(a => ({ ...a, city: e.target.value }))} className={INPUT} placeholder="e.g. London, Toronto, Sydney" />
                   </div>
                   <div>
                     <label className={LABEL}>Postal Code *</label>
