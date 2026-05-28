@@ -102,32 +102,19 @@ Deno.serve(async (req) => {
     };
     const billingPhone = sanitizePhone(customerPhone);
 
-    const pmLineItems = lineItems.map((item) => ({
+    const subtotal = lineItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const pmShippingFee = lineItems[0]?.shipping_fee || 0;
+    const discount = promoDiscount || 0;
+    const finalTotal = Math.round((subtotal + pmShippingFee - discount) * 100);
+
+    const pmLineItems = [{
       currency: 'PHP',
-      amount: Math.round(item.price * 100),
-      description: [item.size && `Size: ${item.size}`, item.custom_text && `Print: ${item.custom_text}`].filter(Boolean).join(' | ') || item.name,
-      name: item.name,
-      quantity: item.quantity,
-    }));
-
-    if (lineItems[0]?.shipping_fee > 0) {
-      pmLineItems.push({
-        currency: 'PHP',
-        amount: Math.round(lineItems[0].shipping_fee * 100),
-        description: 'Shipping Fee',
-        name: 'Shipping',
-        quantity: 1,
-      });
-    }
-
-    if (promoDiscount > 0) {
-      pmLineItems.push({
-        currency: 'PHP',
-        amount: -Math.round(promoDiscount * 100),
-        name: `Promo (${appliedPromoCode})`,
-        quantity: 1,
-      });
-    }
+      amount: finalTotal,
+      name: appliedPromoCode
+        ? `Chokepoint Order (Promo: ${appliedPromoCode})`
+        : 'Chokepoint Order',
+      quantity: 1,
+    }];
 
     const encodedIds = encodeURIComponent(JSON.stringify(orderIds));
     const encodedNums = encodeURIComponent(JSON.stringify(orderNumbers));
