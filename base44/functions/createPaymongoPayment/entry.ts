@@ -120,6 +120,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (promoDiscount > 0) {
+      pmLineItems.push({
+        currency: 'PHP',
+        amount: -Math.round(promoDiscount * 100),
+        name: `Promo (${appliedPromoCode})`,
+        quantity: 1,
+      });
+    }
+
     const encodedIds = encodeURIComponent(JSON.stringify(orderIds));
     const encodedNums = encodeURIComponent(JSON.stringify(orderNumbers));
 
@@ -135,7 +144,7 @@ Deno.serve(async (req) => {
           show_description: true,
           show_line_items: true,
           line_items: pmLineItems,
-          payment_method_types: ['qrph', 'card'],
+          payment_method_types: ['qrph', 'card', 'gcash', 'paymaya', 'dob_bpi', 'dob_ubp'],
           description: 'Chokepoint Fightwear Order',
           success_url: `${origin}/OrderConfirmed?status=success&orderIds=${encodedIds}&orderNumbers=${encodedNums}&name=${encodeURIComponent(customerName || '')}`,
           cancel_url: `${origin}/Checkout?payment=cancelled`,
