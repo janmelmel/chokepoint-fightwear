@@ -465,12 +465,26 @@ export default function Checkout() {
             </div>
           </div>
 
-          {/* QRPh Payment Notice */}
-          <div className="border border-[#ff6b00]/30 bg-[#ff6b00]/5 px-4 py-3 flex gap-3">
-            <span className="text-lg flex-shrink-0">📱</span>
-            <p className="font-mono-ui text-[10px] text-[#ff8c00] leading-relaxed">
-              We currently accept payment via <strong>QRPh (Scan to Pay)</strong>. Open your GCash, Maya, or any banking app and scan the QR code to complete your payment. More payment options coming soon!
-            </p>
+          {/* Accepted Payment Methods */}
+          <div className="border border-[#222] bg-[#111] px-4 py-3">
+            <p className="font-mono-ui text-[9px] text-[#555] uppercase tracking-widest mb-2">Accepted Payment Methods</p>
+            <div className="grid grid-cols-2 gap-1.5">
+              {[
+                { icon: '💳', label: 'Visa & Mastercard' },
+                { icon: '📱', label: 'GCash' },
+                { icon: '📱', label: 'Maya' },
+                { icon: '🛍️', label: 'ShopeePay' },
+                { icon: '🚗', label: 'GrabPay' },
+                { icon: '🏦', label: 'BPI Direct Debit' },
+                { icon: '🏦', label: 'UnionBank Direct Debit' },
+                { icon: '📲', label: 'QRPh (Scan to Pay)' },
+              ].map(m => (
+                <div key={m.label} className="flex items-center gap-1.5">
+                  <span className="text-sm">{m.icon}</span>
+                  <span className="font-mono-ui text-[10px] text-[#888]">{m.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           <button
