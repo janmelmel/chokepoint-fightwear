@@ -136,14 +136,6 @@ Deno.serve(async (req) => {
           show_line_items: true,
           line_items: pmLineItems,
           payment_method_types: [
-            'qrph',
-            'gcash',
-            'grab_pay',
-            'paymaya',
-            'shopeepay',
-            'card',
-            'dob_bpi',
-            'dob_ubp'
           ],
           description: 'Chokepoint Fightwear Order',
           success_url: `${origin}/OrderConfirmed?status=success&orderIds=${encodedIds}&orderNumbers=${encodedNums}&name=${encodeURIComponent(customerName || '')}`,
