@@ -91,6 +91,17 @@ Deno.serve(async (req) => {
     const authHeader = 'Basic ' + btoa(secretKey + ':');
     const origin = req.headers.get('origin') || 'https://chokepoint-fightwear.base44.app';
 
+    // Sanitize phone to E.164 for PayMongo billing
+    const sanitizePhone = (raw) => {
+      if (!raw) return '';
+      const digits = raw.replace(/\D/g, '');
+      if (digits.startsWith('63')) return '+' + digits;
+      if (digits.startsWith('09')) return '+63' + digits.slice(1);
+      if (digits.startsWith('9') && digits.length === 10) return '+63' + digits;
+      return '+' + digits;
+    };
+    const billingPhone = sanitizePhone(customerPhone);
+
     const pmLineItems = lineItems.map((item) => ({
       currency: 'PHP',
       amount: Math.round(item.price * 100),
