@@ -60,10 +60,10 @@ export default function HeroSlideshow({ banners }) {
           className="relative z-10 text-center"
           style={{ opacity: contentOpacity }}
         >
-          <h1 style={{ fontFamily: "'Bitsumishi', sans-serif" }} className="text-6xl sm:text-8xl md:text-9xl text-white mt-6 leading-none uppercase">CHOKEPOINT</h1>
+          <h1 style={{ fontFamily: "'Bitsumishi', sans-serif" }} className="text-[11vw] sm:text-8xl md:text-9xl text-white mt-6 leading-none uppercase">CHOKEPOINT</h1>
           <p className="font-mono-ui text-[11px] tracking-[0.5em] text-[#4f8ef7] uppercase mt-3">No Escape From Chokepoint</p>
           <div className="w-24 h-px bg-[#4f8ef7] mx-auto mt-6 mb-8" />
-          <a href="#gear" className="font-mono-ui text-xs tracking-[0.3em] uppercase px-8 py-4 inline-block bg-[#4f8ef7] text-white font-bold hover:bg-[#6ea8ff] transition-all">
+          <a href="#gear" className="font-mono-ui text-xs tracking-[0.3em] uppercase py-4 inline-block bg-[#4f8ef7] text-white font-bold hover:bg-[#6ea8ff] transition-all w-4/5 sm:w-auto sm:px-8">
             Shop the Drop
           </a>
         </motion.div>
