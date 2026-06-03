@@ -218,8 +218,10 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
       </div>
 
       {/* ── MOBILE (<768px) ── */}
-      <div className="flex md:hidden items-center h-16 px-4 gap-3 w-full">
-        <button onClick={onCartClick} className="relative text-[#888] hover:text-white">
+      <div className="flex md:hidden items-center h-16 px-4 w-full">
+        <Link to="/Home"><CPLogo size={30} variant="white" /></Link>
+        <div className="flex-1" />
+        <button onClick={onCartClick} className="relative text-[#888] hover:text-white mr-4">
           <ShoppingBag className="w-5 h-5" />
           {cartCount > 0 && (
             <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#4f8ef7] text-white text-xs font-bold flex items-center justify-center">
@@ -227,10 +229,6 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
             </span>
           )}
         </button>
-        <ProfileButton authUser={authUser} profileOpen={profileOpen} setProfileOpen={setProfileOpen} />
-        <div className="flex-1 flex justify-center">
-          <Link to="/Home"><CPLogo size={30} variant="white" /></Link>
-        </div>
         <button onClick={() => setMenuOpen(!menuOpen)} className="text-[#888] hover:text-white">
           {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -291,18 +289,27 @@ export default function StickyHeader({ onCartClick, onProductPreview }) {
             className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/FAQ') ? 'text-[#4f8ef7]' : 'text-[#888] hover:text-white'}`}>
             FAQ
           </Link>
-          {authUser && (
-            <Link to="/MyOrders" onClick={() => setMenuOpen(false)}
-              className="block font-mono-ui text-xs text-[#4f8ef7] hover:text-white tracking-widest uppercase py-2.5 border-b border-[#1a1a1a]">
-              My Orders
-            </Link>
-          )}
-          {authUser && (
-            <button onClick={() => base44.auth.logout()}
-              className="block w-full text-left font-mono-ui text-xs text-[#555] hover:text-[#ff0000] tracking-widest uppercase py-2.5">
-              Logout
-            </button>
-          )}
+          {/* Account section */}
+          <div className="pt-2 mt-1 border-t border-[#333]">
+            <p className="font-mono-ui text-xs text-[#444] uppercase tracking-[0.2em] px-1 pt-2 pb-1">Account</p>
+            {authUser ? (
+              <>
+                <Link to="/MyOrders" onClick={() => setMenuOpen(false)}
+                  className={`block font-mono-ui text-xs tracking-widest uppercase py-2.5 border-b border-[#1a1a1a] ${isActive('/MyOrders') ? 'text-[#4f8ef7]' : 'text-white hover:text-[#4f8ef7]'}`}>
+                  My Orders
+                </Link>
+                <button onClick={() => base44.auth.logout()}
+                  className="block w-full text-left font-mono-ui text-xs text-[#555] hover:text-[#ff4444] tracking-widest uppercase py-2.5">
+                  Logout
+                </button>
+              </>
+            ) : authUser === null ? (
+              <button onClick={() => { setMenuOpen(false); base44.auth.redirectToLogin(window.location.href); }}
+                className="block w-full text-left font-mono-ui text-xs text-[#4f8ef7] hover:text-white tracking-widest uppercase py-2.5">
+                Login / Sign Up
+              </button>
+            ) : null}
+          </div>
         </div>
       )}
     </header>
