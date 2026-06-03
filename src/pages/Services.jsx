@@ -109,16 +109,16 @@ export default function Services() {
             className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/Custom"
               className="font-mono-ui text-xs uppercase tracking-widest px-8 py-3 flex items-center justify-center gap-2 font-bold transition-all"
-              style={{ background: C.red, border: `1px solid ${C.red}`, color: '#fff' }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.redBright; e.currentTarget.style.boxShadow = '0 0 20px rgba(160,0,0,0.5)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = C.red; e.currentTarget.style.boxShadow = 'none'; }}>
+              style={{ background: '#3B82F6', border: '1px solid #3B82F6', color: '#ffffff' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#60A5FA'; e.currentTarget.style.borderColor = '#60A5FA'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#3B82F6'; e.currentTarget.style.borderColor = '#3B82F6'; }}>
               Start a Custom Order <ArrowRight className="w-4 h-4" />
             </Link>
             <a href="#services"
               className="font-mono-ui text-xs uppercase tracking-widest px-8 py-3 flex items-center justify-center gap-2 font-semibold transition-all"
-              style={{ background: 'transparent', border: '1px solid #a8a8a8', color: '#e0e0e0' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#fff'; e.currentTarget.style.color = '#fff'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#a8a8a8'; e.currentTarget.style.color = '#e0e0e0'; }}>
+              style={{ background: 'transparent', border: '2px solid #ffffff', color: '#ffffff' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
               See What We Offer <ChevronDown className="w-4 h-4" />
             </a>
           </motion.div>
