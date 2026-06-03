@@ -7,7 +7,28 @@ export default function ProductCard({ product, onPreview }) {
 
   const orderType = product.order_type || (product.is_preorder ? 'preorder' : 'add_to_bag');
   const isContactToOrder = orderType === 'contact_to_order';
-  const isSoldOut = !isContactToOrder && product.stock_limit > 0 && product.total_ordered >= product.stock_limit;
+
+  // Product is sold out only if ALL sizes have explicit stock of 0
+  const isAllSizesOOS = (() => {
+    if (product.variants?.length) {
+      return product.variants.every(v =>
+        (v.sizes || []).length > 0 &&
+        (v.sizes || []).every(vs => vs.stock != null && vs.stock <= 0)
+      );
+    }
+    const sps = product.stock_per_size;
+    const sizes = product.sizes || [];
+    if (sizes.length > 0 && sps && Object.keys(sps).length > 0) {
+      return sizes.every(s => {
+        const stock = sps[s];
+        return stock != null && stock <= 0;
+      });
+    }
+    // Fall back to global stock_limit check
+    return product.stock_limit > 0 && product.total_ordered >= product.stock_limit;
+  })();
+
+  const isSoldOut = !isContactToOrder && isAllSizesOOS;
   const stockLeft = product.stock_limit > 0 ? product.stock_limit - (product.total_ordered || 0) : null;
   const isLowStock = !isContactToOrder && stockLeft !== null && stockLeft <= 5 && stockLeft > 0;
 
