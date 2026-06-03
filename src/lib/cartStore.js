@@ -68,6 +68,7 @@ export function addToCart(product, size, quantity = 1, customText = '') {
       shipping_fee_override: product.shipping_fee_override ?? null,
       allow_custom_print: !!product.allow_custom_print,
       custom_print_label: product.custom_print_label || '',
+      weight_kg: product.weight_kg || null,
       added_at: Date.now(),
     });
   }

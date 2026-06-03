@@ -85,14 +85,16 @@ export const PRODUCT_DEFAULT_WEIGHTS = {
 export function getProductWeight(product) {
   if (product?.weight_kg) return product.weight_kg;
   const name = (product?.name || product?.product_name || '').toLowerCase();
-  if (name.includes('mat')) return PRODUCT_DEFAULT_WEIGHTS.mats.weight;
-  if (name.includes('gi') && !name.includes('no')) return PRODUCT_DEFAULT_WEIGHTS.gi.weight;
-  if (name.includes('kimono')) return PRODUCT_DEFAULT_WEIGHTS.kimono.weight;
-  if (name.includes('no-gi') || name.includes('nogi') || name.includes('set')) return PRODUCT_DEFAULT_WEIGHTS.nogi.weight;
-  if (name.includes('rashguard') || name.includes('rash')) return PRODUCT_DEFAULT_WEIGHTS.rashguard.weight;
-  if (name.includes('short')) return PRODUCT_DEFAULT_WEIGHTS.short.weight;
-  if (name.includes('wrap')) return PRODUCT_DEFAULT_WEIGHTS.handwraps.weight;
-  return PRODUCT_DEFAULT_WEIGHTS.default.weight;
+  if (name.includes('mat')) return 10.0;
+  if (name.includes('kimono')) return 1.5;
+  if (name.includes('gi') && !name.includes('no')) return 1.5;
+  // "set" = full no-gi set (rashguard + shorts); plain nogi = rashguard or shorts only
+  if (name.includes('set')) return 0.5;
+  if (name.includes('no-gi') || name.includes('nogi')) return 0.25;
+  if (name.includes('rashguard') || name.includes('rash')) return 0.15;
+  if (name.includes('short')) return 0.15;
+  if (name.includes('wrap')) return 0.20;
+  return 0.5;
 }
 
 export function calcVolumetricWeight(l, w, h) {
@@ -127,13 +129,13 @@ export function calculateDHLRate(cartItems) {
     return sum + w * (item.quantity || 1);
   }, 0);
 
-  // Total volumetric weight (use product dims if available, else default)
-  const totalVolKg = cartItems.reduce((sum, item) => {
-    const l = item.length_cm || PRODUCT_DEFAULT_WEIGHTS.default.l;
-    const w = item.width_cm || PRODUCT_DEFAULT_WEIGHTS.default.w;
-    const h = item.height_cm || PRODUCT_DEFAULT_WEIGHTS.default.h;
-    return sum + calcVolumetricWeight(l, w, h) * (item.quantity || 1);
-  }, 0);
+  // Total volumetric weight — only calculated when all three dimensions are stored
+  let totalVolKg = 0;
+  for (const item of cartItems) {
+    if (item.length_cm && item.width_cm && item.height_cm) {
+      totalVolKg += calcVolumetricWeight(item.length_cm, item.width_cm, item.height_cm) * (item.quantity || 1);
+    }
+  }
 
   return { totalActualKg, totalVolKg };
 }

@@ -1,0 +1,84 @@
+{
+  "name": "CustomRequest",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Rashguard",
+        "Grappling Shorts",
+        "Gi",
+        "Dri-fit Shirt",
+        "Sleeveless",
+        "Rollup Mats",
+        "Other"
+      ]
+    },
+    "details": {
+      "type": "string"
+    },
+    "rashguard_sleeve": {
+      "type": "string",
+      "enum": [
+        "Long Sleeve",
+        "Short Sleeve"
+      ]
+    },
+    "shorts_slit": {
+      "type": "string",
+      "enum": [
+        "With Slit",
+        "No Slit"
+      ]
+    },
+    "gi_colors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gi_color_request": {
+      "type": "string"
+    },
+    "color_hex": {
+      "type": "string"
+    },
+    "quantity": {
+      "type": "number"
+    },
+    "mat_sqm": {
+      "type": "number"
+    },
+    "design_image_url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "New",
+        "In Review",
+        "Quoted",
+        "Confirmed",
+        "Declined"
+      ],
+      "default": "New"
+    },
+    "staff_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "category"
+  ]
+}
