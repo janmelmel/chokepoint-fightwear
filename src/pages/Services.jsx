@@ -89,7 +89,7 @@ export default function Services() {
       <StickyHeader />
 
       {/* HERO */}
-      <section className="relative overflow-hidden pt-20 pb-14 px-4">
+      <section className="relative overflow-hidden pt-24 pb-16 px-4">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] blur-[120px] pointer-events-none" style={{ background: 'rgba(79,142,247,0.12)' }} />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}
