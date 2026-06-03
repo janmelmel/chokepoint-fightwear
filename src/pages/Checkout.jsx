@@ -458,12 +458,6 @@ export default function Checkout() {
             <div className="grid grid-cols-2 gap-1.5">
               {[
                 { icon: '💳', label: 'Visa & Mastercard' },
-                { icon: '📱', label: 'GCash' },
-                { icon: '📱', label: 'Maya' },
-                { icon: '🛍️', label: 'ShopeePay' },
-                { icon: '🚗', label: 'GrabPay' },
-                { icon: '🏦', label: 'BPI Direct Debit' },
-                { icon: '🏦', label: 'UnionBank Direct Debit' },
                 { icon: '📲', label: 'QRPh (Scan to Pay)' },
               ].map(m => (
                 <div key={m.label} className="flex items-center gap-1.5">
