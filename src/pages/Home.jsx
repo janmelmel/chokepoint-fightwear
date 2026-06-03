@@ -97,10 +97,16 @@ export default function Home() {
             Team kits, academy sets, custom patches — tell us what you need and we'll build it with you.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/Custom" className="btn-glow-orange px-10 py-4 font-mono-ui text-xs uppercase tracking-widest inline-flex items-center gap-2">
+            <Link to="/Custom" className="px-10 py-4 font-mono-ui text-xs uppercase tracking-widest inline-flex items-center gap-2 font-bold transition-all"
+              style={{ background: '#3B82F6', border: '1px solid #3B82F6', color: '#ffffff' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#60A5FA'; e.currentTarget.style.borderColor = '#60A5FA'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#3B82F6'; e.currentTarget.style.borderColor = '#3B82F6'; }}>
               Request Custom Gear →
             </Link>
-            <Link to="/Services" className="btn-glow-white px-10 py-4 font-mono-ui text-xs uppercase tracking-widest inline-flex items-center gap-2">
+            <Link to="/Services" className="px-10 py-4 font-mono-ui text-xs uppercase tracking-widest inline-flex items-center gap-2 font-semibold transition-all"
+              style={{ background: 'transparent', border: '2px solid #ffffff', color: '#ffffff' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
               See Our Services
             </Link>
           </div>
