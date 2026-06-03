@@ -116,9 +116,9 @@ export default function Services() {
             </Link>
             <a href="#services"
               className="font-mono-ui text-xs uppercase tracking-widest px-8 py-3 flex items-center justify-center gap-2 font-semibold transition-all"
-              style={{ background: 'transparent', border: `1px solid ${C.border}`, color: C.silver }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = C.silver; e.currentTarget.style.color = '#fff'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.silver; }}>
+              style={{ background: 'transparent', border: '1px solid #a8a8a8', color: '#e0e0e0' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#fff'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#a8a8a8'; e.currentTarget.style.color = '#e0e0e0'; }}>
               See What We Offer <ChevronDown className="w-4 h-4" />
             </a>
           </motion.div>
