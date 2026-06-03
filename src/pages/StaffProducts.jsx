@@ -194,7 +194,11 @@ export default function StaffProducts() {
     if (!cat) return DEFAULT_SIZE_GROUPS;
     const name = cat.name.toLowerCase();
     if ((name.includes('gi') && !name.includes('no')) || name.includes('kimono')) return GI_SIZE_GROUPS;
-    if (name.includes('no-gi') || name.includes('no gi') || name.includes('nogi')) return NOGI_SIZE_GROUPS;
+    if (
+      name.includes('no-gi') || name.includes('no gi') || name.includes('nogi') ||
+      name.includes('rashguard') || name.includes('rash guard') ||
+      name.includes('grappling short') || name.includes('grappling short')
+    ) return NOGI_SIZE_GROUPS;
     return DEFAULT_SIZE_GROUPS;
   };
 
